@@ -6,17 +6,12 @@
     <title>Smart Wallet Brasil</title>
     <meta name="theme-color" content="#6366f1">
     <meta name="description" content="Smart Wallet Brasil - Controle financeiro pessoal inteligente">
-
-    <!-- PWA iOS -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Smart Wallet">
     <link rel="apple-touch-icon" href="favicon.svg">
-
-    <!-- PWA Android/geral -->
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="manifest" href="manifest.json">
-
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -93,6 +88,22 @@
         
         .container { max-width: 1400px; margin: 0 auto; padding: 16px; position: relative; z-index: 1; }
         
+        /* Icon Styles */
+        .icon {
+            width: 20px;
+            height: 20px;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            fill: none;
+        }
+        .icon-sm { width: 16px; height: 16px; }
+        .icon-lg { width: 24px; height: 24px; }
+        .icon-xl { width: 32px; height: 32px; }
+        .icon-2xl { width: 48px; height: 48px; }
+        .icon-3xl { width: 64px; height: 64px; }
+        
         /* Splash Screen */
         .splash-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -111,7 +122,14 @@
         .splash-subtitle { font-size: 1.1rem; color: #cbd5e1; margin-bottom: 8px; font-weight: 500; }
         .splash-email { font-size: 0.95rem; color: #94a3b8; }
         .splash-icons { display: flex; gap: 30px; margin-top: 40px; flex-wrap: wrap; justify-content: center; }
-        .splash-icon { font-size: 3rem; animation: float 3s ease-in-out infinite; filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.5)); }
+        .splash-icon {
+            width: 48px; height: 48px;
+            stroke: var(--primary-color);
+            stroke-width: 1.5;
+            fill: none;
+            animation: float 3s ease-in-out infinite;
+            filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.5));
+        }
         .splash-icon:nth-child(2) { animation-delay: 0.5s; }
         .splash-icon:nth-child(3) { animation-delay: 1s; }
         .splash-icon:nth-child(4) { animation-delay: 1.5s; }
@@ -136,7 +154,14 @@
             padding: 40px; max-width: 600px; width: 100%; text-align: center;
             box-shadow: var(--shadow-lg);
         }
-        .quote-icon { font-size: 3rem; margin-bottom: 20px; opacity: 0.9; }
+        .quote-icon {
+            width: 48px; height: 48px;
+            stroke: var(--warning-color);
+            stroke-width: 1.5;
+            fill: none;
+            margin: 0 auto 20px;
+            opacity: 0.9;
+        }
         .quote-text { font-size: 1.3rem; font-weight: 500; line-height: 1.6; margin-bottom: 24px; font-style: italic; }
         .quote-author { font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 32px; font-weight: 600; }
         .quote-btn {
@@ -191,7 +216,7 @@
             background: var(--glass-bg); backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border); color: var(--text-primary);
             width: 48px; height: 48px; border-radius: 14px; cursor: pointer;
-            font-size: 1.3rem; display: flex; align-items: center; justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             box-shadow: var(--shadow); transition: all 0.3s ease;
         }
         .icon-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); border-color: var(--primary-color); }
@@ -199,7 +224,7 @@
         
         .dollar-btn {
             background: var(--gradient-primary); color: white;
-            font-weight: bold; font-size: 1.4rem; border: none;
+            font-weight: bold; border: none;
         }
         .dollar-btn:hover { transform: scale(1.05); box-shadow: 0 4px 20px rgba(99, 102, 241, 0.5); }
         
@@ -207,7 +232,7 @@
             background: var(--glass-bg); backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border); color: var(--text-primary);
             width: 48px; height: 48px; border-radius: 14px; cursor: pointer;
-            font-size: 1.5rem; display: flex; align-items: center; justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             box-shadow: var(--shadow); transition: all 0.3s ease;
             position: relative;
         }
@@ -245,7 +270,7 @@
         .dropdown-item:hover { background: rgba(99, 102, 241, 0.15); }
         .dropdown-item.danger { color: var(--danger-color); }
         .dropdown-item.danger:hover { background: rgba(239, 68, 68, 0.15); }
-        .dropdown-item .icon { font-size: 1.2rem; width: 24px; text-align: center; }
+        .dropdown-item .icon { width: 18px; height: 18px; }
         .dropdown-divider { height: 1px; background: var(--border-color); margin: 6px 0; }
         
         /* Dashboard */
@@ -324,7 +349,8 @@
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
         .status-badge {
-            display: inline-block; padding: 6px 12px; border-radius: 12px;
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 6px 12px; border-radius: 12px;
             font-size: 0.75rem; font-weight: 700; white-space: nowrap; letter-spacing: 0.3px;
         }
         .status-pending { background: var(--status-pending-bg); color: var(--status-pending-color); border: 1px solid rgba(245, 158, 11, 0.3); }
@@ -341,7 +367,14 @@
         .amount.negative { color: var(--danger-color); }
         .balance { font-weight: 600; color: var(--text-secondary); white-space: nowrap; }
         .empty-state { text-align: center; padding: 60px 20px; color: var(--text-secondary); }
-        .empty-state-icon { font-size: 4rem; margin-bottom: 16px; opacity: 0.5; }
+        .empty-state-icon {
+            width: 64px; height: 64px;
+            stroke: var(--text-secondary);
+            stroke-width: 1.5;
+            fill: none;
+            margin: 0 auto 16px;
+            opacity: 0.5;
+        }
         .empty-state h3 { margin-bottom: 8px; font-size: 1.2rem; font-weight: 600; }
         
         /* Privacy mode */
@@ -357,12 +390,13 @@
             position: fixed; bottom: 28px; right: 28px;
             width: 64px; height: 64px; border-radius: 20px;
             background: var(--gradient-primary); color: white; border: none;
-            font-size: 2rem; cursor: pointer;
+            cursor: pointer;
             box-shadow: 0 8px 30px rgba(99, 102, 241, 0.5);
             display: flex; align-items: center; justify-content: center;
             transition: all 0.3s ease; z-index: 999;
         }
         .fab:hover { transform: scale(1.1) rotate(90deg); box-shadow: 0 12px 40px rgba(99, 102, 241, 0.7); }
+        .fab .icon { width: 28px; height: 28px; stroke-width: 2.5; }
         
         /* Modals */
         .modal {
@@ -380,7 +414,7 @@
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
         .modal-header h2 { font-size: 1.5rem; font-weight: 700; }
         .modal-close {
-            background: none; border: none; font-size: 1.8rem; cursor: pointer;
+            background: none; border: none; cursor: pointer;
             color: var(--text-secondary); width: 44px; height: 44px; border-radius: 12px;
             display: flex; align-items: center; justify-content: center; transition: all 0.2s ease;
         }
@@ -452,10 +486,11 @@
             width: 80px; height: 80px; border-radius: 50%;
             background: var(--gradient-danger); color: white;
             display: flex; align-items: center; justify-content: center;
-            font-size: 2.5rem; margin: 0 auto 20px;
+            margin: 0 auto 20px;
             box-shadow: 0 0 30px rgba(239, 68, 68, 0.4);
             animation: pulse-danger 2s ease-in-out infinite;
         }
+        .danger-icon .icon { width: 40px; height: 40px; stroke-width: 2; }
         @keyframes pulse-danger {
             0%, 100% { box-shadow: 0 0 30px rgba(239, 68, 68, 0.4); }
             50% { box-shadow: 0 0 50px rgba(239, 68, 68, 0.7); }
@@ -487,7 +522,13 @@
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             opacity: 0; cursor: pointer;
         }
-        .file-input-icon { font-size: 2.5rem; margin-bottom: 8px; }
+        .file-input-icon {
+            width: 40px; height: 40px;
+            stroke: var(--text-secondary);
+            stroke-width: 1.5;
+            fill: none;
+            margin: 0 auto 8px;
+        }
         .file-input-text { color: var(--text-secondary); font-size: 0.9rem; }
         
         /* Print */
@@ -570,11 +611,11 @@
             <p class="splash-subtitle">Idealizado por RogerElizar™</p>
             <p class="splash-email">rogerelizar@gmail.com</p>
             <div class="splash-icons">
-                <div class="splash-icon">💰</div>
-                <div class="splash-icon">📊</div>
-                <div class="splash-icon">💳</div>
-                <div class="splash-icon">🏦</div>
-                <div class="splash-icon">💎</div>
+                <svg class="splash-icon" viewBox="0 0 24 24"><path d="M12 2v20M2 12h20"/></svg>
+                <svg class="splash-icon" viewBox="0 0 24 24"><path d="M3 3v18h18M18 17V9M13 17V5M8 17v-3"/></svg>
+                <svg class="splash-icon" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+                <svg class="splash-icon" viewBox="0 0 24 24"><path d="M3 21h18M5 21V7l8-4 8 4v14M8 21v-9a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v9"/></svg>
+                <svg class="splash-icon" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
             </div>
         </div>
     </div>
@@ -582,7 +623,7 @@
     <!-- Quote Modal -->
     <div class="quote-modal" id="quoteModal">
         <div class="quote-content">
-            <div class="quote-icon">💡</div>
+            <svg class="quote-icon" viewBox="0 0 24 24"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3M3.343 18.657l.707-.707M12 21a9 9 0 1 1 0-18 9 9 0 0 1 0 18z"/></svg>
             <p class="quote-text" id="quoteText"></p>
             <p class="quote-author" id="quoteAuthor"></p>
             <button class="quote-btn" onclick="startApp()">Gerenciar Minhas Finanças</button>
@@ -598,36 +639,56 @@
         <div class="toolbar">
             <div class="toolbar-left">
                 <div class="month-selector">
-                    <button onclick="moneylog.changeMonth(-1)" aria-label="Mês anterior">‹</button>
+                    <button onclick="moneylog.changeMonth(-1)" aria-label="Mês anterior">
+                        <svg class="icon" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+                    </button>
                     <div class="current-month" id="currentMonth">Janeiro 2026</div>
-                    <button onclick="moneylog.changeMonth(1)" aria-label="Próximo mês">›</button>
+                    <button onclick="moneylog.changeMonth(1)" aria-label="Próximo mês">
+                        <svg class="icon" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+                    </button>
                 </div>
-                <button class="icon-btn" id="privacyBtn" onclick="togglePrivacy()" aria-label="Ocultar valores" title="Ocultar/mostrar valores">👁️</button>
-                <button class="icon-btn" id="themeBtn" onclick="toggleTheme()" aria-label="Alternar tema" title="Modo claro/escuro">🌙</button>
+                <button class="icon-btn" id="privacyBtn" onclick="togglePrivacy()" aria-label="Ocultar valores" title="Ocultar/mostrar valores">
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                </button>
+                <button class="icon-btn" id="themeBtn" onclick="toggleTheme()" aria-label="Alternar tema" title="Modo claro/escuro">
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                </button>
             </div>
             <div class="toolbar-right">
-                <button class="btn btn-secondary" onclick="openExportModal()">📄 Extrato</button>
-                <button class="btn btn-primary dollar-btn" onclick="openGoalModal()" aria-label="Meta de Reserva">$</button>
+                <button class="btn btn-secondary" onclick="openExportModal()">
+                    <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                    Extrato
+                </button>
+                <button class="btn btn-primary dollar-btn" onclick="openGoalModal()" aria-label="Meta de Reserva">
+                    <svg class="icon" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                </button>
                 <div style="position: relative;">
-                    <button class="menu-btn" onclick="toggleMenu(event)" aria-label="Menu" title="Mais opções">⋮</button>
+                    <button class="menu-btn" onclick="toggleMenu(event)" aria-label="Menu" title="Mais opções">
+                        <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+                    </button>
                     <div class="dropdown-menu" id="mainMenu">
                         <button class="dropdown-item" onclick="openImportCsvModal()">
-                            <span class="icon">📥</span><span>Importar Extrato CSV</span>
+                            <svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                            <span>Importar Extrato CSV</span>
                         </button>
                         <div class="dropdown-divider"></div>
                         <button class="dropdown-item" onclick="moneylog.exportBackup()">
-                            <span class="icon">💾</span><span>Backup Geral (JSON)</span>
+                            <svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                            <span>Backup Geral (JSON)</span>
                         </button>
                         <button class="dropdown-item" onclick="openImportBackupModal()">
-                            <span class="icon">📂</span><span>Restaurar Backup</span>
+                            <svg class="icon" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                            <span>Restaurar Backup</span>
                         </button>
                         <div class="dropdown-divider"></div>
                         <button class="dropdown-item" onclick="moneylog.loadTestData()">
-                            <span class="icon">🧪</span><span>Carregar Dados de Teste</span>
+                            <svg class="icon" viewBox="0 0 24 24"><path d="M10 2v7.31M14 2v7.31M8.5 2h7M14 9.3a6.5 6.5 0 1 1-4 0"/></svg>
+                            <span>Carregar Dados de Teste</span>
                         </button>
                         <div class="dropdown-divider"></div>
                         <button class="dropdown-item danger" onclick="openClearDataModal()">
-                            <span class="icon">🗑️</span><span>Limpar Todos os Dados</span>
+                            <svg class="icon" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                            <span>Limpar Todos os Dados</span>
                         </button>
                     </div>
                 </div>
@@ -654,7 +715,7 @@
         <div class="transactions-section">
             <h2>Histórico do Mês</h2>
             <div class="filters">
-                <input type="text" id="searchFilter" placeholder="🔍 Buscar...">
+                <input type="text" id="searchFilter" placeholder="Buscar...">
                 <select id="categoryFilter"><option value="">Todas as categorias</option></select>
                 <select id="typeFilter">
                     <option value="">Todos os tipos</option>
@@ -679,24 +740,32 @@
                 </table>
             </div>
             <div class="empty-state" id="emptyState" style="display: none;">
-                <div class="empty-state-icon">📊</div>
+                <svg class="empty-state-icon" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/></svg>
                 <h3>Nenhuma transação encontrada</h3>
                 <p>Comece adicionando sua primeira transação!</p>
             </div>
         </div>
     </div>
 
-    <button class="fab" onclick="openNewTransactionModal()" aria-label="Nova transação" id="fabBtn" style="display:none;">+</button>
+    <button class="fab" onclick="openNewTransactionModal()" aria-label="Nova transação" id="fabBtn" style="display:none;">
+        <svg class="icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </button>
 
     <!-- Modal Nova Transação -->
     <div class="modal" id="newTransactionModal">
         <div class="modal-content">
-            <div class="modal-header"><h2>Nova Transação</h2><button class="modal-close" onclick="closeNewTransactionModal()">&times;</button></div>
+            <div class="modal-header"><h2>Nova Transação</h2><button class="modal-close" onclick="closeNewTransactionModal()"><svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
             <form id="transactionForm">
                 <div class="form-group"><label>Tipo</label>
                     <div class="type-selector">
-                        <button type="button" class="type-btn active" data-type="expense" onclick="selectTransactionType('expense')">💸 Despesa</button>
-                        <button type="button" class="type-btn" data-type="income" onclick="selectTransactionType('income')">💰 Receita</button>
+                        <button type="button" class="type-btn active" data-type="expense" onclick="selectTransactionType('expense')">
+                            <svg class="icon icon-sm" viewBox="0 0 24 24" style="margin-right:6px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                            Despesa
+                        </button>
+                        <button type="button" class="type-btn" data-type="income" onclick="selectTransactionType('income')">
+                            <svg class="icon icon-sm" viewBox="0 0 24 24" style="margin-right:6px;"><line x1="12" y1="19" x2="12" y2="5"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                            Receita
+                        </button>
                     </div>
                 </div>
                 <div class="form-row">
@@ -707,8 +776,8 @@
                     <div class="category-manager"><button type="button" class="category-manager-btn" onclick="openCategoryManager()">⚙️ Gerenciar categorias</button></div>
                 </div>
                 <div class="form-group"><label for="description">Descrição</label><textarea id="description" rows="2" placeholder="Descrição da transação"></textarea></div>
-                <div class="form-group"><div class="checkbox-group"><input type="checkbox" id="statusOk"><label for="statusOk">✅ Status OK (Concluído)</label></div></div>
-                <div class="form-group"><div class="checkbox-group"><input type="checkbox" id="recurring"><label for="recurring">🔁 Transação recorrente/parcelada</label></div></div>
+                <div class="form-group"><div class="checkbox-group"><input type="checkbox" id="statusOk"><label for="statusOk">✓ Status OK (Concluído)</label></div></div>
+                <div class="form-group"><div class="checkbox-group"><input type="checkbox" id="recurring"><label for="recurring">↻ Transação recorrente/parcelada</label></div></div>
                 <div class="form-group" id="recurringOptions" style="display: none;">
                     <div class="form-row">
                         <div><label for="recurrenceType">Tipo</label><select id="recurrenceType"><option value="monthly">Mensal</option><option value="installment">Parcelado</option></select></div>
@@ -716,7 +785,7 @@
                     </div>
                 </div>
                 <div class="action-buttons">
-                    <button type="submit" class="btn btn-primary"><span>➕</span> Adicionar</button>
+                    <button type="submit" class="btn btn-primary"><svg class="icon icon-sm" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Adicionar</button>
                     <button type="button" class="btn btn-secondary" onclick="closeNewTransactionModal()">Cancelar</button>
                 </div>
             </form>
@@ -726,13 +795,19 @@
     <!-- Modal Edição -->
     <div class="modal" id="editModal">
         <div class="modal-content">
-            <div class="modal-header"><h2>Editar Transação</h2><button class="modal-close" onclick="closeEditModal()">&times;</button></div>
+            <div class="modal-header"><h2>Editar Transação</h2><button class="modal-close" onclick="closeEditModal()"><svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
             <form id="editForm">
                 <input type="hidden" id="editId">
                 <div class="form-group"><label>Tipo</label>
                     <div class="type-selector">
-                        <button type="button" class="type-btn active" data-type="expense" onclick="selectEditType('expense')">💸 Despesa</button>
-                        <button type="button" class="type-btn" data-type="income" onclick="selectEditType('income')">💰 Receita</button>
+                        <button type="button" class="type-btn active" data-type="expense" onclick="selectEditType('expense')">
+                            <svg class="icon icon-sm" viewBox="0 0 24 24" style="margin-right:6px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                            Despesa
+                        </button>
+                        <button type="button" class="type-btn" data-type="income" onclick="selectEditType('income')">
+                            <svg class="icon icon-sm" viewBox="0 0 24 24" style="margin-right:6px;"><line x1="12" y1="19" x2="12" y2="5"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                            Receita
+                        </button>
                     </div>
                 </div>
                 <div class="form-row">
@@ -741,8 +816,8 @@
                 </div>
                 <div class="form-group"><label for="editCategory">Categoria</label><select id="editCategory" required></select></div>
                 <div class="form-group"><label for="editDescription">Descrição</label><textarea id="editDescription" rows="2"></textarea></div>
-                <div class="form-group"><div class="checkbox-group"><input type="checkbox" id="editStatusOk"><label for="editStatusOk">✅ Status OK (Concluído)</label></div></div>
-                <div class="form-group"><div class="checkbox-group"><input type="checkbox" id="editRecurring"><label for="editRecurring">🔁 Transação recorrente/parcelada</label></div></div>
+                <div class="form-group"><div class="checkbox-group"><input type="checkbox" id="editStatusOk"><label for="editStatusOk">✓ Status OK (Concluído)</label></div></div>
+                <div class="form-group"><div class="checkbox-group"><input type="checkbox" id="editRecurring"><label for="editRecurring">↻ Transação recorrente/parcelada</label></div></div>
                 <div class="form-group" id="editRecurringOptions" style="display: none;">
                     <div class="form-row">
                         <div><label for="editRecurrenceType">Tipo</label><select id="editRecurrenceType"><option value="monthly">Mensal</option><option value="installment">Parcelado</option></select></div>
@@ -751,8 +826,8 @@
                     <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 8px;">⚠️ Alterar recorrência afetará apenas esta transação específica.</p>
                 </div>
                 <div class="action-buttons">
-                    <button type="submit" class="btn btn-primary">💾 Salvar</button>
-                    <button type="button" class="btn btn-danger" onclick="moneylog.deleteFromEdit()">🗑️ Excluir</button>
+                    <button type="submit" class="btn btn-primary"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Salvar</button>
+                    <button type="button" class="btn btn-danger" onclick="moneylog.deleteFromEdit()"><svg class="icon icon-sm" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> Excluir</button>
                     <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancelar</button>
                 </div>
             </form>
@@ -762,17 +837,23 @@
     <!-- Modal Categorias -->
     <div class="modal" id="categoryModal">
         <div class="modal-content">
-            <div class="modal-header"><h2>Gerenciar Categorias</h2><button class="modal-close" onclick="closeCategoryManager()">&times;</button></div>
+            <div class="modal-header"><h2>Gerenciar Categorias</h2><button class="modal-close" onclick="closeCategoryManager()"><svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
             <div class="form-group"><label for="newCategoryName">Nova categoria</label>
                 <div style="display: flex; gap: 10px; margin-bottom: 10px;">
                     <input type="text" id="newCategoryName" placeholder="Nome da categoria" style="flex: 1;">
                     <input type="color" id="newCategoryColor" value="#6366f1" style="width: 54px; padding: 4px; cursor: pointer; border-radius: 12px;">
                 </div>
                 <div class="type-selector">
-                    <button type="button" class="type-btn active" data-type="expense" onclick="selectNewCategoryType('expense')">💸 Despesa</button>
-                    <button type="button" class="type-btn" data-type="income" onclick="selectNewCategoryType('income')">💰 Receita</button>
+                    <button type="button" class="type-btn active" data-type="expense" onclick="selectNewCategoryType('expense')">
+                        <svg class="icon icon-sm" viewBox="0 0 24 24" style="margin-right:6px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        Despesa
+                    </button>
+                    <button type="button" class="type-btn" data-type="income" onclick="selectNewCategoryType('income')">
+                        <svg class="icon icon-sm" viewBox="0 0 24 24" style="margin-right:6px;"><line x1="12" y1="19" x2="12" y2="5"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        Receita
+                    </button>
                 </div>
-                <button type="button" class="btn btn-primary btn-small" style="width: 100%;" onclick="moneylog.addCategory()">➕ Adicionar categoria</button>
+                <button type="button" class="btn btn-primary btn-small" style="width: 100%;" onclick="moneylog.addCategory()"><svg class="icon icon-sm" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Adicionar categoria</button>
             </div>
             <div style="margin-top: 24px;"><label style="font-weight: 600; margin-bottom: 12px; display: block;">Categorias existentes</label><div id="categoryList" style="display: flex; flex-direction: column; gap: 10px; max-height: 320px; overflow-y: auto;"></div></div>
         </div>
@@ -781,11 +862,11 @@
     <!-- Modal Exportar Extrato -->
     <div class="modal" id="exportModal">
         <div class="modal-content">
-            <div class="modal-header"><h2>📄 Exportar Extrato</h2><button class="modal-close" onclick="closeExportModal()">&times;</button></div>
+            <div class="modal-header"><h2>Exportar Extrato</h2><button class="modal-close" onclick="closeExportModal()"><svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
             <p style="margin-bottom: 20px; color: var(--text-secondary);">Escolha o formato para as transações do mês atual:</p>
             <div class="action-buttons" style="flex-direction: column; gap: 12px;">
-                <button class="btn btn-primary" onclick="moneylog.exportCSV()">📥 Baixar CSV</button>
-                <button class="btn btn-secondary" onclick="moneylog.printPDF()">🖨️ Imprimir / Salvar PDF</button>
+                <button class="btn btn-primary" onclick="moneylog.exportCSV()"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Baixar CSV</button>
+                <button class="btn btn-secondary" onclick="moneylog.printPDF()"><svg class="icon icon-sm" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Imprimir / Salvar PDF</button>
             </div>
         </div>
     </div>
@@ -793,14 +874,14 @@
     <!-- Modal Meta -->
     <div class="modal" id="goalModal">
         <div class="modal-content">
-            <div class="modal-header"><h2>💰 Meta de Reserva</h2><button class="modal-close" onclick="closeGoalModal()">&times;</button></div>
+            <div class="modal-header"><h2>Meta de Reserva</h2><button class="modal-close" onclick="closeGoalModal()"><svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
             <form id="goalForm">
                 <div class="form-group"><label for="goalAmount">Meta de Reserva (R$)</label><input type="number" id="goalAmount" step="0.01" min="0" placeholder="Ex: 10000.00" required></div>
                 <div class="form-group"><label for="monthlyContribution">Aporte Mensal (R$)</label><input type="number" id="monthlyContribution" step="0.01" min="0" placeholder="Ex: 500.00" required></div>
                 <div id="goalResult" style="background: var(--input-bg); padding: 16px; border-radius: 14px; margin: 16px 0; display: none;"></div>
                 <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 16px;">⚠️ O cálculo considera o saldo total acumulado e a constância dos aportes.</p>
                 <div class="action-buttons">
-                    <button type="submit" class="btn btn-primary">Calcular & Salvar</button>
+                    <button type="submit" class="btn btn-primary"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Calcular & Salvar</button>
                     <button type="button" class="btn btn-secondary" onclick="closeGoalModal()">Fechar</button>
                 </div>
             </form>
@@ -810,7 +891,7 @@
     <!-- Modal Importar CSV -->
     <div class="modal" id="importCsvModal">
         <div class="modal-content">
-            <div class="modal-header"><h2>📥 Importar Extrato CSV</h2><button class="modal-close" onclick="closeImportCsvModal()">&times;</button></div>
+            <div class="modal-header"><h2>Importar Extrato CSV</h2><button class="modal-close" onclick="closeImportCsvModal()"><svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
             <p style="margin-bottom: 16px; color: var(--text-secondary); font-size: 0.9rem;">Importe transações de um arquivo CSV no formato exportado pelo sistema (separador: <strong>;</strong>).</p>
             <div style="background: var(--input-bg); border-radius: 12px; padding: 12px; margin-bottom: 16px; font-size: 0.8rem; font-family: monospace; color: var(--text-secondary);">
                 Data;Descrição;Categoria;Tipo;Status;Valor<br>
@@ -820,7 +901,7 @@
                 <label>Selecione o arquivo CSV</label>
                 <label class="file-input-wrapper">
                     <input type="file" id="csvFileInput" accept=".csv" onchange="handleCsvFileSelect(event)">
-                    <div class="file-input-icon">📄</div>
+                    <svg class="file-input-icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
                     <div class="file-input-text" id="csvFileName">Clique ou arraste um arquivo CSV</div>
                 </label>
             </div>
@@ -831,7 +912,7 @@
                 </div>
             </div>
             <div class="action-buttons">
-                <button class="btn btn-primary" onclick="moneylog.importCSV()">📥 Importar</button>
+                <button class="btn btn-primary" onclick="moneylog.importCSV()"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Importar</button>
                 <button class="btn btn-secondary" onclick="closeImportCsvModal()">Cancelar</button>
             </div>
         </div>
@@ -840,20 +921,20 @@
     <!-- Modal Importar Backup -->
     <div class="modal" id="importBackupModal">
         <div class="modal-content">
-            <div class="modal-header"><h2>📂 Restaurar Backup</h2><button class="modal-close" onclick="closeImportBackupModal()">&times;</button></div>
+            <div class="modal-header"><h2>Restaurar Backup</h2><button class="modal-close" onclick="closeImportBackupModal()"><svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
             <div class="danger-warning">
-                ⚠️ <strong>Atenção:</strong> Restaurar um backup substituirá <strong>todos</strong> os dados atuais (transações, categorias, metas e preferências).
+                <strong>Atenção:</strong> Restaurar um backup substituirá <strong>todos</strong> os dados atuais (transações, categorias, metas e preferências).
             </div>
             <div class="form-group">
                 <label>Selecione o arquivo de backup JSON</label>
                 <label class="file-input-wrapper">
                     <input type="file" id="backupFileInput" accept=".json" onchange="handleBackupFileSelect(event)">
-                    <div class="file-input-icon">💾</div>
+                    <svg class="file-input-icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                     <div class="file-input-text" id="backupFileName">Clique ou arraste um arquivo JSON</div>
                 </label>
             </div>
             <div class="action-buttons">
-                <button class="btn btn-primary" onclick="moneylog.importBackup()">📂 Restaurar</button>
+                <button class="btn btn-primary" onclick="moneylog.importBackup()"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> Restaurar</button>
                 <button class="btn btn-secondary" onclick="closeImportBackupModal()">Cancelar</button>
             </div>
         </div>
@@ -862,8 +943,10 @@
     <!-- Modal Limpar Dados (dupla confirmação) -->
     <div class="modal danger-modal" id="clearDataModal">
         <div class="modal-content">
-            <div class="modal-header"><h2 style="color: var(--danger-color);">⚠️ Limpar Todos os Dados</h2><button class="modal-close" onclick="closeClearDataModal()">&times;</button></div>
-            <div class="danger-icon">⚠️</div>
+            <div class="modal-header"><h2 style="color: var(--danger-color);">Limpar Todos os Dados</h2><button class="modal-close" onclick="closeClearDataModal()"><svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+            <div class="danger-icon">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </div>
             <div class="danger-warning">
                 <strong>Você está prestes a apagar permanentemente:</strong><br>
                 • Todas as transações<br>
@@ -885,7 +968,7 @@
                 <p style="margin-bottom: 12px; font-weight: 600;">Passo 2 de 2: Digite <strong style="color: var(--danger-color); letter-spacing: 2px;">LIMPAR</strong> para confirmar</p>
                 <input type="text" class="confirm-input" id="clearConfirmInput" placeholder="LIMPAR" autocomplete="off" oninput="checkClearConfirm()">
                 <div class="action-buttons" style="margin-top: 16px;">
-                    <button class="btn btn-danger-full" id="finalClearBtn" onclick="moneylog.clearAllData()" disabled style="opacity: 0.5; cursor: not-allowed;">🗑️ Apagar Tudo Permanentemente</button>
+                    <button class="btn btn-danger-full" id="finalClearBtn" onclick="moneylog.clearAllData()" disabled style="opacity: 0.5; cursor: not-allowed;"><svg class="icon icon-sm" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> Apagar Tudo Permanentemente</button>
                     <button class="btn btn-secondary" onclick="closeClearDataModal()">Cancelar</button>
                 </div>
             </div>
@@ -1413,7 +1496,7 @@
                             <span style="width:20px; height:20px; border-radius:50%; background:${cat.color}; display:inline-block;"></span>
                             <div><div style="font-weight:500;">${this.escapeHtml(cat.name)}</div><div style="font-size:0.75rem; color:var(--text-secondary);">${cat.type === 'income' ? '💰 Receita' : '💸 Despesa'}</div></div>
                         </div>
-                        <button class="btn btn-danger btn-small" onclick="moneylog.deleteCategory('${cat.id}')">🗑️</button>
+                        <button class="btn btn-danger btn-small" onclick="moneylog.deleteCategory('${cat.id}')"><svg class="icon icon-sm" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
                     </div>
                 `).join('');
             }
@@ -1597,9 +1680,9 @@
             getRecurrenceDisplay(t) {
                 if (!t.recurrence) return '';
                 if (t.recurrence.type === 'installment') {
-                    return `<span class="recurrence-badge">🔁 ${t.recurrence.current}/${t.recurrence.total}</span>`;
+                    return `<span class="recurrence-badge"><svg class="icon icon-sm" viewBox="0 0 24 24" style="width:12px;height:12px;"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg> ${t.recurrence.current}/${t.recurrence.total}</span>`;
                 } else if (t.recurrence.type === 'monthly') {
-                    return `<span class="recurrence-badge">🔁 Mensal</span>`;
+                    return `<span class="recurrence-badge"><svg class="icon icon-sm" viewBox="0 0 24 24" style="width:12px;height:12px;"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> Mensal</span>`;
                 }
                 return '';
             }
@@ -1932,7 +2015,13 @@
             applyTheme() {
                 document.body.classList.toggle('light', !this.darkMode);
                 const btn = document.getElementById('themeBtn');
-                if (btn) btn.textContent = this.darkMode ? '☀️' : '🌙';
+                if (btn) {
+                    if (this.darkMode) {
+                        btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';
+                    } else {
+                        btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+                    }
+                }
                 if (Object.keys(this.charts).length) this.updateChartsTheme();
             }
 
@@ -1940,8 +2029,13 @@
                 document.body.classList.toggle('privacy-on', this.privacyOn);
                 const btn = document.getElementById('privacyBtn');
                 if (btn) {
-                    btn.textContent = this.privacyOn ? '🙈' : '👁️';
-                    btn.classList.toggle('active', this.privacyOn);
+                    if (this.privacyOn) {
+                        btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
+                        btn.classList.add('active');
+                    } else {
+                        btn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+                        btn.classList.remove('active');
+                    }
                 }
             }
 
@@ -2056,17 +2150,15 @@
             moneylog.applyTheme();
         }
     </script>
-
-<script>
-    // Registrar Service Worker para funcionar offline
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('sw.js')
-                .then(reg => console.log('✅ SW registrado:', reg.scope))
-                .catch(err => console.log('❌ SW falhou:', err));
-        });
-    }
-</script>
-
+    <script>
+        // Registrar Service Worker para funcionar offline
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(reg => console.log('✅ SW registrado:', reg.scope))
+                    .catch(err => console.log('❌ SW falhou:', err));
+            });
+        }
+    </script>
 </body>
 </html>
