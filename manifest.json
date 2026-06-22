@@ -2,7 +2,7 @@
   "name": "Smart Wallet",
   "short_name": "SmartWallet",
   "description": "Controle financeiro pessoal inteligente - Idealizado por RogerElizar™",
-  "start_url": "./index.html",
+  "start_url": "./SmartWallet-2026/index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
