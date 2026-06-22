@@ -95,7 +95,6 @@
         header h1 { font-size: 1.8rem; font-weight: 800; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
         header p { color: var(--text-secondary); font-size: 0.9rem; margin-top: 4px; }
         
-        /* ===== TOOLBAR REORGANIZADA ===== */
         .toolbar { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
         .toolbar-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
         .month-selector { background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 16px; padding: 6px; box-shadow: var(--shadow); display: flex; align-items: center; gap: 4px; flex: 1; min-width: 200px; }
@@ -109,7 +108,40 @@
         .icon-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); border-color: var(--primary-color); }
         .icon-btn.active { background: var(--gradient-primary); color: white; border-color: transparent; }
         .dollar-btn { background: var(--gradient-primary); color: white; font-weight: bold; border: none; width: 48px; height: 48px; border-radius: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow); transition: all 0.3s ease; flex-shrink: 0; }
-        .dollar-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); border-color: var(--primary-color); }
+        .dollar-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+        
+        /* ===== BOTÃO DE ALERTA (SINO) ===== */
+        .alert-btn { 
+            background: var(--glass-bg); backdrop-filter: blur(20px); 
+            border: 1px solid var(--glass-border); color: var(--text-primary); 
+            width: 48px; height: 48px; border-radius: 14px; cursor: pointer; 
+            display: flex; align-items: center; justify-content: center; 
+            box-shadow: var(--shadow); transition: all 0.3s ease; flex-shrink: 0; 
+            position: relative;
+        }
+        .alert-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); border-color: var(--primary-color); }
+        .alert-btn.has-alerts { animation: bell-ring 1.5s ease-in-out infinite; }
+        @keyframes bell-ring {
+            0%, 100% { transform: rotate(0deg); }
+            10%, 30% { transform: rotate(-8deg); }
+            20%, 40% { transform: rotate(8deg); }
+            50% { transform: rotate(0deg); }
+        }
+        .alert-badge {
+            position: absolute; top: -4px; right: -4px;
+            background: var(--danger-color); color: white;
+            min-width: 20px; height: 20px; border-radius: 10px;
+            font-size: 0.7rem; font-weight: 700;
+            display: none; align-items: center; justify-content: center;
+            padding: 0 5px; border: 2px solid var(--bg-color);
+            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.5);
+            animation: badge-pulse 2s ease-in-out infinite;
+        }
+        .alert-badge.visible { display: flex; }
+        @keyframes badge-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
         
         .menu-btn { background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); color: var(--text-primary); width: 48px; height: 48px; border-radius: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow); transition: all 0.3s ease; position: relative; flex-shrink: 0; }
         .menu-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); border-color: var(--primary-color); }
@@ -266,6 +298,29 @@
         .purchase-amount { font-weight: 700; font-size: 1rem; white-space: nowrap; }
         .purchase-actions { display: flex; gap: 4px; }
         
+        /* ===== ITENS DE CONTAS PENDENTES ===== */
+        .bill-item { 
+            background: var(--input-bg); border-radius: 12px; padding: 14px 16px; 
+            margin-bottom: 10px; border-left: 4px solid var(--warning-color);
+            display: flex; justify-content: space-between; align-items: center; gap: 12px;
+            transition: all 0.2s ease;
+        }
+        .bill-item:hover { transform: translateX(4px); }
+        .bill-item.urgent { border-left-color: var(--danger-color); background: rgba(239, 68, 68, 0.08); }
+        .bill-item.overdue { border-left-color: #7f1d1d; background: rgba(127, 29, 29, 0.15); }
+        .bill-info { flex: 1; min-width: 0; }
+        .bill-desc { font-weight: 600; margin-bottom: 4px; }
+        .bill-meta { font-size: 0.8rem; color: var(--text-secondary); display: flex; gap: 10px; flex-wrap: wrap; }
+        .bill-days { 
+            display: inline-block; padding: 2px 8px; border-radius: 8px; 
+            font-size: 0.7rem; font-weight: 700; margin-left: 6px;
+        }
+        .bill-days.urgent { background: var(--danger-color); color: white; }
+        .bill-days.warning { background: var(--warning-color); color: white; }
+        .bill-days.overdue { background: #7f1d1d; color: #fca5a5; }
+        .bill-amount { font-weight: 700; font-size: 1.05rem; white-space: nowrap; color: var(--danger-color); }
+        .bill-actions { display: flex; gap: 4px; }
+        
         @media print {
             body { background: white; color: black; }
             body::before { display: none; }
@@ -318,21 +373,21 @@
             .quote-content { padding: 28px; }
             .credit-cards-grid { grid-template-columns: 1fr; }
             
-            /* Mobile: toolbar compacta */
             .toolbar { gap: 10px; margin-bottom: 16px; }
             .month-selector { width: 100%; padding: 4px; }
             .current-month { font-size: 0.95rem; padding: 0 4px; }
             .month-selector button { width: 36px; height: 36px; }
             .toolbar-actions { justify-content: space-between; width: 100%; }
-            .icon-btn, .dollar-btn, .menu-btn { width: 44px; height: 44px; border-radius: 12px; }
-            .icon-btn .icon, .menu-btn .icon { width: 18px; height: 18px; }
+            .icon-btn, .dollar-btn, .alert-btn, .menu-btn { width: 44px; height: 44px; border-radius: 12px; }
+            .icon-btn .icon, .alert-btn .icon, .menu-btn .icon { width: 18px; height: 18px; }
             .dollar-btn .icon { width: 20px; height: 20px; }
             .dropdown-menu { right: 0; min-width: 260px; max-width: calc(100vw - 24px); }
+            .alert-badge { min-width: 18px; height: 18px; font-size: 0.65rem; top: -2px; right: -2px; }
         }
         @media (max-width: 380px) { 
             .dashboard { grid-template-columns: 1fr 1fr; } 
             .card-value { font-size: 1rem; }
-            .icon-btn, .dollar-btn, .menu-btn { width: 40px; height: 40px; }
+            .icon-btn, .dollar-btn, .alert-btn, .menu-btn { width: 40px; height: 40px; }
         }
     </style>
 </head>
@@ -367,9 +422,7 @@
             <p>Controle financeiro pessoal inteligente</p>
         </header>
 
-        <!-- ===== TOOLBAR REORGANIZADA ===== -->
         <div class="toolbar">
-            <!-- Linha 1: Seletor de Mês -->
             <div class="toolbar-row">
                 <div class="month-selector">
                     <button onclick="smartwallet.changeMonth(-1)" aria-label="Mês anterior">
@@ -382,7 +435,6 @@
                 </div>
             </div>
             
-            <!-- Linha 2: Ações (em linha no mobile também) -->
             <div class="toolbar-actions">
                 <button class="icon-btn" id="privacyBtn" onclick="togglePrivacy()" aria-label="Ocultar valores" title="Ocultar/mostrar valores">
                     <svg class="icon" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
@@ -392,6 +444,13 @@
                 </button>
                 <button class="dollar-btn" onclick="openGoalModal()" aria-label="Meta de Reserva" title="Meta de Reserva">
                     <svg class="icon" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                </button>
+                <button class="alert-btn" id="alertBtn" onclick="openBillsModal()" aria-label="Contas a vencer" title="Contas a vencer">
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                    </svg>
+                    <span class="alert-badge" id="alertBadge">0</span>
                 </button>
                 <div style="position: relative;">
                     <button class="menu-btn" onclick="toggleMenu(event)" aria-label="Menu" title="Menu">
@@ -526,7 +585,7 @@
                 </div>
                 <div class="form-group">
                     <label for="paymentMethod">💳 Efetuado com</label>
-                    <select id="paymentMethod" required onchange="handlePaymentMethodChange('paymentMethod')">
+                    <select id="paymentMethod" required>
                         <option value="">Selecione a forma de pagamento...</option>
                     </select>
                 </div>
@@ -535,8 +594,15 @@
                 <div class="form-group"><div class="checkbox-group"><input type="checkbox" id="recurring"><label for="recurring">↻ Transação recorrente/parcelada</label></div></div>
                 <div class="form-group" id="recurringOptions" style="display: none;">
                     <div class="form-row">
-                        <div><label for="recurrenceType">Tipo</label><select id="recurrenceType"><option value="monthly">Mensal</option><option value="installment">Parcelado</option></select></div>
-                        <div><label for="recurrenceCount">Parcelas</label><input type="number" id="recurrenceCount" min="2" max="360" value="2"></div>
+                        <div>
+                            <label for="recurrenceType">Tipo</label>
+                            <select id="recurrenceType">
+                                <option value="monthly">Mensal</option>
+                                <option value="yearly">Anual</option>
+                                <option value="installment">Parcelado</option>
+                            </select>
+                        </div>
+                        <div><label for="recurrenceCount">Parcelas/Ocorrências</label><input type="number" id="recurrenceCount" min="2" max="360" value="2"></div>
                     </div>
                 </div>
                 <div class="action-buttons">
@@ -572,7 +638,7 @@
                 <div class="form-group"><label for="editCategory">Categoria</label><select id="editCategory" required></select></div>
                 <div class="form-group">
                     <label for="editPaymentMethod">💳 Efetuado com</label>
-                    <select id="editPaymentMethod" required onchange="handlePaymentMethodChange('editPaymentMethod')">
+                    <select id="editPaymentMethod" required>
                         <option value="">Selecione a forma de pagamento...</option>
                     </select>
                 </div>
@@ -581,8 +647,15 @@
                 <div class="form-group"><div class="checkbox-group"><input type="checkbox" id="editRecurring"><label for="editRecurring">↻ Transação recorrente/parcelada</label></div></div>
                 <div class="form-group" id="editRecurringOptions" style="display: none;">
                     <div class="form-row">
-                        <div><label for="editRecurrenceType">Tipo</label><select id="editRecurrenceType"><option value="monthly">Mensal</option><option value="installment">Parcelado</option></select></div>
-                        <div><label for="editRecurrenceCount">Parcelas</label><input type="number" id="editRecurrenceCount" min="2" max="360" value="2"></div>
+                        <div>
+                            <label for="editRecurrenceType">Tipo</label>
+                            <select id="editRecurrenceType">
+                                <option value="monthly">Mensal</option>
+                                <option value="yearly">Anual</option>
+                                <option value="installment">Parcelado</option>
+                            </select>
+                        </div>
+                        <div><label for="editRecurrenceCount">Parcelas/Ocorrências</label><input type="number" id="editRecurrenceCount" min="2" max="360" value="2"></div>
                     </div>
                     <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 8px;">⚠️ Alterar recorrência afetará apenas esta transação específica.</p>
                 </div>
@@ -655,8 +728,7 @@
             <div class="modal-header"><h2>Importar Extrato CSV</h2><button class="modal-close" onclick="closeImportCsvModal()"><svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
             <p style="margin-bottom: 16px; color: var(--text-secondary); font-size: 0.9rem;">Importe transações de um arquivo CSV no formato exportado pelo sistema (separador: <strong>;</strong>).</p>
             <div style="background: var(--input-bg); border-radius: 12px; padding: 12px; margin-bottom: 16px; font-size: 0.8rem; font-family: monospace; color: var(--text-secondary);">
-                Data;Descrição;Categoria;Tipo;Pagamento;Status;Valor<br>
-                2026-01-15;"Salário";"Salário";Receita;PIX;Concluído;5000.00
+                Data;Descrição;Categoria;Tipo;Pagamento;Status;Recorrência;Valor
             </div>
             <div class="form-group">
                 <label>Selecione o arquivo CSV</label>
@@ -684,7 +756,7 @@
         <div class="modal-content">
             <div class="modal-header"><h2>Restaurar Backup</h2><button class="modal-close" onclick="closeImportBackupModal()"><svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
             <div class="danger-warning">
-                <strong>Atenção:</strong> Restaurar um backup substituirá <strong>todos</strong> os dados atuais (transações, categorias, cartões, metas e preferências).
+                <strong>Atenção:</strong> Restaurar um backup substituirá <strong>todos</strong> os dados atuais.
             </div>
             <div class="form-group">
                 <label>Selecione o arquivo de backup JSON</label>
@@ -715,7 +787,7 @@
                 • Todos os cartões de crédito e faturas<br>
                 • Meta de reserva e aportes<br>
                 • Todas as preferências<br><br>
-                <strong>Esta ação é IRREVERSÍVEL.</strong> Recomendamos fazer um backup antes.
+                <strong>Esta ação é IRREVERSÍVEL.</strong>
             </div>
             <div id="clearStep1">
                 <p style="margin-bottom: 12px; font-weight: 600;">Passo 1 de 2: Você tem certeza?</p>
@@ -728,7 +800,7 @@
                 <p style="margin-bottom: 12px; font-weight: 600;">Passo 2 de 2: Digite <strong style="color: var(--danger-color); letter-spacing: 2px;">LIMPAR</strong> para confirmar</p>
                 <input type="text" class="confirm-input" id="clearConfirmInput" placeholder="LIMPAR" autocomplete="off" oninput="checkClearConfirm()">
                 <div class="action-buttons" style="margin-top: 16px;">
-                    <button class="btn btn-danger-full" id="finalClearBtn" onclick="smartwallet.clearAllData()" disabled style="opacity: 0.5; cursor: not-allowed;"><svg class="icon icon-sm" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> Apagar Tudo Permanentemente</button>
+                    <button class="btn btn-danger-full" id="finalClearBtn" onclick="smartwallet.clearAllData()" disabled style="opacity: 0.5; cursor: not-allowed;"><svg class="icon icon-sm" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> Apagar Tudo</button>
                     <button class="btn btn-secondary" onclick="closeClearDataModal()">Cancelar</button>
                 </div>
             </div>
@@ -815,16 +887,11 @@
                         <label for="purchaseInstallments">Parcelas</label>
                         <select id="purchaseInstallments">
                             <option value="1">À vista (1x)</option>
-                            <option value="2">2x</option>
-                            <option value="3">3x</option>
-                            <option value="4">4x</option>
-                            <option value="5">5x</option>
-                            <option value="6">6x</option>
-                            <option value="10">10x</option>
-                            <option value="12">12x</option>
-                            <option value="18">18x</option>
-                            <option value="24">24x</option>
-                            <option value="36">36x</option>
+                            <option value="2">2x</option><option value="3">3x</option>
+                            <option value="4">4x</option><option value="5">5x</option>
+                            <option value="6">6x</option><option value="10">10x</option>
+                            <option value="12">12x</option><option value="18">18x</option>
+                            <option value="24">24x</option><option value="36">36x</option>
                             <option value="48">48x</option>
                         </select>
                     </div>
@@ -841,6 +908,20 @@
                     <button type="button" class="btn btn-secondary" onclick="closeNewPurchaseModal()">Cancelar</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- ===== NOVO MODAL: CONTAS A VENCER ===== -->
+    <div class="modal" id="billsModal">
+        <div class="modal-content wide">
+            <div class="modal-header">
+                <h2>🔔 Contas a Vencer</h2>
+                <button class="modal-close" onclick="closeBillsModal()"><svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+            </div>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 16px;">
+                Contas pendentes que vencem nos próximos 3 dias (ou já venceram).
+            </p>
+            <div id="billsList"></div>
         </div>
     </div>
 
@@ -898,59 +979,53 @@
             { id: 'transfer', name: 'Transferência', icon: '↔️' }
         ];
 
+        const DEFAULT_CATEGORIES = [
+            { id: 'generosidade_1782078159158', name: 'Generosidade', color: '#007306', type: 'expense' },
+            { id: 'despensa_1782078213198', name: 'Despensa', color: '#e37171', type: 'expense' },
+            { id: 'transporte_1782078258677', name: 'Transporte', color: '#21fffb', type: 'expense' },
+            { id: 'moradia_1782078304782', name: 'Moradia', color: '#ffff00', type: 'expense' },
+            { id: 'sa_de_1782078348051', name: 'Saúde', color: '#ff9c38', type: 'expense' },
+            { id: 'educa__o_1782078383453', name: 'Educação', color: '#0000ff', type: 'expense' },
+            { id: 'cuidados_pessoais_1782078466633', name: 'Cuidados Pessoais', color: '#701a1a', type: 'expense' },
+            { id: 'docs_juridico_1782078515639', name: 'Docs&Juridico', color: '#404040', type: 'expense' },
+            { id: 'inst__financeira_1782078568135', name: 'Inst. Financeira', color: '#574737', type: 'expense' },
+            { id: 'lazer_1782078764511', name: 'Lazer', color: '#ff00ff', type: 'expense' },
+            { id: 'servi_os_1782078825830', name: 'Serviços', color: '#5117a3', type: 'expense' },
+            { id: 'pets_1782078962737', name: 'Pets', color: '#1349a8', type: 'expense' },
+            { id: 'reserva_emerg_ncia_1782079075760', name: 'Reserva Emergência', color: '#00ff00', type: 'expense' },
+            { id: 'meta_econ_mica_1782079184672', name: 'Meta Econômica', color: '#ccff00', type: 'expense' },
+            { id: 'investimento_1782079473435', name: 'Investimento', color: '#e6dcb1', type: 'expense' },
+            { id: 'sal_rio_1782079506460', name: 'Salário', color: '#475569', type: 'income' },
+            { id: 'freelancer_1782079624742', name: 'Freelancer', color: '#b3e6e0', type: 'income' },
+            { id: 'previd_ncia_1782079696986', name: 'Previdência', color: '#c861ff', type: 'income' },
+            { id: 'restitui__o_1782079795687', name: 'Restituição', color: '#ffdd00', type: 'income' },
+            { id: 'benef_cios_1782079908274', name: 'Benefícios', color: '#82cfff', type: 'income' }
+        ];
+
+        // Dados de teste com exemplos de recorrência ANUAL
         const TEST_DATA = {
             transactions: [
-                { id: 1735689600001, date: "2026-01-05", amount: 5000, category: "sal_rio_1782079506460", description: "Salário Janeiro", statusOk: true, paymentMethod: 'transfer' },
+                // Recorrência ANUAL - IPVA (exemplo)
+                { id: 1740787200009, date: "2026-03-10", amount: -1800, category: "transporte_1782078258677", description: "IPVA 2026", statusOk: true, paymentMethod: 'pix', recurrence: { type: 'yearly' } },
+                // Recorrência ANUAL - Seguro de Vida
+                { id: 1735689600030, date: "2026-01-15", amount: -650, category: "sa_de_1782078348051", description: "Seguro de Vida Anual", statusOk: true, paymentMethod: 'auto', recurrence: { type: 'yearly' } },
+                // Recorrência MENSAL - Aluguel
                 { id: 1735689600002, date: "2026-01-10", amount: -1500, category: "moradia_1782078304782", description: "Aluguel Janeiro", statusOk: true, paymentMethod: 'auto', recurrence: { type: 'monthly' } },
-                { id: 1735689600003, date: "2026-01-18", amount: -950, category: "despensa_1782078213198", description: "Mercado Semana 1-2", statusOk: true, paymentMethod: 'debit' },
-                { id: 1735689600004, date: "2026-01-22", amount: -180, category: "despensa_1782078213198", description: "Restaurante com amigos", statusOk: true, paymentMethod: 'pix' },
-                { id: 1735689600005, date: "2026-01-18", amount: 1800, category: "freelancer_1782079624742", description: "Freelance Design Gráfico", statusOk: true, paymentMethod: 'pix' },
-                { id: 1738368000001, date: "2026-02-05", amount: 5000, category: "sal_rio_1782079506460", description: "Salário Fevereiro", statusOk: true, paymentMethod: 'transfer' },
-                { id: 1738368000002, date: "2026-02-10", amount: -1500, category: "moradia_1782078304782", description: "Aluguel Fevereiro", statusOk: true, paymentMethod: 'auto', recurrence: { type: 'monthly' } },
-                { id: 1738368000003, date: "2026-02-18", amount: -1020, category: "despensa_1782078213198", description: "Mercado Fevereiro", statusOk: true, paymentMethod: 'debit' },
-                { id: 1740787200001, date: "2026-03-05", amount: 5000, category: "sal_rio_1782079506460", description: "Salário Março", statusOk: true, paymentMethod: 'transfer' },
-                { id: 1740787200002, date: "2026-03-10", amount: -1500, category: "moradia_1782078304782", description: "Aluguel Março", statusOk: true, paymentMethod: 'auto', recurrence: { type: 'monthly' } },
-                { id: 1743465600001, date: "2026-04-05", amount: 5000, category: "sal_rio_1782079506460", description: "Salário Abril", statusOk: true, paymentMethod: 'transfer' },
-                { id: 1743465600002, date: "2026-04-10", amount: -1500, category: "moradia_1782078304782", description: "Aluguel Abril", statusOk: true, paymentMethod: 'auto', recurrence: { type: 'monthly' } },
-                { id: 1746057600001, date: "2026-05-05", amount: 5000, category: "sal_rio_1782079506460", description: "Salário Maio", statusOk: true, paymentMethod: 'transfer' },
-                { id: 1746057600002, date: "2026-05-10", amount: -1500, category: "moradia_1782078304782", description: "Aluguel Maio", statusOk: true, paymentMethod: 'auto', recurrence: { type: 'monthly' } },
-                { id: 1748736000001, date: "2026-06-05", amount: 5000, category: "sal_rio_1782079506460", description: "Salário Junho", statusOk: true, paymentMethod: 'transfer' },
-                { id: 1748736000002, date: "2026-06-10", amount: -1500, category: "moradia_1782078304782", description: "Aluguel Junho", statusOk: true, paymentMethod: 'auto', recurrence: { type: 'monthly' } }
+                // Transação normal
+                { id: 1735689600001, date: "2026-01-05", amount: 5000, category: "sal_rio_1782079506460", description: "Salário Janeiro", statusOk: true, paymentMethod: 'transfer' },
+                { id: 1735689600003, date: "2026-01-18", amount: -950, category: "despensa_1782078213198", description: "Mercado", statusOk: true, paymentMethod: 'debit' },
+                // Conta PENDENTE vencendo em 2 dias (para testar alerta)
+                { id: 1735689600040, date: (() => { const d = new Date(); d.setDate(d.getDate() + 2); return d.toISOString().split('T')[0]; })(), amount: -450, category: "moradia_1782078304782", description: "Conta de Luz (vencimento próximo)", statusOk: false, paymentMethod: 'auto' },
+                // Conta PENDENTE vencendo hoje
+                { id: 1735689600041, date: new Date().toISOString().split('T')[0], amount: -120, category: "servi_os_1782078825830", description: "Internet (vence hoje)", statusOk: false, paymentMethod: 'auto' },
+                // Conta PENDENTE vencendo amanhã
+                { id: 1735689600042, date: (() => { const d = new Date(); d.setDate(d.getDate() + 1); return d.toISOString().split('T')[0]; })(), amount: -85, category: "moradia_1782078304782", description: "Conta de Água (vence amanhã)", statusOk: false, paymentMethod: 'auto' },
+                // Conta PENDENTE já vencida (ontem)
+                { id: 1735689600043, date: (() => { const d = new Date(); d.setDate(d.getDate() - 1); return d.toISOString().split('T')[0]; })(), amount: -39.90, category: "lazer_1782078764511", description: "Netflix (vencida)", statusOk: false, paymentMethod: 'auto' }
             ],
-            categories: [
-                { id: 'generosidade_1782078159158', name: 'Generosidade', color: '#007306', type: 'expense' },
-                { id: 'despensa_1782078213198', name: 'Despensa', color: '#e37171', type: 'expense' },
-                { id: 'transporte_1782078258677', name: 'Transporte', color: '#21fffb', type: 'expense' },
-                { id: 'moradia_1782078304782', name: 'Moradia', color: '#ffff00', type: 'expense' },
-                { id: 'sa_de_1782078348051', name: 'Saúde', color: '#ff9c38', type: 'expense' },
-                { id: 'educa__o_1782078383453', name: 'Educação', color: '#0000ff', type: 'expense' },
-                { id: 'cuidados_pessoais_1782078466633', name: 'Cuidados Pessoais', color: '#701a1a', type: 'expense' },
-                { id: 'docs_juridico_1782078515639', name: 'Docs&Juridico', color: '#404040', type: 'expense' },
-                { id: 'inst__financeira_1782078568135', name: 'Inst. Financeira', color: '#574737', type: 'expense' },
-                { id: 'lazer_1782078764511', name: 'Lazer', color: '#ff00ff', type: 'expense' },
-                { id: 'servi_os_1782078825830', name: 'Serviços', color: '#5117a3', type: 'expense' },
-                { id: 'pets_1782078962737', name: 'Pets', color: '#1349a8', type: 'expense' },
-                { id: 'reserva_emerg_ncia_1782079075760', name: 'Reserva Emergência', color: '#00ff00', type: 'expense' },
-                { id: 'meta_econ_mica_1782079184672', name: 'Meta Econômica', color: '#ccff00', type: 'expense' },
-                { id: 'investimento_1782079473435', name: 'Investimento', color: '#e6dcb1', type: 'expense' },
-                { id: 'sal_rio_1782079506460', name: 'Salário', color: '#475569', type: 'income' },
-                { id: 'freelancer_1782079624742', name: 'Freelancer', color: '#b3e6e0', type: 'income' },
-                { id: 'previd_ncia_1782079696986', name: 'Previdência', color: '#c861ff', type: 'income' },
-                { id: 'restitui__o_1782079795687', name: 'Restituição', color: '#ffdd00', type: 'income' },
-                { id: 'benef_cios_1782079908274', name: 'Benefícios', color: '#82cfff', type: 'income' }
-            ],
-            cards: [
-                { id: 'card_nubank_1', name: 'Nubank Ultravioleta', brand: 'Mastercard', last4: '4532', closingDay: 20, dueDay: 27, limit: 8000, color: '#1a1a1a' },
-                { id: 'card_itau_1', name: 'Itaú Click', brand: 'Visa', last4: '8891', closingDay: 10, dueDay: 17, limit: 5000, color: '#ff6b00' }
-            ],
-            cardPurchases: [
-                { id: 1001, cardId: 'card_nubank_1', date: '2026-06-05', amount: 189.90, description: 'Amazon - Livros', category: 'educa__o_1782078383453', installments: 1, status: 'done' },
-                { id: 1002, cardId: 'card_nubank_1', date: '2026-06-08', amount: 450.00, description: 'Magazine Luiza', category: 'moradia_1782078304782', installments: 3, status: 'done' },
-                { id: 1003, cardId: 'card_nubank_1', date: '2026-06-12', amount: 89.90, description: 'Netflix', category: 'lazer_1782078764511', installments: 1, status: 'done', recurrence: { type: 'monthly' } },
-                { id: 1004, cardId: 'card_itau_1', date: '2026-06-10', amount: 230.00, description: 'Posto Shell', category: 'transporte_1782078258677', installments: 1, status: 'done' },
-                { id: 1005, cardId: 'card_itau_1', date: '2026-06-15', amount: 1200.00, description: 'iFood Premium Anual', category: 'despensa_1782078213198', installments: 12, status: 'done' },
-                { id: 1006, cardId: 'card_nubank_1', date: '2026-06-18', amount: 320.00, description: 'Farmácia', category: 'sa_de_1782078348051', installments: 1, status: 'pending' }
-            ],
+            categories: DEFAULT_CATEGORIES,
+            cards: [],
+            cardPurchases: [],
             goal: 50000,
             monthlyContribution: 1500,
             privacyOn: false,
@@ -1013,30 +1088,7 @@
                 this.init();
             }
 
-            getDefaultCategories() {
-                return [
-                    { id: 'generosidade_1782078159158', name: 'Generosidade', color: '#007306', type: 'expense' },
-                    { id: 'despensa_1782078213198', name: 'Despensa', color: '#e37171', type: 'expense' },
-                    { id: 'transporte_1782078258677', name: 'Transporte', color: '#21fffb', type: 'expense' },
-                    { id: 'moradia_1782078304782', name: 'Moradia', color: '#ffff00', type: 'expense' },
-                    { id: 'sa_de_1782078348051', name: 'Saúde', color: '#ff9c38', type: 'expense' },
-                    { id: 'educa__o_1782078383453', name: 'Educação', color: '#0000ff', type: 'expense' },
-                    { id: 'cuidados_pessoais_1782078466633', name: 'Cuidados Pessoais', color: '#701a1a', type: 'expense' },
-                    { id: 'docs_juridico_1782078515639', name: 'Docs&Juridico', color: '#404040', type: 'expense' },
-                    { id: 'inst__financeira_1782078568135', name: 'Inst. Financeira', color: '#574737', type: 'expense' },
-                    { id: 'lazer_1782078764511', name: 'Lazer', color: '#ff00ff', type: 'expense' },
-                    { id: 'servi_os_1782078825830', name: 'Serviços', color: '#5117a3', type: 'expense' },
-                    { id: 'pets_1782078962737', name: 'Pets', color: '#1349a8', type: 'expense' },
-                    { id: 'reserva_emerg_ncia_1782079075760', name: 'Reserva Emergência', color: '#00ff00', type: 'expense' },
-                    { id: 'meta_econ_mica_1782079184672', name: 'Meta Econômica', color: '#ccff00', type: 'expense' },
-                    { id: 'investimento_1782079473435', name: 'Investimento', color: '#e6dcb1', type: 'expense' },
-                    { id: 'sal_rio_1782079506460', name: 'Salário', color: '#475569', type: 'income' },
-                    { id: 'freelancer_1782079624742', name: 'Freelancer', color: '#b3e6e0', type: 'income' },
-                    { id: 'previd_ncia_1782079696986', name: 'Previdência', color: '#c861ff', type: 'income' },
-                    { id: 'restitui__o_1782079795687', name: 'Restituição', color: '#ffdd00', type: 'income' },
-                    { id: 'benef_cios_1782079908274', name: 'Benefícios', color: '#82cfff', type: 'income' }
-                ];
-            }
+            getDefaultCategories() { return JSON.parse(JSON.stringify(DEFAULT_CATEGORIES)); }
 
             init() {
                 this.applyTheme();
@@ -1049,6 +1101,7 @@
                 this.setupGoalForm();
                 this.render();
                 this.initCharts();
+                this.updateAlertBadge();
             }
 
             setupEventListeners() {
@@ -1060,7 +1113,7 @@
                 document.getElementById('categoryFilter').addEventListener('change', () => this.render());
                 document.getElementById('typeFilter').addEventListener('change', () => this.render());
                 document.getElementById('statusFilter').addEventListener('change', () => this.render());
-                ['newTransactionModal', 'editModal', 'categoryModal', 'exportModal', 'goalModal', 'importCsvModal', 'importBackupModal', 'clearDataModal', 'creditCardsModal', 'newCardModal', 'invoiceModal', 'newPurchaseModal'].forEach(id => {
+                ['newTransactionModal', 'editModal', 'categoryModal', 'exportModal', 'goalModal', 'importCsvModal', 'importBackupModal', 'clearDataModal', 'creditCardsModal', 'newCardModal', 'invoiceModal', 'newPurchaseModal', 'billsModal'].forEach(id => {
                     const el = document.getElementById(id);
                     if (el) el.addEventListener('click', e => { if(e.target.id === id) e.target.classList.remove('active'); });
                 });
@@ -1096,6 +1149,7 @@
                 return this.transactions.filter(t => { const d = new Date(t.date + 'T00:00:00'); return d.getMonth() === m && d.getFullYear() === y; });
             }
 
+            // ===== CATEGORIAS: APENAS NOME, SEM TIPO ENTRE PARÊNTESES =====
             populateCategorySelects() {
                 const selects = [document.getElementById('category'), document.getElementById('editCategory'), document.getElementById('categoryFilter'), document.getElementById('purchaseCategory')];
                 selects.forEach((sel, i) => {
@@ -1106,7 +1160,9 @@
                     this.categories.forEach(cat => {
                         const opt = document.createElement('option');
                         opt.value = cat.id;
-                        opt.textContent = `${cat.name} (${cat.type === 'income' ? 'Receita' : 'Despesa'})`;
+                        // ✅ MUDANÇA: apenas o nome, sem (Despesa)/(Receita)
+                        opt.textContent = cat.name;
+                        // Mantém dataset.type para o filtro funcionar internamente
                         opt.dataset.type = cat.type;
                         sel.appendChild(opt);
                     });
@@ -1207,7 +1263,10 @@
                     <div style="display:flex; align-items:center; justify-content:space-between; padding:10px; background:var(--input-bg); border-radius:12px;">
                         <div style="display:flex; align-items:center; gap:10px;">
                             <span style="width:20px; height:20px; border-radius:50%; background:${cat.color}; display:inline-block;"></span>
-                            <div><div style="font-weight:500;">${this.escapeHtml(cat.name)}</div><div style="font-size:0.75rem; color:var(--text-secondary);">${cat.type === 'income' ? '💰 Receita' : '💸 Despesa'}</div></div>
+                            <div>
+                                <div style="font-weight:500;">${this.escapeHtml(cat.name)}</div>
+                                <div style="font-size:0.75rem; color:var(--text-secondary);">${cat.type === 'income' ? '💰 Receita' : '💸 Despesa'}</div>
+                            </div>
                         </div>
                         <button class="btn btn-danger btn-small" onclick="smartwallet.deleteCategory('${cat.id}')"><svg class="icon icon-sm" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
                     </div>
@@ -1245,6 +1304,7 @@
                     this.showToast('Transação adicionada!');
                 }
                 this.saveTransactions(); this.render(); this.updateCharts();
+                this.updateAlertBadge();
                 closeNewTransactionModal(); this.clearForm();
             }
 
@@ -1259,11 +1319,19 @@
                 document.getElementById('newPurchaseModal').classList.add('active');
             }
 
+            // ===== RECORRÊNCIA: SUPORTE A ANUAL =====
             createRecurring(base, type, count) {
                 const start = new Date(base.date + 'T00:00:00');
                 for (let i = 0; i < count; i++) {
                     const t = { ...base, id: Date.now() + i };
-                    const d = new Date(start); d.setMonth(start.getMonth() + i);
+                    const d = new Date(start);
+                    
+                    if (type === 'yearly') {
+                        d.setFullYear(start.getFullYear() + i);
+                    } else {
+                        d.setMonth(start.getMonth() + i);
+                    }
+                    
                     t.date = d.toISOString().split('T')[0];
                     t.recurrence = { type: type };
                     if (type === 'installment') {
@@ -1279,6 +1347,7 @@
                 if (confirm('Excluir esta transação?')) {
                     this.transactions = this.transactions.filter(t => t.id !== id);
                     this.saveTransactions(); this.render(); this.updateCharts();
+                    this.updateAlertBadge();
                     this.showToast('Excluída!');
                     closeEditModal();
                 }
@@ -1321,10 +1390,6 @@
                 const isRecurring = document.getElementById('editRecurring').checked;
                 const paymentMethod = document.getElementById('editPaymentMethod').value;
                 
-                if (paymentMethod.startsWith('card:') && !this.transactions[idx].paymentMethod?.startsWith('card:')) {
-                    if (!confirm('Ao mudar para cartão, esta transação será convertida em compra no cartão. Continuar?')) return;
-                }
-                
                 const updated = {
                     ...this.transactions[idx],
                     date: document.getElementById('editDate').value,
@@ -1350,6 +1415,7 @@
                 
                 this.transactions[idx] = updated;
                 this.saveTransactions(); this.render(); this.updateCharts();
+                this.updateAlertBadge();
                 closeEditModal(); this.showToast('Atualizada!');
             }
 
@@ -1414,12 +1480,15 @@
             formatDate(d) { return new Date(d + 'T00:00:00').toLocaleDateString('pt-BR'); }
             escapeHtml(t) { const d = document.createElement('div'); d.textContent = t || ''; return d.innerHTML; }
 
+            // ===== BADGE DE RECORRÊNCIA COM SUPORTE A ANUAL =====
             getRecurrenceDisplay(t) {
                 if (!t.recurrence) return '';
                 if (t.recurrence.type === 'installment') {
                     return `<span class="recurrence-badge"><svg class="icon icon-sm" viewBox="0 0 24 24" style="width:12px;height:12px;"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg> ${t.recurrence.current}/${t.recurrence.total}</span>`;
                 } else if (t.recurrence.type === 'monthly') {
                     return `<span class="recurrence-badge"><svg class="icon icon-sm" viewBox="0 0 24 24" style="width:12px;height:12px;"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> Mensal</span>`;
+                } else if (t.recurrence.type === 'yearly') {
+                    return `<span class="recurrence-badge"><svg class="icon icon-sm" viewBox="0 0 24 24" style="width:12px;height:12px;"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><text x="12" y="18" text-anchor="middle" font-size="7" fill="currentColor" stroke="none" font-weight="bold">12</text></svg> Anual</span>`;
                 }
                 return '';
             }
@@ -1530,6 +1599,7 @@
                     if (t.recurrence) {
                         if (t.recurrence.type === 'installment') recurrence = `${t.recurrence.current}/${t.recurrence.total}`;
                         else if (t.recurrence.type === 'monthly') recurrence = 'Mensal';
+                        else if (t.recurrence.type === 'yearly') recurrence = 'Anual';
                     }
                     csv += `${t.date};"${(t.description||'').replace(/"/g,'""')}";"${c.name}";${t.amount>0?'Receita':'Despesa'};"${payment}";${status};${recurrence};${Math.abs(t.amount).toFixed(2)}\n`;
                 });
@@ -1594,6 +1664,7 @@
                 this.saveTransactions();
                 this.render();
                 this.updateCharts();
+                this.updateAlertBadge();
                 closeImportCsvModal();
                 this.showToast(`${imported} transações importadas!${skipped > 0 ? ` (${skipped} ignoradas)` : ''}`);
                 this.pendingCsvData = null;
@@ -1620,7 +1691,7 @@
 
             exportBackup() {
                 const backup = {
-                    version: '2.0',
+                    version: '2.1',
                     exportDate: new Date().toISOString(),
                     appName: 'Smart Wallet Brasil',
                     transactions: this.transactions,
@@ -1669,6 +1740,7 @@
                     document.getElementById('monthlyContribution').value = this.monthlyContribution || '';
                     this.render();
                     this.updateCharts();
+                    this.updateAlertBadge();
                     closeImportBackupModal();
                     this.showToast('Backup restaurado com sucesso!');
                     this.pendingBackupData = null;
@@ -1699,8 +1771,9 @@
                 document.getElementById('monthlyContribution').value = this.monthlyContribution;
                 this.render();
                 this.updateCharts();
+                this.updateAlertBadge();
                 document.getElementById('mainMenu').classList.remove('active');
-                this.showToast(`🧪 Dados de teste carregados! ${this.transactions.length} transações + ${this.cards.length} cartões.`);
+                this.showToast(`🧪 Dados de teste carregados! ${this.transactions.length} transações.`);
             }
 
             clearAllData() {
@@ -1722,8 +1795,138 @@
                 document.getElementById('monthlyContribution').value = '';
                 this.render();
                 this.updateCharts();
+                this.updateAlertBadge();
                 closeClearDataModal();
                 this.showToast('🗑️ Todos os dados foram apagados!');
+            }
+
+            // ===== SISTEMA DE ALERTAS DE CONTAS A VENCER =====
+            getUpcomingBills() {
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                const in3Days = new Date(today);
+                in3Days.setDate(in3Days.getDate() + 3);
+                
+                // Busca transações pendentes (statusOk=false) de despesa (amount<0) 
+                // que vencem entre hoje e 3 dias no futuro (inclusive já vencidas)
+                return this.transactions.filter(t => {
+                    if (t.statusOk) return false; // já paga
+                    if (t.amount >= 0) return false; // só despesas
+                    const tDate = new Date(t.date + 'T00:00:00');
+                    return tDate <= in3Days;
+                }).sort((a, b) => new Date(a.date) - new Date(b.date));
+            }
+
+            updateAlertBadge() {
+                const bills = this.getUpcomingBills();
+                const badge = document.getElementById('alertBadge');
+                const btn = document.getElementById('alertBtn');
+                
+                if (bills.length > 0) {
+                    badge.textContent = bills.length;
+                    badge.classList.add('visible');
+                    btn.classList.add('has-alerts');
+                } else {
+                    badge.classList.remove('visible');
+                    btn.classList.remove('has-alerts');
+                }
+            }
+
+            renderBillsModal() {
+                const bills = this.getUpcomingBills();
+                const container = document.getElementById('billsList');
+                
+                if (bills.length === 0) {
+                    container.innerHTML = `
+                        <div style="text-align:center; padding:40px 20px; color:var(--text-secondary);">
+                            <div style="font-size:3rem; margin-bottom:12px;">✅</div>
+                            <h3 style="margin-bottom:8px;">Nenhuma conta pendente!</h3>
+                            <p>Todas as contas estão em dia.</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                
+                const total = bills.reduce((s, b) => s + Math.abs(b.amount), 0);
+                
+                container.innerHTML = `
+                    <div class="invoice-summary" style="margin-bottom:16px;">
+                        <div class="invoice-row">
+                            <span class="invoice-label">Total de contas</span>
+                            <span class="invoice-value">${bills.length}</span>
+                        </div>
+                        <div class="invoice-row total">
+                            <span>Total a pagar</span>
+                            <span style="color:var(--danger-color);">${this.formatCurrency(total)}</span>
+                        </div>
+                    </div>
+                    ${bills.map(bill => {
+                        const cat = this.getCategoryById(bill.category);
+                        const billDate = new Date(bill.date + 'T00:00:00');
+                        const diffTime = billDate.getTime() - today.getTime();
+                        const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+                        
+                        let daysClass = 'warning';
+                        let daysText = '';
+                        let itemClass = '';
+                        
+                        if (diffDays < 0) {
+                            daysClass = 'overdue';
+                            daysText = `${Math.abs(diffDays)}d atrasada`;
+                            itemClass = 'overdue';
+                        } else if (diffDays === 0) {
+                            daysClass = 'urgent';
+                            daysText = 'Vence hoje';
+                            itemClass = 'urgent';
+                        } else if (diffDays === 1) {
+                            daysClass = 'urgent';
+                            daysText = 'Vence amanhã';
+                            itemClass = 'urgent';
+                        } else {
+                            daysClass = 'warning';
+                            daysText = `Em ${diffDays} dias`;
+                        }
+                        
+                        return `
+                            <div class="bill-item ${itemClass}">
+                                <div class="bill-info">
+                                    <div class="bill-desc">
+                                        ${this.escapeHtml(bill.description)}
+                                        <span class="bill-days ${daysClass}">${daysText}</span>
+                                    </div>
+                                    <div class="bill-meta">
+                                        <span>📅 ${this.formatDate(bill.date)}</span>
+                                        <span style="color:${cat.color};">● ${this.escapeHtml(cat.name)}</span>
+                                        ${bill.paymentMethod ? `<span>${this.getPaymentMethodName(bill.paymentMethod)}</span>` : ''}
+                                    </div>
+                                </div>
+                                <div class="bill-amount">${this.formatCurrency(Math.abs(bill.amount))}</div>
+                                <div class="bill-actions">
+                                    <button class="btn btn-success btn-small" onclick="smartwallet.markBillAsPaid(${bill.id})" title="Marcar como paga">
+                                        <svg class="icon icon-sm" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                                    </button>
+                                    <button class="btn btn-secondary btn-small" onclick="smartwallet.editTransaction(${bill.id}); closeBillsModal();" title="Editar">
+                                        <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                `;
+            }
+
+            markBillAsPaid(id) {
+                const idx = this.transactions.findIndex(t => t.id === id);
+                if (idx === -1) return;
+                this.transactions[idx].statusOk = true;
+                this.saveTransactions();
+                this.render();
+                this.updateAlertBadge();
+                this.renderBillsModal();
+                this.showToast('✓ Conta marcada como paga!');
             }
 
             saveCard() {
@@ -1757,7 +1960,7 @@
             deleteCard(id) {
                 const purchases = this.cardPurchases.filter(p => p.cardId === id);
                 if (purchases.length > 0) {
-                    if (!confirm(`Este cartão tem ${purchases.length} compra(s). Deseja remover mesmo assim? As compras também serão excluídas.`)) return;
+                    if (!confirm(`Este cartão tem ${purchases.length} compra(s). Deseja remover mesmo assim?`)) return;
                     this.cardPurchases = this.cardPurchases.filter(p => p.cardId !== id);
                     this.saveCardPurchases();
                 }
@@ -1823,7 +2026,6 @@
                     const installmentAmount = this.getInstallmentAmount(p);
                     
                     if (p.installments && p.installments > 1) {
-                        const monthsDiff = (closingDate.getFullYear() - pDate.getFullYear()) * 12 + (closingDate.getMonth() - pDate.getMonth());
                         for (let i = 0; i < p.installments; i++) {
                             const installmentDate = new Date(pDate);
                             installmentDate.setMonth(installmentDate.getMonth() + i);
@@ -2050,7 +2252,7 @@
                 
                 if (total <= 0) return this.showToast('Fatura sem valor a pagar');
                 
-                if (!confirm(`Criar transação de pagamento da fatura no valor de ${this.formatCurrency(total)}?\n\nA transação será criada como despesa na categoria "Inst. Financeira" com pagamento via PIX.`)) return;
+                if (!confirm(`Criar transação de pagamento da fatura no valor de ${this.formatCurrency(total)}?`)) return;
                 
                 this.transactions.push({
                     id: Date.now(),
@@ -2065,6 +2267,7 @@
                 this.saveTransactions();
                 this.render();
                 this.updateCharts();
+                this.updateAlertBadge();
                 this.showToast('Transação de pagamento criada!');
             }
 
@@ -2225,11 +2428,6 @@
         function selectEditType(t) { smartwallet.currentEditType=t; document.querySelectorAll('#editForm .type-btn').forEach(b=>b.classList.toggle('active', b.dataset.type===t)); smartwallet.filterCategoriesByType('editCategory', t); }
         function selectNewCategoryType(t) { smartwallet.newCategoryType=t; document.querySelectorAll('#categoryModal .type-btn').forEach(b=>b.classList.toggle('active', b.dataset.type===t)); }
         
-        function handlePaymentMethodChange(selectId) {
-            const sel = document.getElementById(selectId);
-            if (!sel) return;
-        }
-        
         function openNewTransactionModal() { smartwallet.setDefaultDate(); smartwallet.filterCategoriesByType('category', smartwallet.currentTransactionType); document.getElementById('newTransactionModal').classList.add('active'); }
         function closeNewTransactionModal() { document.getElementById('newTransactionModal').classList.remove('active'); smartwallet.clearForm(); }
         function closeEditModal() { document.getElementById('editModal').classList.remove('active'); smartwallet.currentEditId = null; }
@@ -2331,9 +2529,7 @@
         }
         function closeNewCardModal() { document.getElementById('newCardModal').classList.remove('active'); }
 
-        function openInvoiceModal(cardId) {
-            smartwallet.openInvoice(cardId);
-        }
+        function openInvoiceModal(cardId) { smartwallet.openInvoice(cardId); }
         function closeInvoiceModal() { document.getElementById('invoiceModal').classList.remove('active'); }
 
         function openNewPurchaseModal(cardId) {
@@ -2345,6 +2541,13 @@
             document.getElementById('newPurchaseModal').classList.add('active');
         }
         function closeNewPurchaseModal() { document.getElementById('newPurchaseModal').classList.remove('active'); }
+
+        // ===== FUNÇÕES DO MODAL DE CONTAS A VENCER =====
+        function openBillsModal() {
+            smartwallet.renderBillsModal();
+            document.getElementById('billsModal').classList.add('active');
+        }
+        function closeBillsModal() { document.getElementById('billsModal').classList.remove('active'); }
 
         function togglePrivacy() {
             smartwallet.privacyOn = !smartwallet.privacyOn;
