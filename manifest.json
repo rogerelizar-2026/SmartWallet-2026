@@ -2,15 +2,15 @@
   "name": "Smart Wallet",
   "short_name": "SmartWallet",
   "description": "Controle financeiro pessoal inteligente - Idealizado por RogerElizar™",
-  "start_url": "./SmartWallet-2026/index.html",
-  "scope": "./",
+  "start_url": "/SmartWallet-2026/",
+  "scope": "/SmartWallet-2026/",
   "display": "standalone",
-  "orientation": "portrait",
+  "orientation": "portrait-primary",
   "background_color": "#0a0e1a",
   "theme_color": "#6366f1",
   "lang": "pt-BR",
   "dir": "ltr",
-  "id": "smart-wallet-v1.0",
+  "id": "smart-wallet-2026-v1.0",
   "categories": ["finance", "productivity", "utilities"],
   "icons": [
     {
@@ -52,8 +52,20 @@
     {
       "name": "Nova Transação",
       "short_name": "Nova",
-      "description": "Adicionar nova transação",
-      "url": "./SmartWallet-2026/index.html?action=new",
+      "description": "Adicionar nova transação financeira",
+      "url": "/SmartWallet-2026/?action=new",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Cartões de Crédito",
+      "short_name": "Cartões",
+      "description": "Gerenciar cartões e faturas",
+      "url": "/SmartWallet-2026/?action=cards",
       "icons": [
         {
           "src": "icon-192.png",
@@ -61,5 +73,13 @@
         }
       ]
     }
-  ]
+  ],
+  "share_target": {
+    "action": "/SmartWallet-2026/?share",
+    "method": "GET",
+    "params": {
+      "title": "descricao",
+      "text": "valor"
+    }
+  }
 }
