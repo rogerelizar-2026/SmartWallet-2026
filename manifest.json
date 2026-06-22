@@ -9,48 +9,57 @@
   "background_color": "#0a0e1a",
   "theme_color": "#6366f1",
   "lang": "pt-BR",
-  "categories": ["finance", "productivity"],
-"icons": [
-  {
-    "src": "icon-192.png",
-    "sizes": "192x192",
-    "type": "image/png",
-    "purpose": "any maskable"
-  },
-  {
-    "src": "icon-512.png",
-    "sizes": "512x512",
-    "type": "image/png",
-    "purpose": "any maskable"
-  },
-  {
+  "dir": "ltr",
+  "id": "smart-wallet-v1.0",
+  "categories": ["finance", "productivity", "utilities"],
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
       "src": "favicon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "purpose": "any"
     }
   ],
-"screenshots": [
-  {
-    "src": "screenshot-desktop.png",
-    "sizes": "1280x720",
-    "type": "image/png",
-    "form_factor": "wide",
-    "label": "Tela principal - Dashboard financeiro"
-  },
-  {
-    "src": "screenshot-mobile.png",
-    "sizes": "750x1334",
-    "type": "image/png",
-    "form_factor": "narrow",
-    "label": "Versão mobile - Controle de transações"
-  }  "shortcuts": [
+  "screenshots": [
+    {
+      "src": "screenshot-desktop.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Tela principal - Dashboard financeiro"
+    },
+    {
+      "src": "screenshot-mobile.png",
+      "sizes": "750x1334",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Versão mobile - Controle de transações"
+    }
+  ],
+  "shortcuts": [
     {
       "name": "Nova Transação",
       "short_name": "Nova",
       "description": "Adicionar nova transação",
-      "url": "./index.html?action=new",
-      "icons": [{ "src": "favicon.svg", "sizes": "any" }]
+      "url": "./SmartWallet-2026/index.html?action=new",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
     }
   ]
 }
