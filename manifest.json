@@ -1,5 +1,5 @@
 {
-  "name": "Smart Wallet Brasil",
+  "name": "Smart Wallet",
   "short_name": "SmartWallet",
   "description": "Controle financeiro pessoal inteligente - Idealizado por RogerElizar™",
   "start_url": "./index.html",
@@ -10,16 +10,41 @@
   "theme_color": "#6366f1",
   "lang": "pt-BR",
   "categories": ["finance", "productivity"],
-  "icons": [
-    {
+"icons": [
+  {
+    "src": "icon-192.png",
+    "sizes": "192x192",
+    "type": "image/png",
+    "purpose": "any maskable"
+  },
+  {
+    "src": "icon-512.png",
+    "sizes": "512x512",
+    "type": "image/png",
+    "purpose": "any maskable"
+  },
+  {
       "src": "favicon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"
     }
   ],
-  "screenshots": [],
-  "shortcuts": [
+"screenshots": [
+  {
+    "src": "screenshot-desktop.png",
+    "sizes": "1280x720",
+    "type": "image/png",
+    "form_factor": "wide",
+    "label": "Tela principal - Dashboard financeiro"
+  },
+  {
+    "src": "screenshot-mobile.png",
+    "sizes": "750x1334",
+    "type": "image/png",
+    "form_factor": "narrow",
+    "label": "Versão mobile - Controle de transações"
+  }  "shortcuts": [
     {
       "name": "Nova Transação",
       "short_name": "Nova",
