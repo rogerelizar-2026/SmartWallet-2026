@@ -1,4 +1,4 @@
-# 💰 Smart Wallet Brasil
+# 💰 Smart Wallet
 
 Controle financeiro pessoal inteligente como Progressive Web App (PWA).
 
@@ -9,7 +9,7 @@ Controle financeiro pessoal inteligente como Progressive Web App (PWA).
 ### Passo 1: Criar repositório
 1. Acesse [github.com](https://github.com) e faça login
 2. Clique em **"New repository"**
-3. Nome: `smart-wallet-brasil` (ou outro de sua preferência)
+3. Nome: `smart-wallet` (ou outro de sua preferência)
 4. Marque como **Public** (obrigatório para GitHub Pages gratuito)
 5. Clique em **"Create repository"**
 
@@ -35,7 +35,7 @@ Controle financeiro pessoal inteligente como Progressive Web App (PWA).
 ### Passo 4: Acessar seu WebApp
 Sua aplicação estará disponível em:
 ```
-https://SEU-USUARIO.github.io/smart-wallet-brasil/
+https://rogerelizar.github.io/SmartWallet-2026/
 ```
 
 ## 📱 Instalar como App
