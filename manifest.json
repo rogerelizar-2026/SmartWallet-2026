@@ -1,5 +1,5 @@
 {
-  "name": "Smart Wallet",
+  "name": "Smart Wallet Brasil",
   "short_name": "SmartWallet",
   "description": "Controle financeiro pessoal inteligente - Idealizado por RogerElizar™",
   "start_url": "/SmartWallet-2026/",
@@ -12,6 +12,7 @@
   "dir": "ltr",
   "id": "smart-wallet-2026-v1.0",
   "categories": ["finance", "productivity", "utilities"],
+  "prefer_related_applications": false,
   "icons": [
     {
       "src": "icon-192.png",
@@ -38,14 +39,16 @@
       "sizes": "1280x720",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "Tela principal - Dashboard financeiro"
+      "label": "Tela principal - Dashboard financeiro",
+      "purpose": "screenshot"
     },
     {
       "src": "screenshot-mobile.png",
       "sizes": "750x1334",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "Versão mobile - Controle de transações"
+      "label": "Versão mobile - Controle de transações",
+      "purpose": "screenshot"
     }
   ],
   "shortcuts": [
@@ -73,13 +76,5 @@
         }
       ]
     }
-  ],
-  "share_target": {
-    "action": "/SmartWallet-2026/?share",
-    "method": "GET",
-    "params": {
-      "title": "descricao",
-      "text": "valor"
-    }
-  }
+  ]
 }
