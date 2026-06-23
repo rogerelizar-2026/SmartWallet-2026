@@ -1682,18 +1682,39 @@ setupEventListeners() {
             }
 
             updateChartsTheme() {
-                const colors = this.getChartColors();
-                Object.values(this.charts).forEach(chart => {
-                    if (chart.options.scales) {
-                        chart.options.scales.y.ticks.color = colors.textSecondary;
-                        chart.options.scales.y.grid.color = colors.grid;
-                        chart.options.scales.x.ticks.color = colors.textSecondary;
-                        chart.options.scales.x.grid.color = colors.grid;
-                    }
-                    if (chart.options.plugins.legend) chart.options.plugins.legend.labels.color = colors.text;
-                    chart.update();
-                });
+    const colors = this.getChartColors();
+    Object.values(this.charts).forEach(chart => {
+        // Verificação robusta para evitar erros
+        if (!chart || !chart.options) return;
+        
+        try {
+            // Atualiza eixos Y (se existir - pie chart não tem)
+            if (chart.options.scales?.y?.ticks) {
+                chart.options.scales.y.ticks.color = colors.textSecondary;
             }
+            if (chart.options.scales?.y?.grid) {
+                chart.options.scales.y.grid.color = colors.grid;
+            }
+            
+            // Atualiza eixos X (se existir)
+            if (chart.options.scales?.x?.ticks) {
+                chart.options.scales.x.ticks.color = colors.textSecondary;
+            }
+            if (chart.options.scales?.x?.grid) {
+                chart.options.scales.x.grid.color = colors.grid;
+            }
+            
+            // Atualiza legenda
+            if (chart.options.plugins?.legend?.labels) {
+                chart.options.plugins.legend.labels.color = colors.text;
+            }
+            
+            chart.update('none'); // 'none' = sem animação (mais rápido)
+        } catch (e) {
+            console.warn('⚠️ Erro ao atualizar tema do gráfico:', e);
+        }
+    });
+}
 
             updateCharts() {
                 const lLabels=[], lInc=[], lExp=[];
