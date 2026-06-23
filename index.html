@@ -583,9 +583,426 @@
         <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
     </button>
 
-    <!-- Modais (mantidos iguais ao código anterior) -->
-    <!-- [Manter todos os modais do código anterior aqui] -->
+    <!-- Modal Nova Transação -->
+    <div class="modal" id="newTransactionModal" role="dialog" aria-modal="true" aria-labelledby="newTransTitle">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="newTransTitle">Nova Transação</h2>
+                <button class="modal-close" onclick="closeNewTransactionModal()" aria-label="Fechar modal">
+                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <form id="transactionForm">
+                <div class="form-group"><label>Tipo</label>
+                    <div class="type-selector">
+                        <button type="button" class="type-btn active" data-type="expense" onclick="selectTransactionType('expense')">
+                            <svg class="icon icon-sm" viewBox="0 0 24 24" style="margin-right:6px;" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+                            Despesa
+                        </button>
+                        <button type="button" class="type-btn" data-type="income" onclick="selectTransactionType('income')">
+                            <svg class="icon icon-sm" viewBox="0 0 24 24" style="margin-right:6px;" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>
+                            Receita
+                        </button>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label for="date">Data</label><input type="date" id="date" required></div>
+                    <div class="form-group"><label for="amount">Valor (R$)</label><input type="number" id="amount" step="0.01" min="0.01" placeholder="0,00" required></div>
+                </div>
+                <div class="form-group"><label for="category">Categoria</label><select id="category" required><option value="">Selecione...</option></select>
+                    <div class="category-manager"><button type="button" class="category-manager-btn" onclick="openCategoryManager()">⚙️ Gerenciar categorias</button></div>
+                </div>
+                <div class="form-group">
+                    <label for="paymentMethod">💳 Efetuado com</label>
+                    <select id="paymentMethod" required>
+                        <option value="">Selecione a forma de pagamento...</option>
+                    </select>
+                </div>
+                <div class="form-group"><label for="description">Descrição</label><textarea id="description" rows="2" placeholder="Descrição da transação"></textarea></div>
+                <div class="form-group"><div class="checkbox-group"><input type="checkbox" id="statusOk"><label for="statusOk">✓ Status OK (Concluído)</label></div></div>
+                <div class="form-group"><div class="checkbox-group"><input type="checkbox" id="recurring"><label for="recurring"> Transação recorrente/parcelada</label></div></div>
+                <div class="form-group" id="recurringOptions" style="display: none;">
+                    <div class="form-row">
+                        <div>
+                            <label for="recurrenceType">Tipo</label>
+                            <select id="recurrenceType">
+                                <option value="monthly">Mensal</option>
+                                <option value="yearly">Anual</option>
+                                <option value="installment">Parcelado</option>
+                            </select>
+                        </div>
+                        <div><label for="recurrenceCount">Parcelas/Ocorrências</label><input type="number" id="recurrenceCount" min="2" max="360" value="2"></div>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button type="submit" class="btn btn-primary"><svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Adicionar</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeNewTransactionModal()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
+    <!-- Modal Edição -->
+    <div class="modal" id="editModal" role="dialog" aria-modal="true" aria-labelledby="editTitle">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="editTitle">Editar Transação</h2>
+                <button class="modal-close" onclick="closeEditModal()" aria-label="Fechar modal">
+                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <form id="editForm">
+                <input type="hidden" id="editId">
+                <div class="form-group"><label>Tipo</label>
+                    <div class="type-selector">
+                        <button type="button" class="type-btn active" data-type="expense" onclick="selectEditType('expense')">
+                            <svg class="icon icon-sm" viewBox="0 0 24 24" style="margin-right:6px;" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+                            Despesa
+                        </button>
+                        <button type="button" class="type-btn" data-type="income" onclick="selectEditType('income')">
+                            <svg class="icon icon-sm" viewBox="0 0 24 24" style="margin-right:6px;" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>
+                            Receita
+                        </button>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label for="editDate">Data</label><input type="date" id="editDate" required></div>
+                    <div class="form-group"><label for="editAmount">Valor (R$)</label><input type="number" id="editAmount" step="0.01" min="0.01" required></div>
+                </div>
+                <div class="form-group"><label for="editCategory">Categoria</label><select id="editCategory" required></select></div>
+                <div class="form-group">
+                    <label for="editPaymentMethod">💳 Efetuado com</label>
+                    <select id="editPaymentMethod" required>
+                        <option value="">Selecione a forma de pagamento...</option>
+                    </select>
+                </div>
+                <div class="form-group"><label for="editDescription">Descrição</label><textarea id="editDescription" rows="2"></textarea></div>
+                <div class="form-group"><div class="checkbox-group"><input type="checkbox" id="editStatusOk"><label for="editStatusOk">✓ Status OK (Concluído)</label></div></div>
+                <div class="form-group"><div class="checkbox-group"><input type="checkbox" id="editRecurring"><label for="editRecurring"> Transação recorrente/parcelada</label></div></div>
+                <div class="form-group" id="editRecurringOptions" style="display: none;">
+                    <div class="form-row">
+                        <div>
+                            <label for="editRecurrenceType">Tipo</label>
+                            <select id="editRecurrenceType">
+                                <option value="monthly">Mensal</option>
+                                <option value="yearly">Anual</option>
+                                <option value="installment">Parcelado</option>
+                            </select>
+                        </div>
+                        <div><label for="editRecurrenceCount">Parcelas/Ocorrências</label><input type="number" id="editRecurrenceCount" min="2" max="360" value="2"></div>
+                    </div>
+                    <p class="text-xs text-secondary" style="margin-top: 8px;">⚠️ Alterar recorrência afetará apenas esta transação específica.</p>
+                </div>
+                <div class="action-buttons">
+                    <button type="submit" class="btn btn-primary"><svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Salvar</button>
+                    <button type="button" class="btn btn-danger" onclick="smartwallet.deleteFromEdit()"><svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> Excluir</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Categorias -->
+    <div class="modal" id="categoryModal" role="dialog" aria-modal="true" aria-labelledby="catTitle">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="catTitle">Gerenciar Categorias</h2>
+                <button class="modal-close" onclick="closeCategoryManager()" aria-label="Fechar modal">
+                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <div class="form-group"><label for="newCategoryName">Nova categoria</label>
+                <div class="flex-gap-10 mb-10">
+                    <input type="text" id="newCategoryName" placeholder="Nome da categoria" style="flex: 1;">
+                    <input type="color" id="newCategoryColor" value="#6366f1" style="width: 54px; padding: 4px; cursor: pointer; border-radius: 12px;">
+                </div>
+                <div class="type-selector">
+                    <button type="button" class="type-btn active" data-type="expense" onclick="selectNewCategoryType('expense')">
+                        <svg class="icon icon-sm" viewBox="0 0 24 24" style="margin-right:6px;" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+                        Despesa
+                    </button>
+                    <button type="button" class="type-btn" data-type="income" onclick="selectNewCategoryType('income')">
+                        <svg class="icon icon-sm" viewBox="0 0 24 24" style="margin-right:6px;" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>
+                        Receita
+                    </button>
+                </div>
+                <button type="button" class="btn btn-primary btn-small" style="width: 100%;" onclick="smartwallet.addCategory()"><svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Adicionar categoria</button>
+            </div>
+            <div style="margin-top: 24px;"><label class="font-semibold mb-16" style="display: block;">Categorias existentes</label><div id="categoryList" style="display: flex; flex-direction: column; gap: 10px; max-height: 320px; overflow-y: auto;"></div></div>
+        </div>
+    </div>
+
+    <!-- Modal Exportar Extrato -->
+    <div class="modal" id="exportModal" role="dialog" aria-modal="true" aria-labelledby="exportTitle">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="exportTitle">Exportar Extrato</h2>
+                <button class="modal-close" onclick="closeExportModal()" aria-label="Fechar modal">
+                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <p class="mb-20 text-secondary">Escolha o formato para as transações do mês atual:</p>
+            <div class="action-buttons" style="flex-direction: column; gap: 12px;">
+                <button class="btn btn-primary" onclick="smartwallet.exportCSV()"><svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Baixar CSV</button>
+                <button class="btn btn-secondary" onclick="smartwallet.printPDF()"><svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Imprimir / Salvar PDF</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Meta -->
+    <div class="modal" id="goalModal" role="dialog" aria-modal="true" aria-labelledby="goalTitle">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="goalTitle">Meta de Reserva</h2>
+                <button class="modal-close" onclick="closeGoalModal()" aria-label="Fechar modal">
+                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <form id="goalForm">
+                <div class="form-group"><label for="goalAmount">Meta de Reserva (R$)</label><input type="number" id="goalAmount" step="0.01" min="0" placeholder="Ex: 10000.00" required></div>
+                <div class="form-group"><label for="monthlyContribution">Aporte Mensal (R$)</label><input type="number" id="monthlyContribution" step="0.01" min="0" placeholder="Ex: 500.00" required></div>
+                <div id="goalResult" style="background: var(--input-bg); padding: 16px; border-radius: 14px; margin: 16px 0; display: none;"></div>
+                <p class="text-xs text-secondary mb-16">⚠️ O cálculo considera o saldo total acumulado e a constância dos aportes.</p>
+                <div class="action-buttons">
+                    <button type="submit" class="btn btn-primary"><svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Calcular & Salvar</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeGoalModal()">Fechar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Importar CSV -->
+    <div class="modal" id="importCsvModal" role="dialog" aria-modal="true" aria-labelledby="importCsvTitle">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="importCsvTitle">Importar Extrato CSV</h2>
+                <button class="modal-close" onclick="closeImportCsvModal()" aria-label="Fechar modal">
+                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <p class="text-secondary text-xs mb-16">Importe transações de um arquivo CSV no formato exportado pelo sistema (separador: <strong>;</strong>).</p>
+            <div style="background: var(--input-bg); border-radius: 12px; padding: 12px; margin-bottom: 16px; font-size: 0.8rem; font-family: monospace; color: var(--text-secondary);">
+                Data;Descrição;Categoria;Tipo;Pagamento;Status;Recorrência;Valor
+            </div>
+            <div class="form-group">
+                <label>Selecione o arquivo CSV</label>
+                <label class="file-input-wrapper">
+                    <input type="file" id="csvFileInput" accept=".csv" onchange="handleCsvFileSelect(event)">
+                    <svg class="file-input-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                    <div class="file-input-text" id="csvFileName">Clique ou arraste um arquivo CSV</div>
+                </label>
+            </div>
+            <div class="form-group">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="csvReplaceData">
+                    <label for="csvReplaceData">Substituir transações do mês (ao invés de adicionar)</label>
+                </div>
+            </div>
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="smartwallet.importCSV()"><svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Importar</button>
+                <button class="btn btn-secondary" onclick="closeImportCsvModal()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Importar Backup -->
+    <div class="modal" id="importBackupModal" role="dialog" aria-modal="true" aria-labelledby="importBackupTitle">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="importBackupTitle">Restaurar Backup</h2>
+                <button class="modal-close" onclick="closeImportBackupModal()" aria-label="Fechar modal">
+                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <div class="danger-warning">
+                <strong>Atenção:</strong> Restaurar um backup substituirá <strong>todos</strong> os dados atuais.
+            </div>
+            <div class="form-group">
+                <label>Selecione o arquivo de backup JSON</label>
+                <label class="file-input-wrapper">
+                    <input type="file" id="backupFileInput" accept=".json" onchange="handleBackupFileSelect(event)">
+                    <svg class="file-input-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    <div class="file-input-text" id="backupFileName">Clique ou arraste um arquivo JSON</div>
+                </label>
+            </div>
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="smartwallet.importBackup()"><svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> Restaurar</button>
+                <button class="btn btn-secondary" onclick="closeImportBackupModal()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Limpar Dados -->
+    <div class="modal danger-modal" id="clearDataModal" role="dialog" aria-modal="true" aria-labelledby="clearTitle">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="clearTitle" style="color: var(--danger-color);">Limpar Todos os Dados</h2>
+                <button class="modal-close" onclick="closeClearDataModal()" aria-label="Fechar modal">
+                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <div class="danger-icon">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </div>
+            <div class="danger-warning">
+                <strong>Você está prestes a apagar permanentemente:</strong><br>
+                • Todas as transações<br>
+                • Todas as categorias personalizadas<br>
+                • Todos os cartões de crédito e faturas<br>
+                • Meta de reserva e aportes<br>
+                • Todas as preferências<br><br>
+                <strong>Esta ação é IRREVERSÍVEL.</strong>
+            </div>
+            <div id="clearStep1">
+                <p class="font-semibold mb-16">Passo 1 de 2: Você tem certeza?</p>
+                <div class="action-buttons">
+                    <button class="btn btn-danger-full" onclick="showClearStep2()">Sim, tenho certeza</button>
+                    <button class="btn btn-secondary" onclick="closeClearDataModal()">Cancelar</button>
+                </div>
+            </div>
+            <div id="clearStep2" style="display: none;">
+                <p class="font-semibold mb-16">Passo 2 de 2: Digite <strong style="color: var(--danger-color); letter-spacing: 2px;">LIMPAR</strong> para confirmar</p>
+                <input type="text" class="confirm-input" id="clearConfirmInput" placeholder="LIMPAR" autocomplete="off" oninput="checkClearConfirm()">
+                <div class="action-buttons" style="margin-top: 16px;">
+                    <button class="btn btn-danger-full" id="finalClearBtn" onclick="smartwallet.clearAllData()" disabled style="opacity: 0.5; cursor: not-allowed;"><svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> Apagar Tudo</button>
+                    <button class="btn btn-secondary" onclick="closeClearDataModal()">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Cartões de Crédito -->
+    <div class="modal" id="creditCardsModal" role="dialog" aria-modal="true" aria-labelledby="cardsTitle">
+        <div class="modal-content wide">
+            <div class="modal-header">
+                <h2 id="cardsTitle">💳 Cartões de Crédito</h2>
+                <button class="modal-close" onclick="closeCreditCardsModal()" aria-label="Fechar modal">
+                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <div class="flex-gap-10 mb-20" style="justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                <p class="text-secondary text-xs">Gerencie seus cartões e visualize faturas</p>
+                <button class="btn btn-primary btn-small" onclick="openNewCardModal()">
+                    <svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    Novo Cartão
+                </button>
+            </div>
+            <div id="creditCardsList"></div>
+        </div>
+    </div>
+
+    <!-- Modal Novo Cartão -->
+    <div class="modal" id="newCardModal" role="dialog" aria-modal="true" aria-labelledby="newCardTitle">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="newCardTitle">Novo Cartão</h2>
+                <button class="modal-close" onclick="closeNewCardModal()" aria-label="Fechar modal">
+                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <form id="cardForm" onsubmit="event.preventDefault(); smartwallet.saveCard();">
+                <input type="hidden" id="cardEditId">
+                <div class="form-group"><label for="cardName">Nome do Cartão</label><input type="text" id="cardName" placeholder="Ex: Nubank Black" required></div>
+                <div class="form-row">
+                    <div class="form-group"><label for="cardBrand">Bandeira</label>
+                        <select id="cardBrand" required>
+                            <option value="Visa">Visa</option>
+                            <option value="Mastercard">Mastercard</option>
+                            <option value="Elo">Elo</option>
+                            <option value="Amex">Amex</option>
+                            <option value="Hipercard">Hipercard</option>
+                            <option value="Outra">Outra</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label for="cardLast4">4 últimos dígitos</label><input type="text" id="cardLast4" placeholder="0000" maxlength="4" pattern="[0-9]{4}"></div>
+                </div>
+                <div class="form-row-3">
+                    <div class="form-group"><label for="cardClosingDay">Dia Fechamento</label><input type="number" id="cardClosingDay" min="1" max="31" value="20" required></div>
+                    <div class="form-group"><label for="cardDueDay">Dia Vencimento</label><input type="number" id="cardDueDay" min="1" max="31" value="27" required></div>
+                    <div class="form-group"><label for="cardLimit">Limite (R$)</label><input type="number" id="cardLimit" step="0.01" min="0" placeholder="5000" required></div>
+                </div>
+                <div class="form-group"><label for="cardColor">Cor do Cartão</label><input type="color" id="cardColor" value="#6366f1" style="width: 100%; height: 48px; padding: 4px; cursor: pointer; border-radius: 12px;"></div>
+                <div class="action-buttons">
+                    <button type="submit" class="btn btn-primary"><svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Salvar Cartão</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeNewCardModal()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Fatura do Cartão -->
+    <div class="modal" id="invoiceModal" role="dialog" aria-modal="true" aria-labelledby="invoiceTitle">
+        <div class="modal-content wide">
+            <div class="modal-header">
+                <h2 id="invoiceTitle">Fatura</h2>
+                <button class="modal-close" onclick="closeInvoiceModal()" aria-label="Fechar modal">
+                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <div id="invoiceContent"></div>
+        </div>
+    </div>
+
+    <!-- Modal Nova Compra no Cartão -->
+    <div class="modal" id="newPurchaseModal" role="dialog" aria-modal="true" aria-labelledby="purchaseTitle">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="purchaseTitle">Nova Compra no Cartão</h2>
+                <button class="modal-close" onclick="closeNewPurchaseModal()" aria-label="Fechar modal">
+                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <form id="purchaseForm" onsubmit="event.preventDefault(); smartwallet.savePurchase();">
+                <input type="hidden" id="purchaseCardId">
+                <div class="form-row">
+                    <div class="form-group"><label for="purchaseDate">Data da Compra</label><input type="date" id="purchaseDate" required></div>
+                    <div class="form-group"><label for="purchaseAmount">Valor (R$)</label><input type="number" id="purchaseAmount" step="0.01" min="0.01" required></div>
+                </div>
+                <div class="form-group"><label for="purchaseDescription">Descrição</label><input type="text" id="purchaseDescription" placeholder="Ex: Amazon" required></div>
+                <div class="form-group"><label for="purchaseCategory">Categoria</label><select id="purchaseCategory" required><option value="">Selecione...</option></select></div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="purchaseInstallments">Parcelas</label>
+                        <select id="purchaseInstallments">
+                            <option value="1">À vista (1x)</option>
+                            <option value="2">2x</option><option value="3">3x</option>
+                            <option value="4">4x</option><option value="5">5x</option>
+                            <option value="6">6x</option><option value="10">10x</option>
+                            <option value="12">12x</option><option value="18">18x</option>
+                            <option value="24">24x</option><option value="36">36x</option>
+                            <option value="48">48x</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="purchaseStatus">Status</label>
+                        <select id="purchaseStatus">
+                            <option value="pending">Pendente</option>
+                            <option value="done">Concluído</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button type="submit" class="btn btn-primary"><svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Adicionar Compra</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeNewPurchaseModal()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Contas a Vencer -->
+    <div class="modal" id="billsModal" role="dialog" aria-modal="true" aria-labelledby="billsTitle">
+        <div class="modal-content wide">
+            <div class="modal-header">
+                <h2 id="billsTitle">🔔 Contas a Vencer</h2>
+                <button class="modal-close" onclick="closeBillsModal()" aria-label="Fechar modal">
+                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <p class="text-secondary text-xs mb-16">Contas pendentes que vencem nos próximos 3 dias (ou já venceram).</p>
+            <div id="billsList"></div>
+        </div>
+    </div>
+    
     <!-- Toast com role="alert" -->
     <div class="toast" id="toast" role="alert" aria-live="polite" aria-atomic="true"></div>
 
@@ -600,9 +1017,42 @@
             { text: "Riqueza é a capacidade de viver completamente a vida.", author: "Henry David Thoreau" },
             { text: "Um orçamento está dizendo a seu dinheiro para onde ir, em vez de se perguntar para onde ele foi.", author: "Dave Ramsey" },
             { text: "Não economize o que resta depois de gastar; gaste o que resta depois de poupar.", author: "Warren Buffett" }
-            // ... (manter todas as 40 citações)
+            { text: "Se você não encontrar uma maneira de ganhar dinheiro enquanto dorme, você trabalhará até morrer.", author: "Warren Buffett" },
+            { text: "O melhor investimento que você pode fazer é em si mesmo.", author: "Warren Buffett" },
+            { text: "Dinheiro é um péssimo mestre, mas um excelente servo.", author: "P.T. Barnum" },
+            { text: "A riqueza não consiste em ter grandes posses, mas em ter poucas necessidades.", author: "Epicteto" },
+            { text: "Cuidado com pequenos gastos; um pequeno vazamento afundará um grande navio.", author: "Benjamin Franklin" },
+            { text: "Quem compra o que não precisa, rouba a si mesmo.", author: "Provérbio Popular" },
+            { text: "A independência financeira não é sobre ficar rico, é sobre ter opções.", author: "Chris Reining" },
+            { text: "Não é o quanto você ganha, é o quanto você faz o dinheiro trabalhar para você.", author: "Robert Kiyosaki" },
+            { text: "Pague a si mesmo primeiro.", author: "George Samuel Clason" },
+            { text: "Riqueza é como um cigarro: se você não fumar, ela dura mais.", author: "Provérbio Popular" },
+            { text: "O mercado de ações é um mecanismo para transferir dinheiro do impaciente para o paciente.", author: "Warren Buffett" },
+            { text: "A melhor hora para plantar uma árvore foi há 20 anos. A segunda melhor hora é agora.", author: "Provérbio Chinês" },
+            { text: "Finanças não são sobre matemática, são sobre comportamento.", author: "Morgan Housel" },
+            { text: "Pessoas ricas acreditam que ganham dinheiro com ideias. Pessoas pobres acreditam que ganham dinheiro com tempo.", author: "Robert Kiyosaki" },
+            { text: "Gastar dinheiro para impressionar pessoas é a maneira mais rápida de ficar pobre.", author: "Morgan Housel" },
+            { text: "A verdadeira medida da riqueza é quanto você valeria se perdesse todo o seu dinheiro.", author: "Provérbio" },
+            { text: "Economizar é a melhor estratégia de investimento.", author: "Nathaniel Hale" },
+            { text: "A diferença entre ricos e pobres é o que eles fazem com o tempo livre.", author: "Robert Kiyosaki" },
+            { text: "Cada real que você economiza é um empregado que trabalha para você.", author: "T. Harv Eker" },
+            { text: "A maior riqueza é a que menos se corrompe, a da consciência.", author: "Sêneca" },
+            { text: "Se você vive para impressionar os outros, nunca será rico de verdade.", author: "Morgan Housel" },
+            { text: "A liberdade financeira é mais sobre controle do que sobre dinheiro.", author: "Ramit Sethi" },
+            { text: "Não coloque sua fé no dinheiro. Coloque seu dinheiro na sua fé.", author: "Provérbio" },
+            { text: "O maior inimigo da riqueza é a expectativa de ficar rico rápido.", author: "Morgan Housel" },
+            { text: "Planeje suas finanças como planeja suas férias: com destino, roteiro e orçamento.", author: "Anônimo" },
+            { text: "Ricos adquirem ativos. Pobres e classe média adquirem passivos que acham serem ativos.", author: "Robert Kiyosaki" },
+            { text: "A paciência é a virtude dos investidores bem-sucedidos.", author: "Peter Lynch" },
+            { text: "Saber gastar é tão importante quanto saber ganhar.", author: "Provérbio Popular" },
+            { text: "Dinheiro é um ótimo servo, mas um péssimo mestre.", author: "Francis Bacon" },
+            { text: "A prosperidade depende mais da sua mentalidade do que da sua conta bancária.", author: "T. Harv Eker" },
+            { text: "Investir em conhecimento paga os melhores juros.", author: "Benjamin Franklin" },
+            { text: "Não espere; o tempo nunca será 'o certo'. Comece de onde você está.", author: "Napoleon Hill" },
+            { text: "A educação financeira é a base da liberdade financeira.", author: "Robert Kiyosaki" },
+            { text: "O futuro pertence àqueles que se preparam hoje.", author: "Malcolm X" },
+            { text: "Antes de gastar, aprenda a ganhar. Antes de ganhar, aprenda a poupar.", author: "Provérbio" }
         ];
-
         const PAYMENT_METHODS = [
             { id: 'pix', name: 'PIX', icon: '⚡' },
             { id: 'debit', name: 'Cart.Débito', icon: '💳' },
