@@ -747,28 +747,52 @@
                 }
             }
 
-            setupEventListeners() {
-                document.getElementById('transactionForm').addEventListener('submit', e => { e.preventDefault(); this.addTransaction(); });
-                document.getElementById('editForm').addEventListener('submit', e => { e.preventDefault(); this.updateTransaction(); });
-                document.getElementById('recurring').addEventListener('change', e => { document.getElementById('recurringOptions').style.display = e.target.checked ? 'block' : 'none'; });
-                document.getElementById('editRecurring').addEventListener('change', e => { document.getElementById('editRecurringOptions').style.display = e.target.checked ? 'block' : 'none'; });
-                
-                // ⚡ Debounce no search
-                document.getElementById('searchFilter').addEventListener('input', () => {
-                    clearTimeout(this.searchTimeout);
-                    this.searchTimeout = setTimeout(() => this.render(), 300);
-                });
-                
-                document.getElementById('categoryFilter').addEventListener('change', () => this.render());
-                document.getElementById('typeFilter').addEventListener('change', () => this.render());
-                document.getElementById('statusFilter').addEventListener('change', () => this.render());
-                
-                ['newTransactionModal', 'editModal', 'categoryModal', 'exportModal', 'goalModal', 'importCsvModal', 'importBackupModal', 'clearDataModal', 'creditCardsModal', 'newCardModal', 'invoiceModal', 'newPurchaseModal', 'billsModal'].forEach(id => {
-                    const el = document.getElementById(id);
-                    if (el) el.addEventListener('click', e => { if(e.target.id === id) e.target.classList.remove('active'); });
-                });
-            }
+setupEventListeners() {
+    // Função auxiliar segura para adicionar listeners
+    const safeAddListener = (id, event, handler) => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.addEventListener(event, handler);
+        } else {
+            console.warn(`⚠️ Elemento não encontrado: #${id}`);
+        }
+    };
 
+    // Formulários
+    safeAddListener('transactionForm', 'submit', e => { e.preventDefault(); this.addTransaction(); });
+    safeAddListener('editForm', 'submit', e => { e.preventDefault(); this.updateTransaction(); });
+    
+    // Checkboxes de recorrência
+    safeAddListener('recurring', 'change', e => { 
+        const opts = document.getElementById('recurringOptions');
+        if (opts) opts.style.display = e.target.checked ? 'block' : 'none'; 
+    });
+    safeAddListener('editRecurring', 'change', e => { 
+        const opts = document.getElementById('editRecurringOptions');
+        if (opts) opts.style.display = e.target.checked ? 'block' : 'none'; 
+    });
+    
+    // Filtros
+    safeAddListener('searchFilter', 'input', () => {
+        clearTimeout(this.searchTimeout);
+        this.searchTimeout = setTimeout(() => this.render(), 300);
+    });
+    safeAddListener('categoryFilter', 'change', () => this.render());
+    safeAddListener('typeFilter', 'change', () => this.render());
+    safeAddListener('statusFilter', 'change', () => this.render());
+    
+    // Fechar modais ao clicar fora
+    ['newTransactionModal', 'editModal', 'categoryModal', 'exportModal', 'goalModal', 
+     'importCsvModal', 'importBackupModal', 'clearDataModal', 'creditCardsModal', 
+     'newCardModal', 'invoiceModal', 'newPurchaseModal', 'billsModal'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.addEventListener('click', e => { 
+                if(e.target.id === id) e.target.classList.remove('active'); 
+            });
+        }
+    });
+}
             setDefaultDate() { document.getElementById('date').value = new Date().toISOString().split('T')[0]; }
 
             changeMonth(delta) {
