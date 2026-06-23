@@ -35,7 +35,7 @@ Controle financeiro pessoal inteligente como Progressive Web App (PWA).
 ### Passo 4: Acessar seu WebApp
 Sua aplicação estará disponível em:
 ```
-https://rogerelizar.github.io/SmartWallet-2026/
+https://seunomedeusuario.github.io/SmartWallet-2026/
 ```
 
 ## 📱 Instalar como App
