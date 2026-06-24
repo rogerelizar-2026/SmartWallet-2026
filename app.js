@@ -56,7 +56,7 @@
     ];
 
     const manualHTML = `
-        <div class="manual-cover" style="text-align:center; padding:60px 30px; border:3px solid var(--primary-color); border-radius:16px; margin-bottom:40px; background:var(--gradient-card);">
+        <div style="text-align:center; padding:60px 30px; border:3px solid var(--primary-color); border-radius:16px; margin-bottom:40px; background:var(--gradient-card);">
             <h1 style="font-size:2.5rem; margin-bottom:16px; color:var(--primary-color);">📘 Manual do Usuário</h1>
             <h2 style="font-size:1.5rem; margin-bottom:30px; color:var(--accent-color);">Smart Wallet</h2>
             <p style="font-size:1.1rem; margin-bottom:10px;">Controle Financeiro Pessoal Inteligente</p>
@@ -68,9 +68,7 @@
             <p>"Toda boa dádiva e todo dom perfeito vêm do alto, descendo do Pai das luzes."</p>
             <div class="quote-author">— Tiago 1:17</div>
         </div>
-        <p style="font-size:1rem; line-height:1.8; margin:20px 0;">
-            Agradeço a Deus por toda sabedoria, saúde e recursos que me permitiram desenvolver este projeto.
-        </p>
+        <p style="font-size:1rem; line-height:1.8; margin:20px 0;">Agradeço a Deus por toda sabedoria, saúde e recursos que me permitiram desenvolver este projeto.</p>
         <div style="margin-top:30px; padding-top:20px; border-top:2px solid var(--primary-color);">
             <h3 style="color:var(--accent-color); margin-bottom:12px;">💝 Aos meus filhos</h3>
             <div class="manual-quote">
@@ -80,118 +78,56 @@
         </div>
 
         <h2>🎯 Bem-vindo ao Smart Wallet!</h2>
-        <p>O Smart Wallet é seu parceiro na jornada para transformar sua relação com o dinheiro. Este manual vai guiá-lo por todas as funcionalidades.</p>
+        <p>O Smart Wallet é seu parceiro na jornada para transformar sua relação com o dinheiro.</p>
 
         <h2>📱 Instalação como WebApp</h2>
-        <h3>💻 No Computador (Chrome, Edge, Brave)</h3>
-        <ol>
-            <li>Acesse o site pelo navegador</li>
-            <li>Clique no menu (⋮) → "Instalar Smart Wallet..."</li>
-            <li>Confirme a instalação</li>
-        </ol>
-        <h3>📱 No Celular Android (Chrome)</h3>
-        <ol>
-            <li>Abra o site no Chrome</li>
-            <li>Toque nos três pontos (⋮) → "Instalar aplicativo"</li>
-            <li>O ícone aparecerá na sua tela inicial</li>
-        </ol>
-        <h3>🍎 No iPhone (Safari)</h3>
-        <ol>
-            <li>Abra o site no Safari</li>
-            <li>Toque em Compartilhar → "Adicionar à Tela de Início"</li>
-        </ol>
+        <h3>💻 No Computador</h3>
+        <ol><li>Acesse o site pelo navegador</li><li>Clique no menu (⋮) → "Instalar Smart Wallet..."</li><li>Confirme a instalação</li></ol>
+        <h3>📱 No Celular Android</h3>
+        <ol><li>Abra o site no Chrome</li><li>Toque nos três pontos (⋮) → "Instalar aplicativo"</li></ol>
+        <h3>🍎 No iPhone</h3>
+        <ol><li>Abra o site no Safari</li><li>Toque em Compartilhar → "Adicionar à Tela de Início"</li></ol>
 
         <h2>💰 Funcionalidades Principais</h2>
-
         <h3>🏦 Contas (Corrente e Investimentos)</h3>
-        <p>Cadastre suas contas correntes e investimentos para ter uma visão unificada do seu patrimônio. O saldo unificado soma automaticamente todas as contas correntes.</p>
-
+        <p>Cadastre suas contas correntes e investimentos para ter uma visão unificada do seu patrimônio.</p>
         <h3>📊 Dashboard Financeiro</h3>
         <ul>
             <li><strong>Saldo Unificado:</strong> Soma de todas as contas correntes</li>
             <li><strong>Receitas e Despesas:</strong> Totais do mês atual</li>
             <li><strong>Acumulado C.Crédito:</strong> Total das faturas de cartões</li>
         </ul>
-
         <h3>💳 Cartões de Crédito</h3>
-        <p>Controle completo dos seus cartões:</p>
-        <ul>
-            <li>Cadastro com limite, fechamento e vencimento</li>
-            <li>Registro de compras com parcelamento</li>
-            <li>Faturas automáticas com cálculo independente</li>
-            <li>Compras também integram o histórico geral de despesas</li>
-            <li>Exportação de fatura em PDF</li>
-        </ul>
-
-        <div class="manual-warning">
-            <strong>⚠️ Atenção:</strong> Só compre no crédito se puder pagar a fatura integralmente. Parcelar a fatura gera juros que podem multiplicar sua dívida em até 15x!
-        </div>
-
+        <p>Controle completo dos seus cartões com cadastro, compras parceladas e faturas automáticas.</p>
+        <div class="manual-warning"><strong>⚠️ Atenção:</strong> Só compre no crédito se puder pagar a fatura integralmente.</div>
         <h3>📈 Gráficos Inteligentes</h3>
         <ul>
             <li><strong>Entradas e Saídas:</strong> 2 meses anteriores, atual e 3 posteriores</li>
             <li><strong>Cartões de Crédito:</strong> Evolução de 6 meses</li>
-            <li><strong>Despesas por Categoria:</strong> Barras horizontais com legendas</li>
+            <li><strong>Despesas por Categoria:</strong> Barras horizontais</li>
             <li><strong>Reservas e Investimentos:</strong> Acompanhamento de crescimento</li>
         </ul>
-
         <h3>🔔 Alertas de Contas</h3>
         <p>O sistema avisa automaticamente quando há contas vencendo nos próximos 3 dias.</p>
 
         <h2>🚀 Guia do Sucesso Financeiro</h2>
-
         <h3>🎯 A Regra 50-30-20</h3>
-        <ul>
-            <li><strong>50%</strong> para necessidades (aluguel, comida, transporte)</li>
-            <li><strong>30%</strong> para desejos (lazer, restaurantes, hobbies)</li>
-            <li><strong>20%</strong> para objetivos financeiros (reserva, investimentos)</li>
-        </ul>
-
+        <ul><li><strong>50%</strong> para necessidades</li><li><strong>30%</strong> para desejos</li><li><strong>20%</strong> para objetivos financeiros</li></ul>
         <h3>💎 Poupar NÃO é Suficiente - Invista!</h3>
-        <div class="manual-success">
-            <strong>Caso Real - Ana:</strong> Ana investia R$ 500/mês em um CDB que rendia 10% ao ano. Em 10 anos, tinha R$ 102.000. Seu dinheiro rendeu acima da inflação e ela ganhou poder de compra real!
-        </div>
-
+        <div class="manual-success"><strong>Caso Real - Ana:</strong> Ana investia R$ 500/mês em um CDB que rendia 10% ao ano. Em 10 anos, tinha R$ 102.000.</div>
         <h3>⚠️ Os Riscos da Estagnação</h3>
-        <div class="manual-warning">
-            <strong>Caso Hipotético - Pedro:</strong> Pedro acumulou R$ 30.000 em dívidas no cartão. Os juros de 12% ao mês fizeram a dívida crescer para R$ 100.000 em 2 anos. Dívidas não resolvidas crescem exponencialmente!
-        </div>
+        <div class="manual-warning"><strong>Caso Hipotético - Pedro:</strong> Pedro acumulou R$ 30.000 em dívidas no cartão. Os juros de 12% ao mês fizeram a dívida crescer para R$ 100.000 em 2 anos.</div>
 
         <h2>🎯 Seu Plano de Ação</h2>
-        <h3>Semana 1: Diagnóstico</h3>
-        <ol>
-            <li>Cadastre suas contas</li>
-            <li>Registre todas as fontes de renda</li>
-            <li>Registre todos os gastos do mês</li>
-        </ol>
-        <h3>Semana 2: Organização</h3>
-        <ol>
-            <li>Crie categorias personalizadas</li>
-            <li>Cadastre seus cartões de crédito</li>
-            <li>Configure alertas</li>
-        </ol>
-        <h3>Semana 3: Planejamento</h3>
-        <ol>
-            <li>Aplique a regra 50-30-20</li>
-            <li>Identifique gastos a cortar</li>
-            <li>Defina metas financeiras</li>
-        </ol>
-        <h3>Semana 4: Execução</h3>
-        <ol>
-            <li>Registre TODOS os gastos diariamente</li>
-            <li>Revise semanalmente</li>
-            <li>Ajuste conforme necessário</li>
-        </ol>
+        <h3>Semana 1: Diagnóstico</h3><ol><li>Cadastre suas contas</li><li>Registre todas as fontes de renda</li><li>Registre todos os gastos do mês</li></ol>
+        <h3>Semana 2: Organização</h3><ol><li>Crie categorias personalizadas</li><li>Cadastre seus cartões</li><li>Configure alertas</li></ol>
+        <h3>Semana 3: Planejamento</h3><ol><li>Aplique a regra 50-30-20</li><li>Identifique gastos a cortar</li><li>Defina metas financeiras</li></ol>
+        <h3>Semana 4: Execução</h3><ol><li>Registre TODOS os gastos diariamente</li><li>Revise semanalmente</li><li>Ajuste conforme necessário</li></ol>
 
-        <div class="manual-success">
-            <strong>🌟 Lembre-se:</strong> A jornada de mil milhas começa com um único passo. Continue firme e consistente!
-        </div>
+        <div class="manual-success"><strong>🌟 Lembre-se:</strong> A jornada de mil milhas começa com um único passo. Continue firme e consistente!</div>
 
         <h2>📞 Suporte</h2>
-        <ul>
-            <li><strong>E-mail:</strong> rogerelizar@gmail.com</li>
-            <li><strong>Feedback:</strong> Use o botão "Apoie o Projeto" no menu</li>
-        </ul>
+        <ul><li><strong>E-mail:</strong> rogerelizar@gmail.com</li><li><strong>Feedback:</strong> Use o botão "Apoie o Projeto" no menu</li></ul>
 
         <div style="text-align:center; margin-top:40px; padding:30px; background:var(--gradient-card); border-radius:16px;">
             <h3 style="margin-bottom:16px;">🙏 Bênção Final</h3>
@@ -259,57 +195,24 @@
             } catch { return def; }
         }
 
-        saveTransactions() {
-            try { localStorage.setItem('smartwallet_transactions', JSON.stringify(this.transactions)); }
-            catch (e) { if (e.name === 'QuotaExceededError') this.showToast('⚠️ Armazenamento cheio!'); }
-        }
-        saveCategories() {
-            try { localStorage.setItem('smartwallet_categories', JSON.stringify(this.categories)); }
-            catch (e) { if (e.name === 'QuotaExceededError') this.showToast('⚠️ Armazenamento cheio!'); }
-        }
-        saveCards() {
-            try { localStorage.setItem('smartwallet_cards', JSON.stringify(this.cards)); }
-            catch (e) { if (e.name === 'QuotaExceededError') this.showToast('⚠️ Armazenamento cheio!'); }
-        }
-        saveCardPurchases() {
-            try { localStorage.setItem('smartwallet_card_purchases', JSON.stringify(this.cardPurchases)); }
-            catch (e) { if (e.name === 'QuotaExceededError') this.showToast('⚠️ Armazenamento cheio!'); }
-        }
-        saveAccounts() {
-            try { localStorage.setItem('smartwallet_accounts', JSON.stringify(this.accounts)); }
-            catch (e) { if (e.name === 'QuotaExceededError') this.showToast('⚠️ Armazenamento cheio!'); }
-        }
+        saveTransactions() { try { localStorage.setItem('smartwallet_transactions', JSON.stringify(this.transactions)); } catch (e) { if (e.name === 'QuotaExceededError') this.showToast('⚠️ Armazenamento cheio!'); } }
+        saveCategories() { try { localStorage.setItem('smartwallet_categories', JSON.stringify(this.categories)); } catch (e) { if (e.name === 'QuotaExceededError') this.showToast('⚠️ Armazenamento cheio!'); } }
+        saveCards() { try { localStorage.setItem('smartwallet_cards', JSON.stringify(this.cards)); } catch (e) { if (e.name === 'QuotaExceededError') this.showToast('⚠️ Armazenamento cheio!'); } }
+        saveCardPurchases() { try { localStorage.setItem('smartwallet_card_purchases', JSON.stringify(this.cardPurchases)); } catch (e) { if (e.name === 'QuotaExceededError') this.showToast('⚠️ Armazenamento cheio!'); } }
+        saveAccounts() { try { localStorage.setItem('smartwallet_accounts', JSON.stringify(this.accounts)); } catch (e) { if (e.name === 'QuotaExceededError') this.showToast('⚠️ Armazenamento cheio!'); } }
 
         setupEventListeners() {
-            const safeAddListener = (id, event, handler) => {
-                const el = document.getElementById(id);
-                if (el) el.addEventListener(event, handler);
-            };
+            const safeAddListener = (id, event, handler) => { const el = document.getElementById(id); if (el) el.addEventListener(event, handler); };
             safeAddListener('transactionForm', 'submit', e => { e.preventDefault(); this.addTransaction(); });
             safeAddListener('editForm', 'submit', e => { e.preventDefault(); this.updateTransaction(); });
-            safeAddListener('recurring', 'change', e => {
-                const opts = document.getElementById('recurringOptions');
-                if (opts) opts.style.display = e.target.checked ? 'block' : 'none';
-            });
-            safeAddListener('editRecurring', 'change', e => {
-                const opts = document.getElementById('editRecurringOptions');
-                if (opts) opts.style.display = e.target.checked ? 'block' : 'none';
-            });
-            safeAddListener('searchFilter', 'input', () => {
-                clearTimeout(this.searchTimeout);
-                this.searchTimeout = setTimeout(() => this.render(), 300);
-            });
-            safeAddListener('typeFilter', 'change', () => {
-                this.filterCategoriesByType('categoryFilter', document.getElementById('typeFilter').value);
-                this.render();
-            });
+            safeAddListener('recurring', 'change', e => { const opts = document.getElementById('recurringOptions'); if (opts) opts.style.display = e.target.checked ? 'block' : 'none'; });
+            safeAddListener('editRecurring', 'change', e => { const opts = document.getElementById('editRecurringOptions'); if (opts) opts.style.display = e.target.checked ? 'block' : 'none'; });
+            safeAddListener('searchFilter', 'input', () => { clearTimeout(this.searchTimeout); this.searchTimeout = setTimeout(() => this.render(), 300); });
+            safeAddListener('typeFilter', 'change', () => { this.filterCategoriesByType('categoryFilter', document.getElementById('typeFilter').value); this.render(); });
             safeAddListener('categoryFilter', 'change', () => this.render());
             safeAddListener('statusFilter', 'change', () => this.render());
 
-            ['newTransactionModal', 'editModal', 'categoryModal', 'exportModal', 'goalModal',
-                'importCsvModal', 'importBackupModal', 'clearDataModal', 'creditCardsModal',
-                'newCardModal', 'invoiceModal', 'newPurchaseModal', 'billsModal', 'manualModal',
-                'thanksModal', 'accountsModal', 'newAccountModal'].forEach(id => {
+            ['newTransactionModal', 'editModal', 'categoryModal', 'exportModal', 'goalModal', 'importCsvModal', 'importBackupModal', 'clearDataModal', 'creditCardsModal', 'newCardModal', 'invoiceModal', 'newPurchaseModal', 'billsModal', 'manualModal', 'thanksModal', 'accountsModal', 'newAccountModal'].forEach(id => {
                 const el = document.getElementById(id);
                 if (el) el.addEventListener('click', e => { if (e.target.id === id) e.target.classList.remove('active'); });
             });
@@ -329,10 +232,7 @@
             document.getElementById('currentMonth').textContent = `${months[this.currentMonth.getMonth()]} ${this.currentMonth.getFullYear()}`;
         }
 
-        formatMonthYear(date) {
-            const m = String(date.getMonth() + 1).padStart(2, '0');
-            return `${m}-${date.getFullYear()}`;
-        }
+        formatMonthYear(date) { const m = String(date.getMonth() + 1).padStart(2, '0'); return `${m}-${date.getFullYear()}`; }
 
         getMonthTransactions(date = this.currentMonth) {
             const m = date.getMonth(), y = date.getFullYear();
@@ -677,12 +577,8 @@
             const goal = this.goal, contrib = this.monthlyContribution;
             const totalBal = this.transactions.reduce((s, t) => s + t.amount, 0);
             const rem = Math.max(0, goal - totalBal);
-            if (!goal || !contrib || contrib <= 0) {
-                el.style.display = 'block'; el.innerHTML = '<p style="color:var(--danger-color); font-weight:500;">Preencha os campos corretamente.</p>'; return;
-            }
-            if (rem <= 0) {
-                el.style.display = 'block'; el.innerHTML = '<p style="color:var(--success-color); font-weight:500;">🎉 Parabéns! Meta já atingida!</p>'; return;
-            }
+            if (!goal || !contrib || contrib <= 0) { el.style.display = 'block'; el.innerHTML = '<p style="color:var(--danger-color); font-weight:500;">Preencha os campos corretamente.</p>'; return; }
+            if (rem <= 0) { el.style.display = 'block'; el.innerHTML = '<p style="color:var(--success-color); font-weight:500;">🎉 Parabéns! Meta já atingida!</p>'; return; }
             const months = Math.ceil(rem / contrib);
             const years = Math.floor(months / 12);
             const remM = months % 12;
@@ -724,12 +620,10 @@
             const inc = mt.filter(t => t.amount > 0).reduce((s, t) => s + t.amount, 0);
             const exp = mt.filter(t => t.amount < 0).reduce((s, t) => s + t.amount, 0);
 
-            // Saldo Unificado = soma das contas correntes
             const unifiedBalance = this.accounts
                 .filter(a => a.type === 'checking')
                 .reduce((sum, a) => sum + (parseFloat(a.balance) || 0), 0);
 
-            // Acumulado C.Crédito = soma das faturas atuais de todos os cartões
             const creditCardTotal = this.cards.reduce((total, card) => {
                 const period = this.getInvoicePeriod(card);
                 const purchases = this.getCardPurchasesForInvoice(card.id, period.startDate, period.closingDate);
@@ -747,7 +641,7 @@
             const fill = document.getElementById('goalBarFill');
             goalEl.textContent = this.formatCurrency(creditCardTotal);
             goalEl.className = 'card-value privacy-value negative';
-            bar.style.display = 'none';
+            if (bar) bar.style.display = 'none';
         }
 
         getChartColors() {
@@ -842,8 +736,6 @@
         }
 
         updateCharts() {
-            const colors = this.getChartColors();
-            // 2 meses anteriores, atual, 3 posteriores
             const lLabels = [], lInc = [], lExp = [];
             for (let i = -2; i <= 3; i++) {
                 const d = new Date(this.currentMonth);
@@ -861,7 +753,6 @@
                 this.charts.line.update();
             }
 
-            // Despesas por categoria - barras horizontais
             const exps = {};
             this.getMonthTransactions().filter(t => t.amount < 0).forEach(t => {
                 const c = this.getCategoryById(t.category);
@@ -875,7 +766,6 @@
                 this.charts.pie.update();
             }
 
-            // Cartões 6 meses
             if (this.charts.cards) {
                 const cardLabels = [];
                 const cardDatasets = [];
@@ -909,7 +799,6 @@
                 this.charts.cards.update();
             }
 
-            // Reservas e Investimentos
             if (this.charts.invest) {
                 const invLabels = [], resData = [], invData = [];
                 for (let i = -2; i <= 3; i++) {
@@ -937,7 +826,7 @@
             mt.sort((a,b) => new Date(a.date)-new Date(b.date)).forEach(t => {
                 const c = this.getCategoryById(t.category);
                 const status = t.statusOk ? 'Concluído' : 'Pendente';
-                const payment = this.getPaymentMethodName(t.paymentMethod).replace(/[💳⚡💰🔄↔️]/g, '').trim();
+                const payment = this.getPaymentMethodName(t.paymentMethod).replace(/[💳⚡💰🔄️]/g, '').trim();
                 let recurrence = '';
                 if (t.recurrence) {
                     if (t.recurrence.type === 'installment') recurrence = `${t.recurrence.current}/${t.recurrence.total}`;
@@ -1341,13 +1230,11 @@
             const status = document.getElementById('purchaseStatus').value;
             if (!cardId || !date || !amount || !description || !category) return this.showToast('Preencha todos os campos');
 
-            // Adiciona à lista de compras do cartão
             this.cardPurchases.push({
                 id: Date.now(), cardId, date, amount, description, category, installments,
                 status: status === 'done'
             });
 
-            // Adiciona também ao histórico geral de despesas (para o primeiro mês ou parcela atual)
             const card = this.getCardById(cardId);
             const installmentAmount = installments > 1 ? amount / installments : amount;
             this.transactions.push({
@@ -1374,7 +1261,6 @@
         deletePurchase(id, cardId) {
             if (!confirm('Excluir esta compra?')) return;
             const purchase = this.cardPurchases.find(p => p.id === id);
-            // Remove também do histórico geral
             if (purchase) {
                 this.transactions = this.transactions.filter(t => !(t.source === 'card_purchase' && t.description.includes(purchase.description)));
                 this.saveTransactions();
@@ -1638,85 +1524,39 @@
     const smartwallet = new SmartWallet();
     window.smartwallet = smartwallet;
 
-    window.selectTransactionType = function(t) {
-        smartwallet.currentTransactionType = t;
-        document.querySelectorAll('#transactionForm .type-btn').forEach(b => b.classList.toggle('active', b.dataset.type === t));
-        smartwallet.filterCategoriesByType('category', t);
-    };
-    window.selectEditType = function(t) {
-        smartwallet.currentEditType = t;
-        document.querySelectorAll('#editForm .type-btn').forEach(b => b.classList.toggle('active', b.dataset.type === t));
-        smartwallet.filterCategoriesByType('editCategory', t);
-    };
-    window.selectNewCategoryType = function(t) {
-        smartwallet.newCategoryType = t;
-        document.querySelectorAll('#categoryModal .type-btn').forEach(b => b.classList.toggle('active', b.dataset.type === t));
-    };
+    window.selectTransactionType = function(t) { smartwallet.currentTransactionType = t; document.querySelectorAll('#transactionForm .type-btn').forEach(b => b.classList.toggle('active', b.dataset.type === t)); smartwallet.filterCategoriesByType('category', t); };
+    window.selectEditType = function(t) { smartwallet.currentEditType = t; document.querySelectorAll('#editForm .type-btn').forEach(b => b.classList.toggle('active', b.dataset.type === t)); smartwallet.filterCategoriesByType('editCategory', t); };
+    window.selectNewCategoryType = function(t) { smartwallet.newCategoryType = t; document.querySelectorAll('#categoryModal .type-btn').forEach(b => b.classList.toggle('active', b.dataset.type === t)); };
 
-    window.openNewTransactionModal = function() {
-        smartwallet.setDefaultDate();
-        smartwallet.filterCategoriesByType('category', smartwallet.currentTransactionType);
-        document.getElementById('newTransactionModal').classList.add('active');
-    };
-    window.closeNewTransactionModal = function() {
-        document.getElementById('newTransactionModal').classList.remove('active');
-        smartwallet.clearForm();
-    };
-    window.closeEditModal = function() {
-        document.getElementById('editModal').classList.remove('active');
-        smartwallet.currentEditId = null;
-    };
-    window.openCategoryManager = function() {
-        smartwallet.renderCategoryList();
-        document.getElementById('categoryModal').classList.add('active');
-    };
+    window.openNewTransactionModal = function() { smartwallet.setDefaultDate(); smartwallet.filterCategoriesByType('category', smartwallet.currentTransactionType); document.getElementById('newTransactionModal').classList.add('active'); };
+    window.closeNewTransactionModal = function() { document.getElementById('newTransactionModal').classList.remove('active'); smartwallet.clearForm(); };
+    window.closeEditModal = function() { document.getElementById('editModal').classList.remove('active'); smartwallet.currentEditId = null; };
+    window.openCategoryManager = function() { smartwallet.renderCategoryList(); document.getElementById('categoryModal').classList.add('active'); };
     window.closeCategoryManager = function() { document.getElementById('categoryModal').classList.remove('active'); };
     window.openExportModal = function() { document.getElementById('exportModal').classList.add('active'); };
     window.closeExportModal = function() { document.getElementById('exportModal').classList.remove('active'); };
-    window.openGoalModal = function() {
-        smartwallet.calculateGoalResult();
-        document.getElementById('goalModal').classList.add('active');
-    };
+    window.openGoalModal = function() { smartwallet.calculateGoalResult(); document.getElementById('goalModal').classList.add('active'); };
     window.closeGoalModal = function() { document.getElementById('goalModal').classList.remove('active'); };
 
-    window.openImportCsvModal = function() {
-        smartwallet.pendingCsvData = null;
-        document.getElementById('csvFileInput').value = '';
-        document.getElementById('csvFileName').textContent = 'Clique para selecionar';
-        document.getElementById('csvReplaceData').checked = false;
-        document.getElementById('importCsvModal').classList.add('active');
-        document.getElementById('mainMenu').classList.remove('active');
-    };
+    window.openImportCsvModal = function() { smartwallet.pendingCsvData = null; document.getElementById('csvFileInput').value = ''; document.getElementById('csvFileName').textContent = 'Clique para selecionar'; document.getElementById('csvReplaceData').checked = false; document.getElementById('importCsvModal').classList.add('active'); document.getElementById('mainMenu').classList.remove('active'); };
     window.closeImportCsvModal = function() { document.getElementById('importCsvModal').classList.remove('active'); };
 
     window.handleCsvFileSelect = function(event) {
         const file = event.target.files[0]; if (!file) return;
-        if (!file.name.toLowerCase().endsWith('.csv')) {
-            alert('⚠️ Selecione um arquivo .csv'); event.target.value = ''; return;
-        }
+        if (!file.name.toLowerCase().endsWith('.csv')) { alert('⚠️ Selecione um arquivo .csv'); event.target.value = ''; return; }
         document.getElementById('csvFileName').textContent = `📄 ${file.name} (${(file.size/1024).toFixed(1)} KB)`;
         const reader = new FileReader();
         reader.onload = (e) => { smartwallet.pendingCsvData = e.target.result; };
         reader.readAsText(file, 'UTF-8');
     };
 
-    window.openImportBackupModal = function() {
-        smartwallet.pendingBackupData = null;
-        document.getElementById('backupFileInput').value = '';
-        document.getElementById('backupFileName').textContent = 'Clique para selecionar';
-        document.getElementById('importBackupModal').classList.add('active');
-        document.getElementById('mainMenu').classList.remove('active');
-    };
+    window.openImportBackupModal = function() { smartwallet.pendingBackupData = null; document.getElementById('backupFileInput').value = ''; document.getElementById('backupFileName').textContent = 'Clique para selecionar'; document.getElementById('importBackupModal').classList.add('active'); document.getElementById('mainMenu').classList.remove('active'); };
     window.closeImportBackupModal = function() { document.getElementById('importBackupModal').classList.remove('active'); };
 
     window.handleBackupFileSelect = function(event) {
         const file = event.target.files[0]; if (!file) return;
-        if (!file.name.toLowerCase().endsWith('.json')) {
-            alert('⚠️ Selecione um arquivo .json'); event.target.value = ''; return;
-        }
-        if (file.size > 10 * 1024 * 1024) {
-            alert('⚠️ Arquivo muito grande (máx 10MB)'); event.target.value = ''; return;
-        }
+        if (!file.name.toLowerCase().endsWith('.json')) { alert('⚠️ Selecione um arquivo .json'); event.target.value = ''; return; }
+        if (file.size > 10 * 1024 * 1024) { alert('⚠️ Arquivo muito grande (máx 10MB)'); event.target.value = ''; return; }
         document.getElementById('backupFileName').textContent = `💾 ${file.name} (${(file.size/1024).toFixed(1)} KB)`;
         const reader = new FileReader();
         reader.onload = (e) => {
@@ -1726,254 +1566,167 @@
                 JSON.parse(content);
                 smartwallet.pendingBackupData = content;
                 smartwallet.showToast('✅ Arquivo carregado!');
-            } catch (error) {
-                alert('❌ JSON inválido: ' + error.message);
-                event.target.value = '';
-                smartwallet.pendingBackupData = null;
-            }
+            } catch (error) { alert('❌ JSON inválido: ' + error.message); event.target.value = ''; smartwallet.pendingBackupData = null; }
         };
         reader.readAsText(file, 'UTF-8');
     };
 
-    window.openClearDataModal = function() {
-        document.getElementById('clearStep1').style.display = 'block';
-        document.getElementById('clearStep2').style.display = 'none';
-        document.getElementById('clearConfirmInput').value = '';
-        document.getElementById('clearConfirmInput').classList.remove('match');
-        const btn = document.getElementById('finalClearBtn');
-        btn.disabled = true; btn.style.opacity = '0.5'; btn.style.cursor = 'not-allowed';
-        document.getElementById('clearDataModal').classList.add('active');
-        document.getElementById('mainMenu').classList.remove('active');
-    };
+    window.openClearDataModal = function() { document.getElementById('clearStep1').style.display = 'block'; document.getElementById('clearStep2').style.display = 'none'; document.getElementById('clearConfirmInput').value = ''; document.getElementById('clearConfirmInput').classList.remove('match'); const btn = document.getElementById('finalClearBtn'); btn.disabled = true; btn.style.opacity = '0.5'; btn.style.cursor = 'not-allowed'; document.getElementById('clearDataModal').classList.add('active'); document.getElementById('mainMenu').classList.remove('active'); };
     window.closeClearDataModal = function() { document.getElementById('clearDataModal').classList.remove('active'); };
-    window.showClearStep2 = function() {
-        document.getElementById('clearStep1').style.display = 'none';
-        document.getElementById('clearStep2').style.display = 'block';
-        setTimeout(() => document.getElementById('clearConfirmInput').focus(), 100);
-    };
-    window.checkClearConfirm = function() {
-        const input = document.getElementById('clearConfirmInput');
-        const btn = document.getElementById('finalClearBtn');
-        if (input.value.trim().toUpperCase() === 'LIMPAR') {
-            input.classList.add('match'); btn.disabled = false;
-            btn.style.opacity = '1'; btn.style.cursor = 'pointer';
-        } else {
-            input.classList.remove('match'); btn.disabled = true;
-            btn.style.opacity = '0.5'; btn.style.cursor = 'not-allowed';
-        }
-    };
+    window.showClearStep2 = function() { document.getElementById('clearStep1').style.display = 'none'; document.getElementById('clearStep2').style.display = 'block'; setTimeout(() => document.getElementById('clearConfirmInput').focus(), 100); };
+    window.checkClearConfirm = function() { const input = document.getElementById('clearConfirmInput'); const btn = document.getElementById('finalClearBtn'); if (input.value.trim().toUpperCase() === 'LIMPAR') { input.classList.add('match'); btn.disabled = false; btn.style.opacity = '1'; btn.style.cursor = 'pointer'; } else { input.classList.remove('match'); btn.disabled = true; btn.style.opacity = '0.5'; btn.style.cursor = 'not-allowed'; } };
 
-    window.openCreditCardsModal = function() {
-        smartwallet.renderCreditCardsList();
-        document.getElementById('creditCardsModal').classList.add('active');
-        document.getElementById('mainMenu').classList.remove('active');
-    };
+    window.openCreditCardsModal = function() { smartwallet.renderCreditCardsList(); document.getElementById('creditCardsModal').classList.add('active'); document.getElementById('mainMenu').classList.remove('active'); };
     window.closeCreditCardsModal = function() { document.getElementById('creditCardsModal').classList.remove('active'); };
 
-    window.openNewCardModal = function() {
-        document.getElementById('cardEditId').value = '';
-        document.getElementById('cardForm').reset();
-        document.getElementById('cardClosingDay').value = 20;
-        document.getElementById('cardDueDay').value = 27;
-        document.getElementById('cardColor').value = '#6366f1';
-        document.getElementById('newCardTitle').textContent = 'Novo Cartão';
-        document.getElementById('newCardModal').classList.add('active');
-    };
+    window.openNewCardModal = function() { document.getElementById('cardEditId').value = ''; document.getElementById('cardForm').reset(); document.getElementById('cardClosingDay').value = 20; document.getElementById('cardDueDay').value = 27; document.getElementById('cardColor').value = '#6366f1'; document.getElementById('newCardTitle').textContent = 'Novo Cartão'; document.getElementById('newCardModal').classList.add('active'); };
     window.closeNewCardModal = function() { document.getElementById('newCardModal').classList.remove('active'); };
 
     window.openInvoiceModal = function(cardId) { smartwallet.openInvoice(cardId); };
     window.closeInvoiceModal = function() { document.getElementById('invoiceModal').classList.remove('active'); };
 
-    window.openNewPurchaseModal = function(cardId) {
-        document.getElementById('purchaseForm').reset();
-        document.getElementById('purchaseCardId').value = cardId;
-        document.getElementById('purchaseDate').value = new Date().toISOString().split('T')[0];
-        document.getElementById('purchaseInstallments').value = '1';
-        document.getElementById('purchaseStatus').value = 'pending';
-        smartwallet.populateCategorySelects();
-        document.getElementById('newPurchaseModal').classList.add('active');
-    };
+    window.openNewPurchaseModal = function(cardId) { document.getElementById('purchaseForm').reset(); document.getElementById('purchaseCardId').value = cardId; document.getElementById('purchaseDate').value = new Date().toISOString().split('T')[0]; document.getElementById('purchaseInstallments').value = '1'; document.getElementById('purchaseStatus').value = 'pending'; smartwallet.populateCategorySelects(); document.getElementById('newPurchaseModal').classList.add('active'); };
     window.closeNewPurchaseModal = function() { document.getElementById('newPurchaseModal').classList.remove('active'); };
 
-    window.openBillsModal = function() {
-        smartwallet.renderBillsModal();
-        document.getElementById('billsModal').classList.add('active');
-    };
+    window.openBillsModal = function() { smartwallet.renderBillsModal(); document.getElementById('billsModal').classList.add('active'); };
     window.closeBillsModal = function() { document.getElementById('billsModal').classList.remove('active'); };
 
-    window.openManualModal = function() {
-        document.getElementById('manualContent').innerHTML = manualHTML;
-        document.getElementById('manualModal').classList.add('active');
-        document.getElementById('infoMenu').classList.remove('active');
-    };
+    window.openManualModal = function() { document.getElementById('manualContent').innerHTML = manualHTML; document.getElementById('manualModal').classList.add('active'); document.getElementById('infoMenu').classList.remove('active'); };
     window.closeManualModal = function() { document.getElementById('manualModal').classList.remove('active'); };
 
-    window.openTermsModal = function() {
-        document.getElementById('disclaimerModal').style.display = 'flex';
-        initDisclaimer();
-        document.getElementById('infoMenu').classList.remove('active');
-    };
+    window.openTermsModal = function() { document.getElementById('disclaimerModal').classList.add('active'); initDisclaimer(); document.getElementById('infoMenu').classList.remove('active'); };
 
-    window.openThanksModal = function() {
-        document.getElementById('thanksModal').classList.add('active');
-        document.getElementById('infoMenu').classList.remove('active');
-    };
+    window.openThanksModal = function() { document.getElementById('thanksModal').classList.add('active'); document.getElementById('infoMenu').classList.remove('active'); };
     window.closeThanksModal = function() { document.getElementById('thanksModal').classList.remove('active'); };
 
-    window.copyPixKey = function() {
-        const pixKey = document.getElementById('pixKey').textContent;
-        navigator.clipboard.writeText(pixKey).then(() => smartwallet.showToast('✅ Chave PIX copiada!'))
-            .catch(() => smartwallet.showToast('❌ Copie manualmente: ' + pixKey));
-    };
+    window.copyPixKey = function() { const pixKey = document.getElementById('pixKey').textContent; navigator.clipboard.writeText(pixKey).then(() => smartwallet.showToast('✅ Chave PIX copiada!')).catch(() => smartwallet.showToast('❌ Copie manualmente: ' + pixKey)); };
 
-    window.toggleInfoMenu = function(e) {
-        e.stopPropagation();
-        document.getElementById('infoMenu').classList.toggle('active');
-    };
-    window.toggleMenu = function(e) {
-        e.stopPropagation();
-        document.getElementById('mainMenu').classList.toggle('active');
-        document.getElementById('infoMenu').classList.remove('active');
-    };
-    window.togglePrivacy = function() {
-        smartwallet.privacyOn = !smartwallet.privacyOn;
-        localStorage.setItem('smartwallet_privacy', smartwallet.privacyOn);
-        smartwallet.applyPrivacy();
-    };
-    window.toggleTheme = function() {
-        smartwallet.darkMode = !smartwallet.darkMode;
-        localStorage.setItem('smartwallet_dark', smartwallet.darkMode);
-        smartwallet.applyTheme();
-    };
+    window.toggleInfoMenu = function(e) { e.stopPropagation(); document.getElementById('infoMenu').classList.toggle('active'); };
+    window.toggleMenu = function(e) { e.stopPropagation(); document.getElementById('mainMenu').classList.toggle('active'); document.getElementById('infoMenu').classList.remove('active'); };
+    window.togglePrivacy = function() { smartwallet.privacyOn = !smartwallet.privacyOn; localStorage.setItem('smartwallet_privacy', smartwallet.privacyOn); smartwallet.applyPrivacy(); };
+    window.toggleTheme = function() { smartwallet.darkMode = !smartwallet.darkMode; localStorage.setItem('smartwallet_dark', smartwallet.darkMode); smartwallet.applyTheme(); };
 
-// ===== CONTROLE DA SEQUÊNCIA: SPLASH → DISCLAIMER → BOAS-VINDAS → APP =====
-let disclaimerTimerInterval;
-let DISCLAIMER_COUNTDOWN = 12; // 12 segundos
+    // ===== CONTROLE DA SEQUÊNCIA: SPLASH → DISCLAIMER → BOAS-VINDAS → APP =====
+    let disclaimerTimerInterval;
+    const DISCLAIMER_COUNTDOWN = 12;
 
-function initDisclaimer() {
-    const timerDisplay = document.getElementById('disclaimerTimer');
-    const btnEl = document.getElementById('acceptDisclaimerBtn');
-    const disclaimerModal = document.getElementById('disclaimerModal');
-    
-    if (!timerDisplay || !btnEl || !disclaimerModal) return;
-    
-    // Mostra o disclaimer como overlay
-    disclaimerModal.classList.add('active');
-    
-    // Reset
-    let countdown = DISCLAIMER_COUNTDOWN;
-    btnEl.classList.remove('enabled');
-    btnEl.disabled = true;
-    
-    timerDisplay.innerHTML = `⏱️ Aguarde <span id="countdown">${countdown}</span> segundos para continuar`;
-    
-    if (disclaimerTimerInterval) clearInterval(disclaimerTimerInterval);
-    
-    // Inicia contagem regressiva
-    disclaimerTimerInterval = setInterval(() => {
-        countdown--;
-        const countdownSpan = document.getElementById('countdown');
-        if (countdownSpan) countdownSpan.textContent = countdown;
+    function initDisclaimer() {
+        const timerDisplay = document.getElementById('disclaimerTimer');
+        const btnEl = document.getElementById('acceptDisclaimerBtn');
+        const disclaimerModal = document.getElementById('disclaimerModal');
         
-        if (countdown <= 0) {
-            clearInterval(disclaimerTimerInterval);
-            btnEl.classList.add('enabled');
-            btnEl.disabled = false;
-            timerDisplay.innerHTML = '✅ Você já pode aceitar os termos';
-        }
-    }, 1000);
-}
-
-window.acceptDisclaimer = function() {
-    const btnEl = document.getElementById('acceptDisclaimerBtn');
-    const disclaimerModal = document.getElementById('disclaimerModal');
-    
-    if (!btnEl || !btnEl.classList.contains('enabled')) return;
-    if (!disclaimerModal) return;
-    
-    // Salva aceite
-    localStorage.setItem('smartwallet_disclaimer_accepted', 'true');
-    
-    // Animação de desintegração
-    disclaimerModal.classList.add('disintegrating');
-    
-    // Remove o modal após animação
-    setTimeout(() => {
-        disclaimerModal.classList.remove('active', 'disintegrating');
-        disclaimerModal.style.display = 'none';
+        if (!timerDisplay || !btnEl || !disclaimerModal) return;
         
-        // Splash fica visível por 3 segundos como boas-vindas
-        setTimeout(() => {
-            transitionToApp();
-        }, 3000);
-    }, 600); // Duração da animação de desintegração
-};
-
-function transitionToApp() {
-    const splashScreen = document.getElementById('splashScreen');
-    
-    if (splashScreen) {
-        // Fade out da splash
-        splashScreen.classList.add('fade-out');
+        disclaimerModal.classList.add('active');
         
-        setTimeout(() => {
-            splashScreen.style.display = 'none';
+        let countdown = DISCLAIMER_COUNTDOWN;
+        btnEl.classList.remove('enabled');
+        btnEl.disabled = true;
+        
+        timerDisplay.innerHTML = `⏱️ Aguarde <span id="countdown">${countdown}</span> segundos para continuar`;
+        
+        if (disclaimerTimerInterval) clearInterval(disclaimerTimerInterval);
+        
+        disclaimerTimerInterval = setInterval(() => {
+            countdown--;
+            const countdownSpan = document.getElementById('countdown');
+            if (countdownSpan) countdownSpan.textContent = countdown;
             
-            // Mostra quote modal ou vai direto pro app
-            showQuoteModal();
-        }, 800);
-    } else {
-        showQuoteModal();
+            if (countdown <= 0) {
+                clearInterval(disclaimerTimerInterval);
+                btnEl.classList.add('enabled');
+                btnEl.disabled = false;
+                timerDisplay.innerHTML = '✅ Você já pode aceitar os termos';
+            }
+        }, 1000);
     }
-}
 
-function showQuoteModal() {
-    const quote = financialQuotes[Math.floor(Math.random() * financialQuotes.length)];
-    const quoteText = document.getElementById('quoteText');
-    const quoteAuthor = document.getElementById('quoteAuthor');
-    const quoteModal = document.getElementById('quoteModal');
-    
-    if (quoteText) quoteText.textContent = `"${quote.text}"`;
-    if (quoteAuthor) quoteAuthor.textContent = `— ${quote.author}`;
-    if (quoteModal) quoteModal.classList.add('active');
-}
-
-window.startApp = function() {
-    const quoteModal = document.getElementById('quoteModal');
-    const mainApp = document.getElementById('mainApp');
-    const fabBtn = document.getElementById('fabBtn');
-    
-    if (quoteModal) quoteModal.classList.remove('active');
-    if (mainApp) mainApp.style.display = 'block';
-    if (fabBtn) fabBtn.style.display = 'flex';
-};
-
-// ===== INICIALIZAÇÃO PRINCIPAL =====
-window.addEventListener('load', () => {
-    updatePrintDate();
-    
-    const disclaimerAccepted = localStorage.getItem('smartwallet_disclaimer_accepted') === 'true';
-    const splashScreen = document.getElementById('splashScreen');
-    
-    // Garante que splash está visível
-    if (splashScreen) {
-        splashScreen.style.display = 'flex';
-        splashScreen.classList.remove('fade-out');
-    }
-    
-    // Aguarda 1 segundo para a splash carregar, depois mostra disclaimer
-    setTimeout(() => {
-        if (!disclaimerAccepted) {
-            // Primeiro acesso: mostra disclaimer overlay
-            initDisclaimer();
-        } else {
-            // Já aceitou: splash fica 3 segundos e vai pro app
+    window.acceptDisclaimer = function() {
+        const btnEl = document.getElementById('acceptDisclaimerBtn');
+        const disclaimerModal = document.getElementById('disclaimerModal');
+        
+        if (!btnEl || !btnEl.classList.contains('enabled')) return;
+        if (!disclaimerModal) return;
+        
+        localStorage.setItem('smartwallet_disclaimer_accepted', 'true');
+        
+        disclaimerModal.classList.add('disintegrating');
+        
+        setTimeout(() => {
+            disclaimerModal.classList.remove('active', 'disintegrating');
+            disclaimerModal.style.display = 'none';
+            
             setTimeout(() => {
                 transitionToApp();
             }, 3000);
+        }, 600);
+    };
+
+    function transitionToApp() {
+        const splashScreen = document.getElementById('splashScreen');
+        
+        if (splashScreen) {
+            splashScreen.classList.add('fade-out');
+            
+            setTimeout(() => {
+                splashScreen.style.display = 'none';
+                showQuoteModal();
+            }, 800);
+        } else {
+            showQuoteModal();
         }
-    }, 1000);
-});
+    }
+
+    function showQuoteModal() {
+        const quote = financialQuotes[Math.floor(Math.random() * financialQuotes.length)];
+        const quoteText = document.getElementById('quoteText');
+        const quoteAuthor = document.getElementById('quoteAuthor');
+        const quoteModal = document.getElementById('quoteModal');
+        
+        if (quoteText) quoteText.textContent = `"${quote.text}"`;
+        if (quoteAuthor) quoteAuthor.textContent = `— ${quote.author}`;
+        if (quoteModal) quoteModal.classList.add('active');
+    }
+
+    window.startApp = function() {
+        const quoteModal = document.getElementById('quoteModal');
+        const mainApp = document.getElementById('mainApp');
+        const fabBtn = document.getElementById('fabBtn');
+        
+        if (quoteModal) quoteModal.classList.remove('active');
+        if (mainApp) mainApp.style.display = 'block';
+        if (fabBtn) fabBtn.style.display = 'flex';
+    };
+
+    window.printManual = function() { window.print(); };
+
+    function updatePrintDate() {
+        const dateEl = document.getElementById('printDate');
+        if (dateEl) dateEl.textContent = 'Gerado em: ' + new Date().toLocaleString('pt-BR');
+    }
+
+    // ===== INICIALIZAÇÃO PRINCIPAL =====
+    window.addEventListener('load', () => {
+        updatePrintDate();
+        
+        const disclaimerAccepted = localStorage.getItem('smartwallet_disclaimer_accepted') === 'true';
+        const splashScreen = document.getElementById('splashScreen');
+        
+        if (splashScreen) {
+            splashScreen.style.display = 'flex';
+            splashScreen.classList.remove('fade-out');
+        }
+        
+        setTimeout(() => {
+            if (!disclaimerAccepted) {
+                initDisclaimer();
+            } else {
+                setTimeout(() => {
+                    transitionToApp();
+                }, 3000);
+            }
+        }, 1000);
+    });
 
     document.addEventListener('click', (e) => {
         const menu = document.getElementById('mainMenu');
@@ -1984,26 +1737,12 @@ window.addEventListener('load', () => {
         if (!infoBtn && infoMenu.classList.contains('active')) infoMenu.classList.remove('active');
     });
 
-    window.closeRecurrenceConfirmModal = function() {
-        document.getElementById('recurrenceConfirmModal').classList.remove('active');
-        smartwallet.pendingRecurrenceUpdate = null;
-    };
+    window.closeRecurrenceConfirmModal = function() { document.getElementById('recurrenceConfirmModal').classList.remove('active'); smartwallet.pendingRecurrenceUpdate = null; };
     window.applyRecurrenceUpdate = function(scope) { smartwallet.applyRecurrenceUpdate(scope); };
 
-    // ===== CONTAS =====
-    window.openAccountsModal = function() {
-        smartwallet.renderAccountsList();
-        document.getElementById('accountsModal').classList.add('active');
-        document.getElementById('mainMenu').classList.remove('active');
-    };
+    window.openAccountsModal = function() { smartwallet.renderAccountsList(); document.getElementById('accountsModal').classList.add('active'); document.getElementById('mainMenu').classList.remove('active'); };
     window.closeAccountsModal = function() { document.getElementById('accountsModal').classList.remove('active'); };
-    window.openNewAccountModal = function() {
-        document.getElementById('accountEditId').value = '';
-        document.getElementById('accountForm').reset();
-        document.getElementById('accountColor').value = '#6366f1';
-        document.getElementById('newAccountTitle').textContent = 'Nova Conta';
-        document.getElementById('newAccountModal').classList.add('active');
-    };
+    window.openNewAccountModal = function() { document.getElementById('accountEditId').value = ''; document.getElementById('accountForm').reset(); document.getElementById('accountColor').value = '#6366f1'; document.getElementById('newAccountTitle').textContent = 'Nova Conta'; document.getElementById('newAccountModal').classList.add('active'); };
     window.closeNewAccountModal = function() { document.getElementById('newAccountModal').classList.remove('active'); };
 
     if ('serviceWorker' in navigator) {
