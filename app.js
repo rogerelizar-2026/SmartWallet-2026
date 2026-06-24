@@ -15,7 +15,435 @@
         { text: "Gastar dinheiro para impressionar pessoas é a maneira mais rápida de ficar pobre.", author: "Morgan Housel" },
         { text: "Cada real que você economiza é um empregado que trabalha para você.", author: "T. Harv Eker" },
         { text: "A liberdade financeira é mais sobre controle do que sobre dinheiro.", author: "Ramit Sethi" },
-        { text: "O maior inimigo da riqueza é a expectativa de ficar rico rápido.", author: "Morgan Housel" },
+        { text: "O maior inimigo da riqueza é a expectativa de ficar rico rápido.", author: "Morgan Housel" },// ===== NOVO: INVESTIMENTOS =====
+this.investments = this.loadFromStorage('smartwallet_investments', []);
+
+// No init(), adicione:
+this.populateAccountSelects();
+
+// Nova função:
+populateAccountSelects() {
+    const selects = [document.getElementById('transactionAccount'), document.getElementById('editTransactionAccount'), document.getElementById('accountFilter')];
+    selects.forEach(sel => {
+        if (!sel) return;
+        const val = sel.value;
+        const isFilter = sel.id === 'accountFilter';
+        sel.innerHTML = isFilter ? '<option value="">Todas as contas</option>' : '<option value="">Selecione a conta...</option>';
+        this.accounts.forEach(acc => {
+            const opt = document.createElement('option');
+            opt.value = acc.id;
+            opt.textContent = `${acc.type === 'checking' ? '💳' : '📈'} ${acc.name}`;
+            sel.appendChild(opt);
+        });
+        sel.value = val;
+    });
+}
+
+// Modifique addTransaction para incluir account:
+addTransaction() {
+    // ... código existente até paymentMethod ...
+    const accountId = document.getElementById('transactionAccount').value;
+    
+    // ... resto do código ...
+    const base = { date, amount: type === 'expense' ? -Math.abs(amount) : Math.abs(amount), category, description, statusOk, paymentMethod, accountId };
+    // ... resto ...
+}
+
+// Modifique editTransaction para carregar account:
+editTransaction(id) {
+    // ... código existente ...
+    document.getElementById('editTransactionAccount').value = t.accountId || '';
+    // ... resto ...
+}
+
+// Modifique updateTransaction para salvar account:
+updateTransaction() {
+    // ... código existente ...
+    const updated = {
+        ...this.transactions[idx],
+        // ... outros campos ...
+        accountId: document.getElementById('editTransactionAccount').value
+    };
+    // ... resto ...
+}
+
+// Modifique render para incluir coluna Conta:
+render() {
+    // ... código existente ...
+    tbody.innerHTML = sorted.map(t => {
+        const c = this.getCategoryById(t.category);
+        const acc = this.accounts.find(a => a.id === t.accountId);
+        // ... resto ...
+        return `<tr class="transaction-row" onclick="smartwallet.editTransaction(${t.id})">
+            <td data-label="Data">${this.formatDate(t.date)}</td>
+            <td data-label="Descrição">${this.escapeHtml(t.description)||'-'}</td>
+            <td data-label="Categoria"><span class="category-badge" style="background:${c.color}">${this.escapeHtml(c.name)}</span></td>
+            <td data-label="Conta">${acc ? `<span class="account-badge">${this.escapeHtml(acc.name)}</span>` : '-'}</td>
+            <td data-label="Pagamento"><span class="payment-badge">${paymentName}</span></td>
+            <td data-label="Status"><span class="status-badge ${statusClass}">${statusText}</span></td>
+            <td data-label="Recorrência">${recurrenceHtml || '<span style="color:var(--text-secondary);">-</span>'}</td>
+            <td data-label="Valor" class="amount ${cls} privacy-value">${this.formatCurrency(t.amount)}</td>
+            <td data-label="Saldo" class="balance privacy-value">${this.formatCurrency(balMap.get(t.id))}</td>
+        </tr>`;
+    }).join('');
+}
+
+// Modifique getFilteredTransactions para incluir filtro de conta:
+getFilteredTransactions() {
+    const search = document.getElementById('searchFilter').value.toLowerCase();
+    const catFilter = document.getElementById('categoryFilter').value;
+    const typeFilter = document.getElementById('typeFilter').value;
+    const statusFilter = document.getElementById('statusFilter').value;
+    const accountFilter = document.getElementById('accountFilter').value;
+    return this.getMonthTransactions().filter(t => {
+        const cat = this.getCategoryById(t.category);
+        const matchesStatus = !statusFilter || (statusFilter === 'done' ? t.statusOk : !t.statusOk);
+        const matchesAccount = !accountFilter || t.accountId === accountFilter;
+        return (!search || t.description.toLowerCase().includes(search) || cat.name.toLowerCase().includes(search)) &&
+            (!catFilter || t.category === catFilter) &&
+            (!typeFilter || (typeFilter === 'income' ? t.amount > 0 : t.amount < 0)) &&
+            matchesStatus &&
+            matchesAccount;
+    });
+}
+
+// Adicione listener para accountFilter:
+safeAddListener('accountFilter', 'change', () => this.render());
+
+// ===== FUNÇÕES DE INVESTIMENTOS =====
+window.openInvestmentsModal = function() {
+    smartwallet.renderInvestmentsModal();
+    document.getElementById('investmentsModal').classList.add('active');
+    document.getElementById('infoMenu').classList.remove('active');
+};
+window.closeInvestmentsModal = function() { document.getElementById('investmentsModal').classList.remove('active'); };
+
+window.openNewInvestmentModal = function() {
+    document.getElementById('investmentEditId').value = '';
+    document.getElementById('investmentForm').reset();
+    document.getElementById('investmentDate').value = new Date().toISOString().split('T')[0];
+    document.getElementById('newInvestmentTitle').textContent = 'Nova Aplicação';
+    document.getElementById('newInvestmentModal').classList.add('active');
+};
+window.closeNewInvestmentModal = function() { document.getElementById('newInvestmentModal').classList.remove('active'); };
+
+// Na classe SmartWallet, adicione:
+saveInvestment() {
+    const id = document.getElementById('investmentEditId').value;
+    const name = document.getElementById('investmentName').value.trim();
+    const type = document.getElementById('investmentType').value;
+    const initial = parseFloat(document.getElementById('investmentInitial').value) || 0;
+    const current = parseFloat(document.getElementById('investmentCurrent').value) || 0;
+    const date = document.getElementById('investmentDate').value;
+    const rate = parseFloat(document.getElementById('investmentRate').value) || 0;
+    
+    if (!name) return this.showToast('Informe o nome');
+    
+    const investment = { id: id || 'inv_' + Date.now(), name, type, initial, current, date, rate };
+    
+    if (id) {
+        const idx = this.investments.findIndex(i => i.id === id);
+        if (idx !== -1) this.investments[idx] = investment;
+    } else {
+        this.investments.push(investment);
+    }
+    
+    localStorage.setItem('smartwallet_investments', JSON.stringify(this.investments));
+    this.renderInvestmentsModal();
+    this.updateInvestmentChart();
+    closeNewInvestmentModal();
+    this.showToast(id ? 'Aplicação atualizada!' : 'Aplicação cadastrada!');
+}
+
+deleteInvestment(id) {
+    if (!confirm('Excluir esta aplicação?')) return;
+    this.investments = this.investments.filter(i => i.id !== id);
+    localStorage.setItem('smartwallet_investments', JSON.stringify(this.investments));
+    this.renderInvestmentsModal();
+    this.updateInvestmentChart();
+    this.showToast('Aplicação excluída!');
+}
+
+editInvestment(id) {
+    const inv = this.investments.find(i => i.id === id);
+    if (!inv) return;
+    document.getElementById('investmentEditId').value = inv.id;
+    document.getElementById('investmentName').value = inv.name;
+    document.getElementById('investmentType').value = inv.type;
+    document.getElementById('investmentInitial').value = inv.initial;
+    document.getElementById('investmentCurrent').value = inv.current;
+    document.getElementById('investmentDate').value = inv.date;
+    document.getElementById('investmentRate').value = inv.rate;
+    document.getElementById('newInvestmentTitle').textContent = 'Editar Aplicação';
+    document.getElementById('newInvestmentModal').classList.add('active');
+}
+
+renderInvestmentsModal() {
+    const container = document.getElementById('investmentsContent');
+    if (!this.investments.length) {
+        container.innerHTML = `<div style="text-align:center; padding:40px 20px; color:var(--text-secondary);"><div style="font-size:3rem; margin-bottom:12px; opacity:0.5;">📈</div><h3>Nenhuma aplicação cadastrada</h3><p>Clique em "Nova Aplicação" para começar</p></div>`;
+        return;
+    }
+    
+    let totalInitial = 0, totalCurrent = 0;
+    const typeLabels = { cdb: 'CDB', tesouro: 'Tesouro Direto', lci: 'LCI/LCA', fundo: 'Fundo', acao: 'Ações', fiis: 'FIIs', poupanca: 'Poupança', outro: 'Outro' };
+    
+    container.innerHTML = '<div style="margin-bottom:20px;">' + this.investments.map(inv => {
+        const profit = inv.current - inv.initial;
+        const profitPct = inv.initial > 0 ? (profit / inv.initial * 100) : 0;
+        totalInitial += inv.initial;
+        totalCurrent += inv.current;
+        
+        return `
+            <div class="investment-card">
+                <div class="investment-card-header">
+                    <div>
+                        <div class="investment-card-title">${this.escapeHtml(inv.name)}</div>
+                        <div class="investment-card-type">${typeLabels[inv.type] || inv.type} • Aplicado em ${this.formatDate(inv.date)}</div>
+                    </div>
+                    <div class="investment-card-actions">
+                        <button class="btn btn-secondary btn-small" onclick="smartwallet.editInvestment('${inv.id}')">✏️</button>
+                        <button class="btn btn-danger btn-small" onclick="smartwallet.deleteInvestment('${inv.id}')">🗑️</button>
+                    </div>
+                </div>
+                <div class="investment-card-values">
+                    <div class="investment-value-item">
+                        <div class="investment-value-label">Valor Inicial</div>
+                        <div class="investment-value-amount">${this.formatCurrency(inv.initial)}</div>
+                    </div>
+                    <div class="investment-value-item">
+                        <div class="investment-value-label">Valor Atual</div>
+                        <div class="investment-value-amount">${this.formatCurrency(inv.current)}</div>
+                    </div>
+                    <div class="investment-value-item">
+                        <div class="investment-value-label">Rendimento</div>
+                        <div class="investment-value-amount ${profit >= 0 ? 'positive' : 'negative'}">${profitPct.toFixed(2)}% (${this.formatCurrency(profit)})</div>
+                    </div>
+                </div>
+                ${inv.rate > 0 ? `<div style="font-size:0.85rem; color:var(--text-secondary);">Taxa: ${inv.rate}% ao ano</div>` : ''}
+            </div>
+        `;
+    }).join('') + '</div>';
+    
+    const totalProfit = totalCurrent - totalInitial;
+    const totalProfitPct = totalInitial > 0 ? (totalProfit / totalInitial * 100) : 0;
+    
+    container.innerHTML += `
+        <div style="background:var(--input-bg); border-radius:16px; padding:20px; margin-top:20px;">
+            <h3 style="margin-bottom:16px;">📊 Resumo Geral</h3>
+            <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px;">
+                <div style="text-align:center;">
+                    <div style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:4px;">Total Investido</div>
+                    <div style="font-size:1.3rem; font-weight:700;">${this.formatCurrency(totalInitial)}</div>
+                </div>
+                <div style="text-align:center;">
+                    <div style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:4px;">Valor Atual</div>
+                    <div style="font-size:1.3rem; font-weight:700;">${this.formatCurrency(totalCurrent)}</div>
+                </div>
+                <div style="text-align:center;">
+                    <div style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:4px;">Rendimento Total</div>
+                    <div style="font-size:1.3rem; font-weight:700; color:${totalProfit >= 0 ? 'var(--success-color)' : 'var(--danger-color)'};">${totalProfitPct.toFixed(2)}% (${this.formatCurrency(totalProfit)})</div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+updateInvestmentChart() {
+    if (!this.investments.length) {
+        document.getElementById('investmentsChartSection').style.display = 'none';
+        return;
+    }
+    
+    document.getElementById('investmentsChartSection').style.display = 'block';
+    
+    if (!this.charts.invest) {
+        const colors = this.getChartColors();
+        this.charts.invest = new Chart(document.getElementById('investChart').getContext('2d'), {
+            type: 'line',
+            data: { labels: [], datasets: [] },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { position: 'top', labels: { color: colors.text } } },
+                scales: {
+                    y: { beginAtZero: true, ticks: { color: colors.textSecondary }, grid: { color: colors.grid } },
+                    x: { ticks: { color: colors.textSecondary }, grid: { color: colors.grid } }
+                }
+            }
+        });
+    }
+    
+    const labels = this.investments.map(i => i.name);
+    const initialData = this.investments.map(i => i.initial);
+    const currentData = this.investments.map(i => i.current);
+    const profitPctData = this.investments.map(i => i.initial > 0 ? ((i.current - i.initial) / i.initial * 100) : 0);
+    
+    // Projeção para 12 meses
+    const projectionData = this.investments.map(i => {
+        if (i.rate <= 0) return i.current;
+        const monthsSince = Math.max(0, (new Date() - new Date(i.date + 'T00:00:00')) / (1000 * 60 * 60 * 24 * 30));
+        return i.current * Math.pow(1 + i.rate / 100, 12 / 12);
+    });
+    
+    this.charts.invest.data.labels = labels;
+    this.charts.invest.data.datasets = [
+        { label: 'Valor Inicial (R$)', data: initialData, borderColor: '#94a3b8', backgroundColor: 'rgba(148,163,184,0.1)', tension: 0.4 },
+        { label: 'Valor Atual (R$)', data: currentData, borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.1)', tension: 0.4 },
+        { label: 'Rendimento (%)', data: profitPctData, borderColor: '#06b6d4', backgroundColor: 'rgba(6,182,212,0.1)', tension: 0.4, yAxisID: 'y1' },
+        { label: 'Projeção 12 meses (R$)', data: projectionData, borderColor: '#f59e0b', backgroundColor: 'rgba(245,158,11,0.1)', tension: 0.4, borderDash: [5, 5] }
+    ];
+    this.charts.invest.options.scales.y1 = { position: 'right', ticks: { color: this.getChartColors().textSecondary }, grid: { display: false } };
+    this.charts.invest.update();
+}
+
+// No init(), adicione após this.updateAlertBadge():
+this.updateInvestmentChart();
+
+// No saveAccounts(), adicione no final:
+this.populateAccountSelects();
+
+// No deleteAccount(), adicione no final:
+this.populateAccountSelects();
+this.render();
+
+// Modifique exportBackup para incluir investments:
+exportBackup() {
+    // ... código existente ...
+    const backup = {
+        // ... outros campos ...
+        investments: this.investments || [],
+        // ... resto ...
+    };
+    // ... resto ...
+}
+
+// Modifique importBackup para incluir investments:
+importBackup() {
+    // ... código existente ...
+    const investments = (data.investments || []).filter(i => i && typeof i === 'object');
+    // ... resto ...
+    this.investments = investments;
+    // ... resto ...
+    this.updateInvestmentChart();
+}
+
+// Modifique clearAllData para incluir investments:
+clearAllData() {
+    // ... código existente ...
+    this.investments = [];
+    // ... resto ...
+    localStorage.setItem('smartwallet_investments', '[]');
+    // ... resto ...
+}
+
+// Modifique printPDF para respeitar filtros:
+printPDF() {
+    const filters = {
+        search: document.getElementById('searchFilter').value,
+        type: document.getElementById('typeFilter').value,
+        category: document.getElementById('categoryFilter').value,
+        status: document.getElementById('statusFilter').value,
+        account: document.getElementById('accountFilter').value
+    };
+    
+    const filtered = this.getFilteredTransactions();
+    const printWindow = window.open('', '_blank');
+    
+    let filtersInfo = '';
+    if (filters.search) filtersInfo += `<p><strong>Busca:</strong> ${this.escapeHtml(filters.search)}</p>`;
+    if (filters.type) filtersInfo += `<p><strong>Tipo:</strong> ${filters.type === 'income' ? 'Receitas' : 'Despesas'}</p>`;
+    if (filters.category) {
+        const cat = this.getCategoryById(filters.category);
+        filtersInfo += `<p><strong>Categoria:</strong> ${this.escapeHtml(cat.name)}</p>`;
+    }
+    if (filters.status) filtersInfo += `<p><strong>Status:</strong> ${filters.status === 'done' ? 'Concluído' : 'Pendente'}</p>`;
+    if (filters.account) {
+        const acc = this.accounts.find(a => a.id === filters.account);
+        if (acc) filtersInfo += `<p><strong>Conta:</strong> ${this.escapeHtml(acc.name)}</p>`;
+    }
+    
+    printWindow.document.write(`<!DOCTYPE html><html><head><title>Extrato Smart Wallet</title><style>
+        body { font-family: Arial, sans-serif; padding: 40px; color: #1e293b; max-width: 900px; margin: 0 auto; }
+        .header { border-bottom: 3px solid #6366f1; padding-bottom: 20px; margin-bottom: 30px; }
+        .header h1 { color: #6366f1; margin: 0 0 5px 0; }
+        .header .subtitle { color: #64748b; font-size: 0.9rem; }
+        .filters-info { background: #f8fafc; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 0.9rem; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
+        th, td { padding: 10px; text-align: left; border-bottom: 1px solid #e5e7eb; font-size: 0.9rem; }
+        th { background: #f1f5f9; font-weight: 600; }
+        .total-row { background: #f8fafc; font-weight: 700; }
+        .footer { margin-top: 40px; padding-top: 20px; border-top: 2px solid #6366f1; font-size: 0.85rem; color: #64748b; text-align: center; }
+        @media print { body { padding: 20px; } }
+    </style></head><body>
+        <div class="header">
+            <h1>Smart Wallet - Extrato</h1>
+            <div class="subtitle">Período: ${document.getElementById('currentMonth').textContent}</div>
+        </div>
+        ${filtersInfo ? `<div class="filters-info"><strong>Filtros aplicados:</strong>${filtersInfo}</div>` : ''}
+        <table>
+            <thead><tr><th>Data</th><th>Descrição</th><th>Categoria</th><th>Conta</th><th>Pagamento</th><th>Status</th><th>Valor</th></tr></thead>
+            <tbody>
+                ${filtered.sort((a,b) => new Date(a.date) - new Date(b.date)).map(t => {
+                    const cat = this.getCategoryById(t.category);
+                    const acc = this.accounts.find(a => a.id === t.accountId);
+                    const payment = this.getPaymentMethodName(t.paymentMethod);
+                    return `<tr>
+                        <td>${this.formatDate(t.date)}</td>
+                        <td>${this.escapeHtml(t.description)}</td>
+                        <td>${this.escapeHtml(cat.name)}</td>
+                        <td>${acc ? this.escapeHtml(acc.name) : '-'}</td>
+                        <td>${payment}</td>
+                        <td>${t.statusOk ? 'Concluído' : 'Pendente'}</td>
+                        <td style="text-align:right; color:${t.amount >= 0 ? '#10b981' : '#ef4444'}; font-weight:600;">${this.formatCurrency(t.amount)}</td>
+                    </tr>`;
+                }).join('')}
+            </tbody>
+            <tfoot>
+                <tr class="total-row">
+                    <td colspan="6" style="text-align:right;">Total:</td>
+                    <td style="text-align:right; font-size:1.1rem;">${this.formatCurrency(filtered.reduce((s, t) => s + t.amount, 0))}</td>
+                </tr>
+            </tfoot>
+        </table>
+        <div class="footer">Smart Wallet • Gerado em ${new Date().toLocaleString('pt-BR')}<br>Idealizado por RogerElizar™</div>
+    </body></html>`);
+    printWindow.document.close();
+    setTimeout(() => { printWindow.print(); }, 250);
+}
+
+// Modifique printManual para carregar apenas o manual:
+window.printManual = function() {
+    const manualContent = document.getElementById('manualContent').innerHTML;
+    const printWindow = window.open('', '_blank');
+    
+    printWindow.document.write(`<!DOCTYPE html><html><head><title>Manual do Usuário - Smart Wallet</title><style>
+        @page { size: A4; margin: 2cm; }
+        body { font-family: Arial, sans-serif; padding: 40px; color: #1e293b; max-width: 800px; margin: 0 auto; }
+        .header { border-bottom: 3px solid #6366f1; padding-bottom: 20px; margin-bottom: 30px; text-align: center; }
+        .header h1 { color: #6366f1; margin: 0 0 5px 0; }
+        .header .subtitle { color: #64748b; font-size: 0.9rem; }
+        h2 { color: #6366f1; margin-top: 30px; border-bottom: 2px solid #6366f1; padding-bottom: 10px; }
+        h3 { color: #06b6d4; margin-top: 20px; }
+        .manual-quote { margin: 24px 0; padding: 20px 30px; border-left: 4px solid #6366f1; background: #f8fafc; border-radius: 8px; font-style: italic; }
+        .manual-quote .quote-author { font-size: 0.85rem; font-weight: 600; color: #6366f1; text-align: right; margin-top: 12px; font-style: normal; }
+        .manual-tip, .manual-warning, .manual-success { padding: 16px; margin: 16px 0; border-radius: 8px; border-left: 4px solid; }
+        .manual-tip { background: rgba(99,102,241,0.1); border-color: #6366f1; }
+        .manual-warning { background: rgba(245,158,11,0.1); border-color: #f59e0b; }
+        .manual-success { background: rgba(16,185,129,0.1); border-color: #10b981; }
+        .footer { margin-top: 40px; padding-top: 20px; border-top: 2px solid #6366f1; font-size: 0.85rem; color: #64748b; text-align: center; }
+        @media print { body { padding: 20px; } }
+    </style></head><body>
+        <div class="header">
+            <h1>📘 Manual do Usuário</h1>
+            <div class="subtitle">Smart Wallet - Controle Financeiro Pessoal Inteligente</div>
+            <div class="subtitle">Versão 2.0 - 2026</div>
+        </div>
+        ${manualContent}
+        <div class="footer">Smart Wallet • Idealizado por RogerElizar™</div>
+    </body></html>`);
+    printWindow.document.close();
+    setTimeout(() => { printWindow.print(); }, 250);
+};
         { text: "A paciência é a virtude dos investidores bem-sucedidos.", author: "Peter Lynch" },
         { text: "Investir em conhecimento paga os melhores juros.", author: "Benjamin Franklin" },
         { text: "A educação financeira é a base da liberdade financeira.", author: "Robert Kiyosaki" },
