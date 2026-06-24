@@ -15,7 +15,10 @@
         { text: "Gastar dinheiro para impressionar pessoas é a maneira mais rápida de ficar pobre.", author: "Morgan Housel" },
         { text: "Cada real que você economiza é um empregado que trabalha para você.", author: "T. Harv Eker" },
         { text: "A liberdade financeira é mais sobre controle do que sobre dinheiro.", author: "Ramit Sethi" },
-        { text: "O maior inimigo da riqueza é a expectativa de ficar rico rápido.", author: "Morgan Housel" },// ===== NOVO: INVESTIMENTOS =====
+        { text: "O maior inimigo da riqueza é a expectativa de ficar rico rápido.", author: "Morgan Housel" },
+    ];       
+        
+// ===== NOVO: INVESTIMENTOS =====
 this.investments = this.loadFromStorage('smartwallet_investments', []);
 
 // No init(), adicione:
@@ -2133,28 +2136,37 @@ window.printManual = function() {
         if (dateEl) dateEl.textContent = 'Gerado em: ' + new Date().toLocaleString('pt-BR');
     }
 
-    // ===== INICIALIZAÇÃO PRINCIPAL =====
-    window.addEventListener('load', () => {
-        updatePrintDate();
-        
-        const disclaimerAccepted = localStorage.getItem('smartwallet_disclaimer_accepted') === 'true';
-        const splashScreen = document.getElementById('splashScreen');
-        
-        if (splashScreen) {
-            splashScreen.style.display = 'flex';
-            splashScreen.classList.remove('fade-out');
-        }
-        
-        setTimeout(() => {
-            if (!disclaimerAccepted) {
+// ===== INICIALIZAÇÃO PRINCIPAL =====
+window.addEventListener('load', () => {
+    updatePrintDate();
+    
+    const disclaimerAccepted = localStorage.getItem('smartwallet_disclaimer_accepted') === 'true';
+    const splashScreen = document.getElementById('splashScreen');
+    const disclaimerModal = document.getElementById('disclaimerModal');
+    
+    // Garante que splash está visível
+    if (splashScreen) {
+        splashScreen.style.display = 'flex';
+        splashScreen.classList.remove('fade-out');
+    }
+    
+    // Aguarda 3.5 segundos para a splash, depois avança
+    setTimeout(() => {
+        if (!disclaimerAccepted) {
+            // Primeiro acesso: mostra disclaimer
+            if (disclaimerModal) {
+                disclaimerModal.style.display = 'flex';
+                disclaimerModal.classList.add('active');
                 initDisclaimer();
-            } else {
-                setTimeout(() => {
-                    transitionToApp();
-                }, 3000);
             }
-        }, 1000);
-    });
+        } else {
+            // Já aceitou: splash fica mais 3s e vai pro app
+            setTimeout(() => {
+                transitionToApp();
+            }, 3000);
+        }
+    }, 3500);
+});
 
     document.addEventListener('click', (e) => {
         const menu = document.getElementById('mainMenu');
