@@ -32,7 +32,7 @@
         <div>Smart Wallet © 2026 - rogerelizar@gmail.com</div>
     </div>
 
-    <!-- Disclaimer -->
+    <!-- Disclaimer (apenas primeiro uso) -->
     <div class="disclaimer-modal" id="disclaimerModal" style="display: none;">
         <div class="disclaimer-content">
             <div class="disclaimer-header">
@@ -149,6 +149,7 @@
                     <div class="dropdown-menu" id="mainMenu">
                         <button class="dropdown-item" onclick="openExportModal()"><svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>📄 Extrato do Mês</span></button>
                         <div class="dropdown-divider"></div>
+                        <button class="dropdown-item" onclick="openAccountsModal()"><svg class="icon" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg><span>🏦 Minhas Contas</span></button>
                         <button class="dropdown-item" onclick="openCreditCardsModal()"><svg class="icon" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg><span>💳 Meus Cartões</span></button>
                         <button class="dropdown-item" onclick="openNewCardModal()"><svg class="icon" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="12" y1="9" x2="12" y2="15"/><line x1="9" y1="12" x2="15" y2="12"/></svg><span>➕ Novo Cartão</span></button>
                         <div class="dropdown-divider"></div>
@@ -165,30 +166,31 @@
 
         <!-- Dashboard -->
         <div class="dashboard">
-            <div class="card"><div class="card-title">Saldo do Mês</div><div class="card-value privacy-value" id="totalBalance">R$ 0,00</div></div>
+            <div class="card"><div class="card-title">Saldo Unificado</div><div class="card-value privacy-value" id="totalBalance">R$ 0,00</div></div>
             <div class="card"><div class="card-title">Receitas</div><div class="card-value positive privacy-value" id="totalIncome">R$ 0,00</div></div>
             <div class="card"><div class="card-title">Despesas</div><div class="card-value negative privacy-value" id="totalExpenses">R$ 0,00</div></div>
             <div class="card">
-                <div class="card-title">Meta de Reserva</div>
-                <div class="card-value privacy-value" id="goalProgress">Definir meta →</div>
+                <div class="card-title">Acumulado C.Crédito</div>
+                <div class="card-value privacy-value" id="goalProgress">R$ 0,00</div>
                 <div class="goal-bar" style="display:none;"><div class="goal-bar-fill" id="goalBarFill"></div></div>
             </div>
         </div>
 
         <!-- Gráficos -->
         <div class="charts-section">
-            <div class="chart-card"><h3>📈 Entradas e Saídas</h3><div class="chart-container"><canvas id="lineChart"></canvas></div></div>
-            <div class="chart-card"><h3>🥧 Despesas por Categoria</h3><div class="chart-container"><canvas id="pieChart"></canvas></div></div>
+            <div class="chart-card"><h3>📈 Entradas e Saídas por Mês</h3><div class="chart-container"><canvas id="lineChart"></canvas></div></div>
             <div class="chart-card"><h3>💳 Cartões de Crédito (6 meses)</h3><div class="chart-container"><canvas id="cardsChart"></canvas></div></div>
+            <div class="chart-card"><h3>🥧 Despesas por Categoria</h3><div class="chart-container"><canvas id="pieChart"></canvas></div></div>
+            <div class="chart-card"><h3>📊 Reservas e Investimentos</h3><div class="chart-container"><canvas id="investChart"></canvas></div></div>
         </div>
 
         <!-- Transações -->
         <div class="transactions-section">
             <h2>Histórico do Mês</h2>
             <div class="filters">
-                <input type="text" id="searchFilter" placeholder="Buscar...">
-                <select id="categoryFilter"><option value="">Todas as categorias</option></select>
+                <input type="text" id="searchFilter" placeholder="🔍 Buscar...">
                 <select id="typeFilter"><option value="">Todos os tipos</option><option value="income">Receitas</option><option value="expense">Despesas</option></select>
+                <select id="categoryFilter"><option value="">Todas as categorias</option></select>
                 <select id="statusFilter"><option value="">Todos os status</option><option value="done">Concluído</option><option value="pending">Pendente</option></select>
             </div>
             <div class="table-container">
@@ -210,7 +212,7 @@
         <svg class="icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
     </button>
 
-    <!-- Modais -->
+    <!-- Modal Nova Transação -->
     <div class="modal" id="newTransactionModal">
         <div class="modal-content">
             <div class="modal-header"><h2>Nova Transação</h2><button class="modal-close" onclick="closeNewTransactionModal()"><svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
@@ -244,6 +246,7 @@
         </div>
     </div>
 
+    <!-- Modal Edição -->
     <div class="modal" id="editModal">
         <div class="modal-content">
             <div class="modal-header"><h2>Editar Transação</h2><button class="modal-close" onclick="closeEditModal()"><svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
@@ -294,6 +297,7 @@
         </div>
     </div>
 
+    <!-- Modal Categorias -->
     <div class="modal" id="categoryModal">
         <div class="modal-content">
             <div class="modal-header"><h2>Gerenciar Categorias</h2><button class="modal-close" onclick="closeCategoryManager()"><svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
@@ -309,6 +313,7 @@
         </div>
     </div>
 
+    <!-- Modal Exportar -->
     <div class="modal" id="exportModal">
         <div class="modal-content">
             <div class="modal-header"><h2>Exportar Extrato</h2><button class="modal-close" onclick="closeExportModal()"><svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
@@ -319,6 +324,7 @@
         </div>
     </div>
 
+    <!-- Modal Meta -->
     <div class="modal" id="goalModal">
         <div class="modal-content">
             <div class="modal-header"><h2>Meta de Reserva</h2><button class="modal-close" onclick="closeGoalModal()"><svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
@@ -331,6 +337,7 @@
         </div>
     </div>
 
+    <!-- Modal Importar CSV -->
     <div class="modal" id="importCsvModal">
         <div class="modal-content">
             <div class="modal-header"><h2>Importar CSV</h2><button class="modal-close" onclick="closeImportCsvModal()"><svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
@@ -340,6 +347,7 @@
         </div>
     </div>
 
+    <!-- Modal Importar Backup -->
     <div class="modal" id="importBackupModal">
         <div class="modal-content">
             <div class="modal-header"><h2>Restaurar Backup</h2><button class="modal-close" onclick="closeImportBackupModal()"><svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
@@ -349,6 +357,7 @@
         </div>
     </div>
 
+    <!-- Modal Limpar Dados -->
     <div class="modal danger-modal" id="clearDataModal">
         <div class="modal-content">
             <div class="modal-header"><h2 style="color:var(--danger-color);">Limpar Dados</h2><button class="modal-close" onclick="closeClearDataModal()"><svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
@@ -363,18 +372,60 @@
         </div>
     </div>
 
+    <!-- Modal Contas -->
+    <div class="modal" id="accountsModal">
+        <div class="modal-content wide">
+            <div class="modal-header"><h2>🏦 Minhas Contas</h2><button class="modal-close" onclick="closeAccountsModal()"><svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+            <div class="flex-gap-10 mb-20" style="justify-content:space-between;align-items:center;flex-wrap:wrap;">
+                <p class="text-secondary">Gerencie suas contas correntes e investimentos</p>
+                <button class="btn btn-primary btn-small" onclick="openNewAccountModal()">➕ Nova Conta</button>
+            </div>
+            <div id="accountsList"></div>
+        </div>
+    </div>
+
+    <!-- Modal Nova Conta -->
+    <div class="modal" id="newAccountModal">
+        <div class="modal-content">
+            <div class="modal-header"><h2 id="newAccountTitle">Nova Conta</h2><button class="modal-close" onclick="closeNewAccountModal()"><svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+            <form id="accountForm" onsubmit="event.preventDefault(); smartwallet.saveAccount();">
+                <input type="hidden" id="accountEditId">
+                <div class="form-group"><label for="accountName">Nome da Conta</label><input type="text" id="accountName" required></div>
+                <div class="form-group"><label for="accountType">Tipo</label>
+                    <select id="accountType" required>
+                        <option value="checking">Conta Corrente</option>
+                        <option value="investment">Investimento</option>
+                    </select>
+                </div>
+                <div class="form-group"><label for="accountBalance">Saldo Inicial (R$)</label><input type="number" id="accountBalance" step="0.01" value="0" required></div>
+                <div class="form-group"><label for="accountColor">Cor</label><input type="color" id="accountColor" value="#6366f1" style="width:100%;height:48px;padding:4px;cursor:pointer;"></div>
+                <div class="action-buttons">
+                    <button type="submit" class="btn btn-primary">💾 Salvar</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeNewAccountModal()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Cartões -->
     <div class="modal" id="creditCardsModal"><div class="modal-content wide"><div class="modal-header"><h2>💳 Meus Cartões</h2><button class="modal-close" onclick="closeCreditCardsModal()"><svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div><div class="flex-gap-10 mb-20" style="justify-content:space-between;align-items:center;flex-wrap:wrap;"><p class="text-secondary">Gerencie seus cartões</p><button class="btn btn-primary btn-small" onclick="openNewCardModal()">➕ Novo Cartão</button></div><div id="creditCardsList"></div></div></div>
 
+    <!-- Modal Novo Cartão -->
     <div class="modal" id="newCardModal"><div class="modal-content"><div class="modal-header"><h2 id="newCardTitle">Novo Cartão</h2><button class="modal-close" onclick="closeNewCardModal()"><svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div><form id="cardForm" onsubmit="event.preventDefault(); smartwallet.saveCard();"><input type="hidden" id="cardEditId"><div class="form-group"><label for="cardName">Nome</label><input type="text" id="cardName" required></div><div class="form-row"><div class="form-group"><label for="cardBrand">Bandeira</label><select id="cardBrand" required><option value="Visa">Visa</option><option value="Mastercard">Mastercard</option><option value="Elo">Elo</option><option value="Amex">Amex</option><option value="Outra">Outra</option></select></div><div class="form-group"><label for="cardLast4">4 dígitos</label><input type="text" id="cardLast4" maxlength="4"></div></div><div class="form-row-3"><div class="form-group"><label for="cardClosingDay">Fechamento</label><input type="number" id="cardClosingDay" min="1" max="31" value="20" required></div><div class="form-group"><label for="cardDueDay">Vencimento</label><input type="number" id="cardDueDay" min="1" max="31" value="27" required></div><div class="form-group"><label for="cardLimit">Limite</label><input type="number" id="cardLimit" step="0.01" min="0" required></div></div><div class="form-group"><label for="cardColor">Cor</label><input type="color" id="cardColor" value="#6366f1" style="width:100%;height:48px;padding:4px;cursor:pointer;"></div><div class="action-buttons"><button type="submit" class="btn btn-primary">💾 Salvar</button><button type="button" class="btn btn-secondary" onclick="closeNewCardModal()">Cancelar</button></div></form></div></div>
 
+    <!-- Modal Fatura -->
     <div class="modal" id="invoiceModal"><div class="modal-content wide"><div class="modal-header"><h2 id="invoiceTitle">Fatura</h2><button class="modal-close" onclick="closeInvoiceModal()"><svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div><div id="invoiceContent"></div></div></div>
 
-    <div class="modal" id="newPurchaseModal"><div class="modal-content"><div class="modal-header"><h2>Nova Compra</h2><button class="modal-close" onclick="closeNewPurchaseModal()"><svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div><form id="purchaseForm" onsubmit="event.preventDefault(); smartwallet.savePurchase();"><input type="hidden" id="purchaseCardId"><div class="form-row"><div class="form-group"><label for="purchaseDate">Data</label><input type="date" id="purchaseDate" required></div><div class="form-group"><label for="purchaseAmount">Valor (R$)</label><input type="number" id="purchaseAmount" step="0.01" min="0.01" required></div></div><div class="form-group"><label for="purchaseDescription">Descrição</label><input type="text" id="purchaseDescription" required></div><div class="form-group"><label for="purchaseCategory">Categoria</label><select id="purchaseCategory" required></select></div><div class="form-row"><div class="form-group"><label for="purchaseInstallments">Parcelas</label><select id="purchaseInstallments"><option value="1">1x</option><option value="2">2x</option><option value="3">3x</option><option value="6">6x</option><option value="10">10x</option><option value="12">12x</option><option value="24">24x</option><option value="36">36x</option><option value="48">48x</option></select></div><div class="form-group"><label for="purchaseStatus">Status</label><select id="purchaseStatus"><option value="pending">Pendente</option><option value="done">Concluído</option></select></div></div><div class="action-buttons"><button type="submit" class="btn btn-primary">➕ Adicionar</button><button type="button" class="btn btn-secondary" onclick="closeNewPurchaseModal()">Cancelar</button></div></form></div></div>
+    <!-- Modal Nova Compra -->
+    <div class="modal" id="newPurchaseModal"><div class="modal-content"><div class="modal-header"><h2>Nova Compra no Cartão</h2><button class="modal-close" onclick="closeNewPurchaseModal()"><svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div><form id="purchaseForm" onsubmit="event.preventDefault(); smartwallet.savePurchase();"><input type="hidden" id="purchaseCardId"><div class="form-row"><div class="form-group"><label for="purchaseDate">Data</label><input type="date" id="purchaseDate" required></div><div class="form-group"><label for="purchaseAmount">Valor (R$)</label><input type="number" id="purchaseAmount" step="0.01" min="0.01" required></div></div><div class="form-group"><label for="purchaseDescription">Descrição</label><input type="text" id="purchaseDescription" required></div><div class="form-group"><label for="purchaseCategory">Categoria</label><select id="purchaseCategory" required></select></div><div class="form-row"><div class="form-group"><label for="purchaseInstallments">Parcelas</label><select id="purchaseInstallments"><option value="1">1x</option><option value="2">2x</option><option value="3">3x</option><option value="6">6x</option><option value="10">10x</option><option value="12">12x</option><option value="24">24x</option><option value="36">36x</option><option value="48">48x</option></select></div><div class="form-group"><label for="purchaseStatus">Status</label><select id="purchaseStatus"><option value="pending">Pendente</option><option value="done">Concluído</option></select></div></div><div class="action-buttons"><button type="submit" class="btn btn-primary">➕ Adicionar</button><button type="button" class="btn btn-secondary" onclick="closeNewPurchaseModal()">Cancelar</button></div></form></div></div>
 
+    <!-- Modal Contas a Vencer -->
     <div class="modal" id="billsModal"><div class="modal-content wide"><div class="modal-header"><h2>🔔 Contas a Vencer</h2><button class="modal-close" onclick="closeBillsModal()"><svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div><p class="text-secondary mb-16">Contas pendentes que vencem em até 3 dias.</p><div id="billsList"></div></div></div>
 
+    <!-- Modal Manual -->
     <div class="modal" id="manualModal"><div class="modal-content wide"><div class="modal-header"><h2>📘 Manual do Usuário</h2><div class="flex-gap-8"><button class="btn btn-secondary btn-small" onclick="printManual()">🖨️ Imprimir</button><button class="modal-close" onclick="closeManualModal()"><svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div></div><div class="manual-content" id="manualContent"></div></div></div>
 
+    <!-- Modal Agradecimento -->
     <div class="modal" id="thanksModal"><div class="modal-content"><div class="modal-header"><h2>☕ Apoie o Projeto</h2><button class="modal-close" onclick="closeThanksModal()"><svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div><div class="thanks-icon">☕</div><h3 class="thanks-title">Obrigado por Usar o Smart Wallet!</h3><p style="font-size:1.1rem;line-height:1.8;margin-bottom:30px;text-align:center;">Se o Smart Wallet tem sido útil, que tal me pagar um cafezinho?</p><div class="pix-section"><div style="font-size:1.3rem;font-weight:700;color:var(--success-color);margin-bottom:12px;">💚 Doação via PIX</div><p style="margin-bottom:12px;">Qualquer valor é bem-vindo!</p><div class="pix-key" id="pixKey">rogerelizar@gmail.com</div><button class="btn btn-success" onclick="copyPixKey()">📋 Copiar Chave PIX</button></div><div style="margin-top:30px;padding-top:20px;border-top:1px solid var(--border-color);text-align:center;"><h3 style="margin-bottom:12px;">💬 Feedback</h3><a href="mailto:rogerelizar@gmail.com?subject=Feedback%20Smart%20Wallet" class="btn btn-primary">✉️ Enviar Feedback</a></div></div></div>
 
     <div class="toast" id="toast" role="alert"></div>
