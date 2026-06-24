@@ -19,30 +19,6 @@
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any"
-    },
-    {
-      "src": "favicon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "maskable"
-    }
-  ],
-  "screenshots": [
-    {
-      "src": "screenshot-desktop.png",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "form_factor": "wide",
-      "label": "Tela principal - Dashboard financeiro",
-      "purpose": "screenshot"
-    },
-    {
-      "src": "screenshot-mobile.png",
-      "sizes": "750x1334",
-      "type": "image/png",
-      "form_factor": "narrow",
-      "label": "Versão mobile - Controle de transações",
-      "purpose": "screenshot"
     }
   ],
   "shortcuts": [
@@ -51,24 +27,7 @@
       "short_name": "Nova",
       "description": "Adicionar nova transação financeira",
       "url": "./?action=new",
-      "icons": [
-        {
-          "src": "favicon.svg",
-          "sizes": "any"
-        }
-      ]
-    },
-    {
-      "name": "Cartões de Crédito",
-      "short_name": "Cartões",
-      "description": "Gerenciar cartões e faturas",
-      "url": "./?action=cards",
-      "icons": [
-        {
-          "src": "favicon.svg",
-          "sizes": "any"
-        }
-      ]
+      "icons": [{ "src": "favicon.svg", "sizes": "any" }]
     }
   ]
 }
