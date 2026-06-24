@@ -2097,20 +2097,20 @@ window.acceptDisclaimer = function() {
     }, 600);
 };
 
-    function transitionToApp() {
-        const splashScreen = document.getElementById('splashScreen');
+function transitionToApp() {
+    const splashScreen = document.getElementById('splashScreen');
+    
+    if (splashScreen) {
+        splashScreen.classList.add('fade-out');
         
-        if (splashScreen) {
-            splashScreen.classList.add('fade-out');
-            
-            setTimeout(() => {
-                splashScreen.style.display = 'none';
-                showQuoteModal();
-            }, 800);
-        } else {
+        setTimeout(() => {
+            splashScreen.style.display = 'none';
             showQuoteModal();
-        }
+        }, 800);
+    } else {
+        showQuoteModal();
     }
+}
 
     function showQuoteModal() {
         const quote = financialQuotes[Math.floor(Math.random() * financialQuotes.length)];
