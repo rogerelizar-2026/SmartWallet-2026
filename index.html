@@ -32,7 +32,7 @@
         <div>Smart Wallet © 2026 - rogerelizar@gmail.com</div>
     </div>
 
-    <!-- 1. SPLASH SCREEN (sempre visível no início) -->
+    <!-- SPLASH SCREEN -->
     <div class="splash-screen" id="splashScreen">
         <div class="splash-content">
             <h1 class="splash-title">Smart Wallet</h1>
@@ -45,13 +45,11 @@
                 <svg class="splash-icon" viewBox="0 0 24 24"><path d="M3 21h18M5 21V7l8-4 8 4v14M8 21v-9a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v9"/></svg>
                 <svg class="splash-icon" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
             </div>
-            <div class="splash-loader">
-                <div class="splash-loader-bar"></div>
-            </div>
+            <div class="splash-loader"><div class="splash-loader-bar"></div></div>
         </div>
     </div>
 
-    <!-- 2. DISCLAIMER MODAL (overlay sobre a splash) -->
+    <!-- DISCLAIMER MODAL -->
     <div class="disclaimer-modal" id="disclaimerModal">
         <div class="disclaimer-content">
             <div class="disclaimer-header">
@@ -61,37 +59,31 @@
             </div>
             <div class="disclaimer-body">
                 <h3>📋 Sobre o Smart Wallet</h3>
-                <p>O Smart Wallet é uma ferramenta de <strong>controle financeiro pessoal</strong> desenvolvida para ajudar você a organizar suas finanças, acompanhar gastos, planejar metas e tomar decisões financeiras mais conscientes.</p>
+                <p>O Smart Wallet é uma ferramenta de <strong>controle financeiro pessoal</strong> desenvolvida para ajudar você a organizar suas finanças.</p>
                 <h3>🔒 Privacidade e Segurança</h3>
                 <ul>
-                    <li><strong>100% Offline:</strong> Todos os dados são armazenados <strong>localmente</strong> no seu navegador.</li>
-                    <li><strong>Sem Cadastro:</strong> Não exigimos criação de conta ou informações pessoais.</li>
-                    <li><strong>Sem Rastreamento:</strong> Não utilizamos cookies de rastreamento ou analytics.</li>
-                    <li><strong>Controle Total:</strong> Você pode exportar e apagar seus dados a qualquer momento.</li>
+                    <li><strong>100% Offline:</strong> Dados armazenados localmente.</li>
+                    <li><strong>Sem Cadastro:</strong> Sem criação de conta.</li>
+                    <li><strong>Sem Rastreamento:</strong> Sem cookies de analytics.</li>
+                    <li><strong>Controle Total:</strong> Exporte e apague seus dados.</li>
                 </ul>
-                <h3>⚠️ Limitações e Responsabilidades</h3>
+                <h3>⚠️ Limitações</h3>
                 <ul>
-                    <li><strong>Ferramenta de Apoio:</strong> Este aplicativo <strong>não substitui</strong> consultoria financeira profissional.</li>
-                    <li><strong>Decisões Financeiras:</strong> As decisões são de <strong>total responsabilidade do usuário</strong>.</li>
-                    <li><strong>Backup:</strong> Faça backups regulares. Não nos responsabilizamos por perda de dados.</li>
+                    <li><strong>Ferramenta de Apoio:</strong> Não substitui consultoria profissional.</li>
+                    <li><strong>Responsabilidade:</strong> Decisões são do usuário.</li>
+                    <li><strong>Backup:</strong> Faça backups regulares.</li>
                 </ul>
-                <h3>🛡️ Isenção de Responsabilidade</h3>
-                <p>O desenvolvedor <strong>não se responsabiliza</strong> por quaisquer perdas financeiras decorrentes do uso do aplicativo.</p>
                 <h3>✅ Seu Compromisso</h3>
                 <p>Ao continuar, você declara que leu e concorda com estes termos.</p>
             </div>
             <div class="disclaimer-footer">
-                <div class="disclaimer-timer" id="disclaimerTimer">
-                    ⏱️ Aguarde <span id="countdown">12</span> segundos para continuar
-                </div>
-                <button class="disclaimer-accept-btn" id="acceptDisclaimerBtn" onclick="acceptDisclaimer()">
-                    ✓ Li e Concordo com os Termos
-                </button>
+                <div class="disclaimer-timer" id="disclaimerTimer">⏱️ Aguarde <span id="countdown">12</span> segundos para continuar</div>
+                <button class="disclaimer-accept-btn" id="acceptDisclaimerBtn" onclick="acceptDisclaimer()">✓ Li e Concordo com os Termos</button>
             </div>
         </div>
     </div>
 
-    <!-- 3. QUOTE MODAL -->
+    <!-- QUOTE MODAL -->
     <div class="quote-modal" id="quoteModal" role="dialog" aria-modal="true">
         <div class="quote-content">
             <svg class="quote-icon" viewBox="0 0 24 24"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3M3.343 18.657l.707-.707M12 21a9 9 0 1 1 0-18 9 9 0 0 1 0 18z"/></svg>
@@ -101,7 +93,7 @@
         </div>
     </div>
 
-    <!-- 4. APP PRINCIPAL -->
+    <!-- APP PRINCIPAL -->
     <div class="container" id="mainApp" style="display: none;">
         <header>
             <div class="header-content">
@@ -114,18 +106,10 @@
                         <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
                     </button>
                     <div class="info-dropdown" id="infoMenu">
-                        <button class="info-item" onclick="openManualModal()">
-                            <svg class="icon" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-                            <span>📘 Manual do Usuário</span>
-                        </button>
-                        <button class="info-item" onclick="openTermsModal()">
-                            <svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                            <span>📜 Termos de Uso</span>
-                        </button>
-                        <button class="info-item" onclick="openThanksModal()">
-                            <svg class="icon" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                            <span>☕ Apoie o Projeto</span>
-                        </button>
+                        <button class="info-item" onclick="openManualModal()"><svg class="icon" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span>📘 Manual do Usuário</span></button>
+                        <button class="info-item" onclick="openInvestmentsModal()"><svg class="icon" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/></svg><span>📈 Acompanhamento de Aplicações</span></button>
+                        <button class="info-item" onclick="openTermsModal()"><svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>📜 Termos de Uso</span></button>
+                        <button class="info-item" onclick="openThanksModal()"><svg class="icon" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span>☕ Apoie o Projeto</span></button>
                     </div>
                 </div>
             </div>
@@ -140,23 +124,12 @@
                 </div>
             </div>
             <div class="toolbar-actions">
-                <button class="icon-btn" id="privacyBtn" onclick="togglePrivacy()" aria-label="Ocultar valores">
-                    <svg class="icon" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                </button>
-                <button class="icon-btn" id="themeBtn" onclick="toggleTheme()" aria-label="Alternar tema">
-                    <svg class="icon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-                </button>
-                <button class="dollar-btn" onclick="openGoalModal()" aria-label="Meta de Reserva">
-                    <svg class="icon" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                </button>
-                <button class="alert-btn" id="alertBtn" onclick="openBillsModal()" aria-label="Contas a vencer">
-                    <svg class="icon" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-                    <span class="alert-badge" id="alertBadge">0</span>
-                </button>
+                <button class="icon-btn" id="privacyBtn" onclick="togglePrivacy()" aria-label="Ocultar valores"><svg class="icon" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+                <button class="icon-btn" id="themeBtn" onclick="toggleTheme()" aria-label="Alternar tema"><svg class="icon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+                <button class="dollar-btn" onclick="openGoalModal()" aria-label="Meta de Reserva"><svg class="icon" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></button>
+                <button class="alert-btn" id="alertBtn" onclick="openBillsModal()" aria-label="Contas a vencer"><svg class="icon" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span class="alert-badge" id="alertBadge">0</span></button>
                 <div class="menu-wrapper">
-                    <button class="menu-btn" onclick="toggleMenu(event)" aria-label="Menu">
-                        <svg class="icon" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-                    </button>
+                    <button class="menu-btn" onclick="toggleMenu(event)" aria-label="Menu"><svg class="icon" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
                     <div class="dropdown-menu" id="mainMenu">
                         <button class="dropdown-item" onclick="openExportModal()"><svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>📄 Extrato do Mês</span></button>
                         <div class="dropdown-divider"></div>
@@ -190,7 +163,6 @@
             <div class="chart-card"><h3>📈 Entradas e Saídas por Mês</h3><div class="chart-container"><canvas id="lineChart"></canvas></div></div>
             <div class="chart-card"><h3>💳 Cartões de Crédito (6 meses)</h3><div class="chart-container"><canvas id="cardsChart"></canvas></div></div>
             <div class="chart-card"><h3>🥧 Despesas por Categoria</h3><div class="chart-container"><canvas id="pieChart"></canvas></div></div>
-            <div class="chart-card"><h3>📊 Reservas e Investimentos</h3><div class="chart-container"><canvas id="investChart"></canvas></div></div>
         </div>
 
         <div class="transactions-section">
@@ -200,10 +172,11 @@
                 <select id="typeFilter"><option value="">Todos os tipos</option><option value="income">Receitas</option><option value="expense">Despesas</option></select>
                 <select id="categoryFilter"><option value="">Todas as categorias</option></select>
                 <select id="statusFilter"><option value="">Todos os status</option><option value="done">Concluído</option><option value="pending">Pendente</option></select>
+                <select id="accountFilter"><option value="">Todas as contas</option></select>
             </div>
             <div class="table-container">
                 <table>
-                    <thead><tr><th>Data</th><th>Descrição</th><th>Categoria</th><th>Pagamento</th><th>Status</th><th>Recorrência</th><th>Valor</th><th>Saldo</th></tr></thead>
+                    <thead><tr><th>Data</th><th>Descrição</th><th>Categoria</th><th>Conta</th><th>Pagamento</th><th>Status</th><th>Recorrência</th><th>Valor</th><th>Saldo</th></tr></thead>
                     <tbody id="transactionsTable"></tbody>
                 </table>
             </div>
@@ -211,6 +184,15 @@
                 <svg class="empty-state-icon" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/></svg>
                 <h3>Nenhuma transação encontrada</h3>
                 <p>Comece adicionando sua primeira transação!</p>
+            </div>
+        </div>
+
+        <!-- Gráfico de Investimentos (após histórico) -->
+        <div class="charts-section" id="investmentsChartSection" style="display: none;">
+            <div class="chart-card" style="grid-column: 1 / -1;">
+                <h3>📊 Acompanhamento de Aplicações</h3>
+                <div class="chart-container" style="height: 400px;"><canvas id="investChart"></canvas></div>
+                <div id="investSummary" style="margin-top: 20px; padding: 16px; background: var(--input-bg); border-radius: 12px;"></div>
             </div>
         </div>
     </div>
@@ -234,6 +216,7 @@
                 </div>
                 <div class="form-group"><label for="category">Categoria</label><select id="category" required><option value="">Selecione...</option></select></div>
                 <div class="form-group"><label for="paymentMethod">💳 Efetuado com</label><select id="paymentMethod" required><option value="">Selecione...</option></select></div>
+                <div class="form-group"><label for="transactionAccount">🏦 Conta</label><select id="transactionAccount" required><option value="">Selecione a conta...</option></select></div>
                 <div class="form-group"><label for="description">Descrição</label><textarea id="description" rows="2"></textarea></div>
                 <div class="form-group"><div class="checkbox-group"><input type="checkbox" id="statusOk"><label for="statusOk">✓ Status OK (Concluído)</label></div></div>
                 <div class="form-group"><div class="checkbox-group"><input type="checkbox" id="recurring"><label for="recurring">↻ Recorrente/Parcelada</label></div></div>
@@ -266,6 +249,7 @@
                 </div>
                 <div class="form-group"><label for="editCategory">Categoria</label><select id="editCategory" required></select></div>
                 <div class="form-group"><label for="editPaymentMethod">💳 Efetuado com</label><select id="editPaymentMethod" required></select></div>
+                <div class="form-group"><label for="editTransactionAccount">🏦 Conta</label><select id="editTransactionAccount" required><option value="">Selecione a conta...</option></select></div>
                 <div class="form-group"><label for="editDescription">Descrição</label><textarea id="editDescription" rows="2"></textarea></div>
                 <div class="form-group"><div class="checkbox-group"><input type="checkbox" id="editStatusOk"><label for="editStatusOk">✓ Status OK</label></div></div>
                 <div class="form-group"><div class="checkbox-group"><input type="checkbox" id="editRecurring"><label for="editRecurring">↻ Recorrente/Parcelada</label></div></div>
@@ -470,6 +454,53 @@
             <div class="modal-header"><h2>🔔 Contas a Vencer</h2><button class="modal-close" onclick="closeBillsModal()"><svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
             <p class="text-secondary mb-16">Contas pendentes que vencem em até 3 dias.</p>
             <div id="billsList"></div>
+        </div>
+    </div>
+
+    <!-- MODAL DE INVESTIMENTOS -->
+    <div class="modal" id="investmentsModal">
+        <div class="modal-content wide">
+            <div class="modal-header">
+                <h2>📈 Acompanhamento de Aplicações</h2>
+                <div class="flex-gap-8">
+                    <button class="btn btn-primary btn-small" onclick="openNewInvestmentModal()">➕ Nova Aplicação</button>
+                    <button class="modal-close" onclick="closeInvestmentsModal()"><svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+                </div>
+            </div>
+            <div id="investmentsContent"></div>
+        </div>
+    </div>
+
+    <!-- MODAL NOVA APLICAÇÃO -->
+    <div class="modal" id="newInvestmentModal">
+        <div class="modal-content">
+            <div class="modal-header"><h2 id="newInvestmentTitle">Nova Aplicação</h2><button class="modal-close" onclick="closeNewInvestmentModal()"><svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+            <form id="investmentForm" onsubmit="event.preventDefault(); smartwallet.saveInvestment();">
+                <input type="hidden" id="investmentEditId">
+                <div class="form-group"><label for="investmentName">Nome da Aplicação</label><input type="text" id="investmentName" required placeholder="Ex: CDB Banco XYZ"></div>
+                <div class="form-group"><label for="investmentType">Tipo</label>
+                    <select id="investmentType" required>
+                        <option value="cdb">CDB</option>
+                        <option value="tesouro">Tesouro Direto</option>
+                        <option value="lci">LCI/LCA</option>
+                        <option value="fundo">Fundo de Investimento</option>
+                        <option value="acao">Ações</option>
+                        <option value="fiis">FIIs</option>
+                        <option value="poupanca">Poupança</option>
+                        <option value="outro">Outro</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label for="investmentInitial">Valor Inicial (R$)</label><input type="number" id="investmentInitial" step="0.01" min="0" required></div>
+                    <div class="form-group"><label for="investmentCurrent">Valor Atual (R$)</label><input type="number" id="investmentCurrent" step="0.01" min="0" required></div>
+                </div>
+                <div class="form-group"><label for="investmentDate">Data da Aplicação</label><input type="date" id="investmentDate" required></div>
+                <div class="form-group"><label for="investmentRate">Taxa de Rendimento (% ao ano)</label><input type="number" id="investmentRate" step="0.01" min="0" placeholder="Ex: 10.5"></div>
+                <div class="action-buttons">
+                    <button type="submit" class="btn btn-primary">💾 Salvar</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeNewInvestmentModal()">Cancelar</button>
+                </div>
+            </form>
         </div>
     </div>
 
