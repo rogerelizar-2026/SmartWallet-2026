@@ -1815,11 +1815,11 @@
             });
             var totalProfit = totalCurrent - totalInitial;
             var totalProfitPct = totalInitial > 0 ? (totalProfit / totalInitial * 100) : 0;
-            summaryEl.innerHTML = '<div class="investment-summary"><h3>📊 Resumo</h3><div class="investment-summary-grid">' +
-                '<div class="investment-summary-item"><div class="investment-summary-label">Total Investido</div><div class="investment-summary-value">' + this.formatCurrency(totalInitial) + '</div></div>' +
-                '<div class="investment-summary-item"><div class="investment-summary-label">Valor Atual</div><div class="investment-summary-value">' + this.formatCurrency(totalCurrent) + '</div></div>' +
-                '<div class="investment-summary-item"><div class="investment-summary-label">Rendimento</div><div class="investment-summary-value" style="color:' + (totalProfit >= 0 ? 'var(--success-color)' : 'var(--danger-color)') + ';">' + totalProfitPct.toFixed(2) + '% (' + this.formatCurrency(totalProfit) + ')</div></div>' +
-                '</div></div>';
+summaryEl.innerHTML = '<div class="investment-summary"><h3>📊 Resumo</h3><div class="investment-summary-grid">' +
+    '<div class="investment-summary-item"><div class="investment-summary-label">Total Investido</div><div class="investment-summary-value privacy-value">' + this.formatCurrency(totalInitial) + '</div></div>' +
+    '<div class="investment-summary-item"><div class="investment-summary-label">Valor Atual</div><div class="investment-summary-value privacy-value">' + this.formatCurrency(totalCurrent) + '</div></div>' +
+    '<div class="investment-summary-item"><div class="investment-summary-label">Rendimento</div><div class="investment-summary-value privacy-value" style="color:' + (totalProfit >= 0 ? 'var(--success-color)' : 'var(--danger-color)') + ';">' + totalProfitPct.toFixed(2) + '% (' + this.formatCurrency(totalProfit) + ')</div></div>' +
+    '</div></div>';
         }
     };
 
@@ -1951,13 +1951,13 @@
         var totalProfit = totalCurrent - totalInitial;
         var totalProfitPct = totalInitial > 0 ? (totalProfit / totalInitial * 100) : 0;
 
-        html += '<div class="investment-summary">';
-        html += '<h3>📊 Resumo Geral</h3>';
-        html += '<div class="investment-summary-grid">';
-        html += '<div class="investment-summary-item"><div class="investment-summary-label">Total Investido</div><div class="investment-summary-value">' + this.formatCurrency(totalInitial) + '</div></div>';
-        html += '<div class="investment-summary-item"><div class="investment-summary-label">Valor Atual</div><div class="investment-summary-value">' + this.formatCurrency(totalCurrent) + '</div></div>';
-        html += '<div class="investment-summary-item"><div class="investment-summary-label">Rendimento Total</div><div class="investment-summary-value" style="color:' + (totalProfit >= 0 ? 'var(--success-color)' : 'var(--danger-color)') + ';">' + totalProfitPct.toFixed(2) + '% (' + this.formatCurrency(totalProfit) + ')</div></div>';
-        html += '</div></div>';
+            html += '<div class="investment-summary">';
+            html += '<h3>📊 Resumo Geral</h3>';
+            html += '<div class="investment-summary-grid">';
+            html += '<div class="investment-summary-item"><div class="investment-summary-label">Total Investido</div><div class="investment-summary-value privacy-value">' + this.formatCurrency(totalInitial) + '</div></div>';
+            html += '<div class="investment-summary-item"><div class="investment-summary-label">Valor Atual</div><div class="investment-summary-value privacy-value">' + this.formatCurrency(totalCurrent) + '</div></div>';
+            html += '<div class="investment-summary-item"><div class="investment-summary-label">Rendimento Total</div><div class="investment-summary-value privacy-value" style="color:' + (totalProfit >= 0 ? 'var(--success-color)' : 'var(--danger-color)') + ';">' + totalProfitPct.toFixed(2) + '% (' + this.formatCurrency(totalProfit) + ')</div></div>';
+            html += '</div></div>';
 
         container.innerHTML = html;
     };
