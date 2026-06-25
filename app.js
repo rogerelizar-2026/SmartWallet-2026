@@ -547,9 +547,268 @@
         document.getElementById('manualModal').classList.remove('active');
     };
 
-    window.printManual = function() {
-        smartwallet.printManual();
-    };
+window.printManual = function() {
+    var printWindow = window.open('', '_blank');
+    if (!printWindow) {
+        alert('Por favor, permita popups para imprimir');
+        return;
+    }
+
+    var disclaimerText = `
+        <div class="disclaimer-print">
+            <h4>⚠️ Termos de Uso e Aviso Legal</h4>
+            <p><strong>Sobre o Smart Wallet:</strong> Ferramenta de controle financeiro pessoal desenvolvida para ajudar você a organizar suas finanças.</p>
+            <p><strong>Privacidade:</strong> 100% Offline. Dados armazenados localmente. Sem cadastro. Sem rastreamento.</p>
+            <p><strong>Limitações:</strong> Não substitui consultoria financeira profissional. Decisões são de total responsabilidade do usuário. Faça backups regulares.</p>
+            <p><strong>Isenção:</strong> O desenvolvedor não se responsabiliza por perdas financeiras decorrentes do uso do aplicativo.</p>
+            <p><small>Ao utilizar o Smart Wallet, você declara que leu e concorda com estes termos.</small></p>
+        </div>
+    `;
+
+    printWindow.document.write(`<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Manual do Usuário - Smart Wallet</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 2cm;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            color: #1e293b;
+            line-height: 1.6;
+            font-size: 11pt;
+        }
+        
+        .manual-cover {
+            text-align: center;
+            padding: 60px 30px;
+            border: 3px solid #6366f1;
+            border-radius: 16px;
+            margin-bottom: 40px;
+            page-break-after: always;
+        }
+        
+        .manual-cover h1 {
+            color: #6366f1;
+            font-size: 32pt;
+            margin-bottom: 16px;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        .manual-cover h2 {
+            color: #06b6d4;
+            font-size: 20pt;
+            margin-bottom: 20px;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        .manual-cover p {
+            font-size: 12pt;
+            margin-bottom: 10px;
+        }
+        
+        .manual-cover .version {
+            font-size: 10pt;
+            color: #64748b;
+            margin-top: 30px;
+        }
+        
+        .manual-cover .author {
+            font-size: 9pt;
+            color: #94a3b8;
+            margin-top: 10px;
+        }
+        
+        h2 {
+            color: #6366f1;
+            font-size: 16pt;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #6366f1;
+            page-break-after: avoid;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        h3 {
+            color: #06b6d4;
+            font-size: 13pt;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            page-break-after: avoid;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        p {
+            margin-bottom: 12px;
+            text-align: justify;
+        }
+        
+        ul, ol {
+            margin-left: 24px;
+            margin-bottom: 16px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        .manual-quote {
+            margin: 24px 0;
+            padding: 20px 30px;
+            border-left: 4px solid #6366f1;
+            background: #f8fafc;
+            border-radius: 8px;
+            font-style: italic;
+            page-break-inside: avoid;
+        }
+        
+        .manual-quote p {
+            font-size: 11pt;
+            color: #64748b;
+            margin-bottom: 8px;
+        }
+        
+        .manual-quote .quote-author {
+            font-size: 9pt;
+            font-weight: 600;
+            color: #6366f1;
+            text-align: right;
+            margin-top: 12px;
+            font-style: normal;
+        }
+        
+        .dedication {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #6366f1;
+            page-break-inside: avoid;
+        }
+        
+        .dedication h3 {
+            color: #06b6d4;
+            margin-bottom: 12px;
+        }
+        
+        .manual-tip {
+            background: rgba(99, 102, 241, 0.1);
+            border-left: 4px solid #6366f1;
+            padding: 16px;
+            margin: 16px 0;
+            border-radius: 8px;
+            page-break-inside: avoid;
+        }
+        
+        .manual-warning {
+            background: rgba(245, 158, 11, 0.1);
+            border-left: 4px solid #f59e0b;
+            padding: 16px;
+            margin: 16px 0;
+            border-radius: 8px;
+            page-break-inside: avoid;
+        }
+        
+        .manual-success {
+            background: rgba(16, 185, 129, 0.1);
+            border-left: 4px solid #10b981;
+            padding: 16px;
+            margin: 16px 0;
+            border-radius: 8px;
+            page-break-inside: avoid;
+        }
+        
+        .manual-blessing {
+            text-align: center;
+            margin-top: 40px;
+            padding: 30px;
+            background: #f8fafc;
+            border-radius: 16px;
+            page-break-inside: avoid;
+        }
+        
+        .manual-blessing h3 {
+            margin-bottom: 16px;
+            color: #6366f1;
+        }
+        
+        .disclaimer-print {
+            margin-top: 60px;
+            padding-top: 30px;
+            border-top: 2px solid #6366f1;
+            page-break-inside: avoid;
+            font-size: 9pt;
+            color: #64748b;
+        }
+        
+        .disclaimer-print h4 {
+            color: #f59e0b;
+            font-size: 11pt;
+            margin-bottom: 12px;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        .disclaimer-print p {
+            margin-bottom: 8px;
+            font-size: 9pt;
+            text-align: justify;
+        }
+        
+        .disclaimer-print small {
+            font-size: 8pt;
+            font-style: italic;
+        }
+        
+        strong {
+            color: #1e293b;
+        }
+        
+        @media print {
+            body {
+                font-size: 11pt;
+            }
+            
+            .manual-cover {
+                page-break-after: always;
+            }
+            
+            h2, h3 {
+                page-break-after: avoid;
+            }
+            
+            .manual-quote,
+            .manual-tip,
+            .manual-warning,
+            .manual-success,
+            .manual-blessing,
+            .disclaimer-print {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    ${manualHTML}
+    ${disclaimerText}
+</body>
+</html>`);
+
+    printWindow.document.close();
+    
+    setTimeout(function() {
+        printWindow.focus();
+        printWindow.print();
+    }, 500);
+};
 
     window.openTermsModal = function() {
         document.getElementById('disclaimerModal').style.display = 'flex';
