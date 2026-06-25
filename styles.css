@@ -740,7 +740,10 @@ header p {
 
 .alert-badge.visible { display: flex; }
 
-.menu-wrapper { position: relative; }
+.menu-wrapper {
+    position: relative;
+    z-index: 1000;
+}
 
 .menu-btn {
     background: var(--glass-bg);
@@ -771,14 +774,17 @@ header p {
     padding: 8px;
     min-width: 280px;
     box-shadow: var(--shadow-lg);
-    z-index: 100;
+    z-index: 10000; /* AUMENTADO */
     display: none;
     animation: slideDown 0.2s ease;
     max-height: 70vh;
     overflow-y: auto;
+    overflow: visible;
 }
 
-.dropdown-menu.active { display: block; }
+.dropdown-menu.active {
+    display: block;
+}
 
 .dropdown-item {
     display: flex;
