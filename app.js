@@ -3,51 +3,19 @@
 
     console.log('🚀 Smart Wallet iniciando...');
 
-    // ===== CITAÇÕES =====
     var financialQuotes = [
-            { text: "Não se trata de quanto dinheiro você ganha, mas de quanto dinheiro você guarda.", author: "Robert Kiyosaki" },
-            { text: "O hábito de poupar é em si mesmo uma educação.", author: "T.T. Munger" },
-            { text: "Riqueza é a capacidade de viver completamente a vida.", author: "Henry David Thoreau" },
-            { text: "Um orçamento está dizendo a seu dinheiro para onde ir, em vez de se perguntar para onde ele foi.", author: "Dave Ramsey" },
-            { text: "Não economize o que resta depois de gastar; gaste o que resta depois de poupar.", author: "Warren Buffett" },
-            { text: "Se você não encontrar uma maneira de ganhar dinheiro enquanto dorme, você trabalhará até morrer.", author: "Warren Buffett" },
-            { text: "O melhor investimento que você pode fazer é em si mesmo.", author: "Warren Buffett" },
-            { text: "Dinheiro é um péssimo mestre, mas um excelente servo.", author: "P.T. Barnum" },
-            { text: "A riqueza não consiste em ter grandes posses, mas em ter poucas necessidades.", author: "Epicteto" },
-            { text: "Cuidado com pequenos gastos; um pequeno vazamento afundará um grande navio.", author: "Benjamin Franklin" },
-            { text: "Quem compra o que não precisa, rouba a si mesmo.", author: "Provérbio Popular" },
-            { text: "A independência financeira não é sobre ficar rico, é sobre ter opções.", author: "Chris Reining" },
-            { text: "Não é o quanto você ganha, é o quanto você faz o dinheiro trabalhar para você.", author: "Robert Kiyosaki" },
-            { text: "Pague a si mesmo primeiro.", author: "George Samuel Clason" },
-            { text: "Riqueza é como um cigarro: se você não fumar, ela dura mais.", author: "Provérbio Popular" },
-            { text: "O mercado de ações é um mecanismo para transferir dinheiro do impaciente para o paciente.", author: "Warren Buffett" },
-            { text: "A melhor hora para plantar uma árvore foi há 20 anos. A segunda melhor hora é agora.", author: "Provérbio Chinês" },
-            { text: "Finanças não são sobre matemática, são sobre comportamento.", author: "Morgan Housel" },
-            { text: "Pessoas ricas acreditam que ganham dinheiro com ideias. Pessoas pobres acreditam que ganham dinheiro com tempo.", author: "Robert Kiyosaki" },
-            { text: "Gastar dinheiro para impressionar pessoas é a maneira mais rápida de ficar pobre.", author: "Morgan Housel" },
-            { text: "A verdadeira medida da riqueza é quanto você valeria se perdesse todo o seu dinheiro.", author: "Provérbio" },
-            { text: "Economizar é a melhor estratégia de investimento.", author: "Nathaniel Hale" },
-            { text: "A diferença entre ricos e pobres é o que eles fazem com o tempo livre.", author: "Robert Kiyosaki" },
-            { text: "Cada real que você economiza é um empregado que trabalha para você.", author: "T. Harv Eker" },
-            { text: "A maior riqueza é a que menos se corrompe, a da consciência.", author: "Sêneca" },
-            { text: "Se você vive para impressionar os outros, nunca será rico de verdade.", author: "Morgan Housel" },
-            { text: "A liberdade financeira é mais sobre controle do que sobre dinheiro.", author: "Ramit Sethi" },
-            { text: "Não coloque sua fé no dinheiro. Coloque seu dinheiro na sua fé.", author: "Provérbio" },
-            { text: "O maior inimigo da riqueza é a expectativa de ficar rico rápido.", author: "Morgan Housel" },
-            { text: "Planeje suas finanças como planeja suas férias: com destino, roteiro e orçamento.", author: "Anônimo" },
-            { text: "Ricos adquirem ativos. Pobres e classe média adquirem passivos que acham serem ativos.", author: "Robert Kiyosaki" },
-            { text: "A paciência é a virtude dos investidores bem-sucedidos.", author: "Peter Lynch" },
-            { text: "Saber gastar é tão importante quanto saber ganhar.", author: "Provérbio Popular" },
-            { text: "Dinheiro é um ótimo servo, mas um péssimo mestre.", author: "Francis Bacon" },
-            { text: "A prosperidade depende mais da sua mentalidade do que da sua conta bancária.", author: "T. Harv Eker" },
-            { text: "Investir em conhecimento paga os melhores juros.", author: "Benjamin Franklin" },
-            { text: "Não espere; o tempo nunca será 'o certo'. Comece de onde você está.", author: "Napoleon Hill" },
-            { text: "A educação financeira é a base da liberdade financeira.", author: "Robert Kiyosaki" },
-            { text: "O futuro pertence àqueles que se preparam hoje.", author: "Malcolm X" },
-            { text: "Antes de gastar, aprenda a ganhar. Antes de ganhar, aprenda a poupar.", author: "Provérbio" }
+        { text: "Não se trata de quanto dinheiro você ganha, mas de quanto dinheiro você guarda.", author: "Robert Kiyosaki" },
+        { text: "O hábito de poupar é em si mesmo uma educação.", author: "T.T. Munger" },
+        { text: "Um orçamento está dizendo a seu dinheiro para onde ir.", author: "Dave Ramsey" },
+        { text: "Não economize o que resta depois de gastar; gaste o que resta depois de poupar.", author: "Warren Buffett" },
+        { text: "O melhor investimento que você pode fazer é em si mesmo.", author: "Warren Buffett" },
+        { text: "Dinheiro é um péssimo mestre, mas um excelente servo.", author: "P.T. Barnum" },
+        { text: "Cuidado com pequenos gastos; um pequeno vazamento afundará um grande navio.", author: "Benjamin Franklin" },
+        { text: "Pague a si mesmo primeiro.", author: "George Samuel Clason" },
+        { text: "A melhor hora para plantar uma árvore foi há 20 anos. A segunda melhor hora é agora.", author: "Provérbio Chinês" },
+        { text: "Finanças não são sobre matemática, são sobre comportamento.", author: "Morgan Housel" }
     ];
 
-    // ===== MÉTODOS DE PAGAMENTO =====
     var PAYMENT_METHODS = [
         { id: 'pix', name: 'PIX', icon: '⚡' },
         { id: 'debit', name: 'Cart.Débito', icon: '💳' },
@@ -56,7 +24,6 @@
         { id: 'transfer', name: 'Transferência', icon: '↔️' }
     ];
 
-    // ===== CATEGORIAS PADRÃO =====
     var DEFAULT_CATEGORIES = [
         { id: 'moradia', name: 'Moradia', color: '#ffff00', type: 'expense' },
         { id: 'alimentacao', name: 'Alimentação', color: '#e37171', type: 'expense' },
@@ -75,7 +42,7 @@
         '<h1>📘 Manual do Usuário</h1>' +
         '<h2>Smart Wallet Brasil</h2>' +
         '<p>Controle Financeiro Pessoal Inteligente</p>' +
-        '<p class="version">Versão 2.0.1 - 2026</p>' +
+        '<p class="version">Versão 2.0.2 - 2026</p>' +
         '<p class="author">Idealizado por RogerElizar™</p>' +
         '</div>' +
         '<div class="manual-quote">' +
@@ -252,7 +219,6 @@
         '</div>' +
         '</div>';
 
-    // ===== CLASSE PRINCIPAL =====
     function SmartWallet() {
         this.transactions = [];
         this.categories = [];
@@ -391,7 +357,6 @@
         if (!date) date = this.currentMonth;
         var m = date.getMonth();
         var y = date.getFullYear();
-        var self = this;
         return this.transactions.filter(function(t) {
             var d = new Date(t.date + 'T00:00:00');
             return d.getMonth() === m && d.getFullYear() === y;
@@ -593,9 +558,10 @@
         document.getElementById('editStatusOk').checked = !!t.statusOk;
 
         var btns = document.querySelectorAll('#editForm .type-btn');
+        var self = this;
         btns.forEach(function(b) {
-            b.classList.toggle('active', b.getAttribute('data-type') === this.currentEditType);
-        }.bind(this));
+            b.classList.toggle('active', b.getAttribute('data-type') === self.currentEditType);
+        });
 
         this.filterCategoriesByType('editCategory', this.currentEditType);
         document.getElementById('editModal').classList.add('active');
@@ -631,7 +597,8 @@
     SmartWallet.prototype.deleteFromEdit = function() {
         if (!this.currentEditId) return;
         if (!confirm('Excluir esta transação?')) return;
-        this.transactions = this.transactions.filter(function(t) { return t.id !== this.currentEditId; }.bind(this));
+        var self = this;
+        this.transactions = this.transactions.filter(function(t) { return t.id !== self.currentEditId; });
         this.saveTransactions();
         this.render();
         this.updateCharts();
@@ -745,6 +712,17 @@
             var statusClass = t.statusOk ? 'status-done' : 'status-pending';
             var statusText = t.statusOk ? 'Concluído' : 'Pendente';
             var paymentName = self.getPaymentMethodName(t.paymentMethod);
+            
+            var recurrenceHtml = '';
+            if (t.recurrence) {
+                if (t.recurrence.type === 'installment') {
+                    recurrenceHtml = '<span class="recurrence-badge">📅 ' + (t.recurrence.current || 1) + '/' + (t.recurrence.total || 1) + '</span>';
+                } else if (t.recurrence.type === 'monthly') {
+                    recurrenceHtml = '<span class="recurrence-badge">📅 Mensal</span>';
+                } else if (t.recurrence.type === 'yearly') {
+                    recurrenceHtml = '<span class="recurrence-badge">📅 Anual</span>';
+                }
+            }
 
             html += '<tr class="transaction-row" onclick="smartwallet.editTransaction(' + t.id + ')">';
             html += '<td data-label="Data">' + self.formatDate(t.date) + '</td>';
@@ -753,6 +731,7 @@
             html += '<td data-label="Conta">' + (acc ? '<span class="account-badge">' + self.escapeHtml(acc.name) + '</span>' : '-') + '</td>';
             html += '<td data-label="Pagamento"><span class="payment-badge">' + paymentName + '</span></td>';
             html += '<td data-label="Status"><span class="status-badge ' + statusClass + '">' + statusText + '</span></td>';
+            html += '<td data-label="Recorrência">' + (recurrenceHtml || '-') + '</td>';
             html += '<td data-label="Valor" class="amount ' + cls + ' privacy-value">' + self.formatCurrency(t.amount) + '</td>';
             html += '<td data-label="Saldo" class="balance privacy-value">' + self.formatCurrency(balMap[t.id]) + '</td>';
             html += '</tr>';
@@ -842,7 +821,9 @@
                     scales: {
                         x: { beginAtZero: true, ticks: { color: colors.textSecondary }, grid: { color: colors.grid } },
                         y: { ticks: { color: colors.textSecondary }, grid: { color: colors.grid } }
-                    }
+                    },
+                    barPercentage: 0.5,
+                    categoryPercentage: 0.6
                 }
             });
         } catch (e) { console.error('Erro pie:', e); }
@@ -1293,7 +1274,7 @@
         printWindow.document.write('<p><strong>Vencimento:</strong> ' + this.formatDate(period.dueDate.toISOString().split('T')[0]) + '</p>');
         printWindow.document.write('<table><thead><tr><th>Data</th><th>Descrição</th><th>Categoria</th><th>Valor</th></tr></thead><tbody>' + rows + '</tbody>');
         printWindow.document.write('<tfoot><tr class="total"><td colspan="3" style="text-align:right;">TOTAL:</td><td>' + this.formatCurrency(total) + '</td></tr></tfoot></table>');
-        printWindow.document.write('<div class="footer">Smart Wallet • Gerado em ' + new Date().toLocaleString('pt-BR') + '<br>Idealizado por RogerElizar®</div>');
+        printWindow.document.write('<div class="footer">Smart Wallet • Gerado em ' + new Date().toLocaleString('pt-BR') + '<br>Idealizado por RogerElizar™</div>');
         printWindow.document.write('</body></html>');
         printWindow.document.close();
         setTimeout(function() { printWindow.print(); }, 250);
@@ -1326,7 +1307,7 @@
     SmartWallet.prototype.exportBackup = function() {
         try {
             var backup = {
-                version: '2.0',
+                version: '2.0.2',
                 exportDate: new Date().toISOString(),
                 appName: 'Smart Wallet',
                 transactions: this.transactions,
@@ -1515,7 +1496,6 @@
         var name = document.getElementById('newCategoryName').value.trim();
         var color = document.getElementById('newCategoryColor').value;
         if (!name) { this.showToast('Digite um nome'); return; }
-        var self = this;
         var exists = this.categories.some(function(c) { return c.name.toLowerCase() === name.toLowerCase() && c.type === this.newCategoryType; }.bind(this));
         if (exists) { this.showToast('Categoria já existe'); return; }
         this.categories.push({ id: name.toLowerCase().replace(/[^a-z0-9]/g, '_') + '_' + Date.now(), name: name, color: color, type: this.newCategoryType });
@@ -1992,11 +1972,9 @@
         setTimeout(function() { printWindow.print(); }, 500);
     };
 
-    // ===== INSTÂNCIA GLOBAL =====
     var smartwallet = new SmartWallet();
     window.smartwallet = smartwallet;
 
-    // ===== FUNÇÕES GLOBAIS =====
     window.selectTransactionType = function(t) {
         smartwallet.currentTransactionType = t;
         var btns = document.querySelectorAll('#transactionForm .type-btn');
@@ -2270,7 +2248,7 @@
     window.openManualModal = function() {
         document.getElementById('manualContent').innerHTML = manualHTML;
         document.getElementById('manualModal').classList.add('active');
-        document.getElementById('infoMenu').classList.remove('active');
+        document.getElementById('mainMenu').classList.remove('active');
     };
 
     window.closeManualModal = function() {
@@ -2285,12 +2263,12 @@
         document.getElementById('disclaimerModal').style.display = 'flex';
         document.getElementById('disclaimerModal').classList.add('active');
         initDisclaimer();
-        document.getElementById('infoMenu').classList.remove('active');
+        document.getElementById('mainMenu').classList.remove('active');
     };
 
     window.openThanksModal = function() {
         document.getElementById('thanksModal').classList.add('active');
-        document.getElementById('infoMenu').classList.remove('active');
+        document.getElementById('mainMenu').classList.remove('active');
     };
 
     window.closeThanksModal = function() {
@@ -2329,7 +2307,6 @@
         document.getElementById('infoMenu').classList.toggle('active');
     };
 
-    // ===== DISCLAIMER =====
     var disclaimerTimerInterval;
 
     function initDisclaimer() {
@@ -2400,58 +2377,6 @@
         if (fab) fab.style.display = 'flex';
     };
 
-    // ===== DADOS DE TESTE =====
-    window.loadTestData = function() {
-        if (smartwallet.transactions.length > 0) {
-            if (!confirm('Você já possui dados. Substituir pelos dados de teste?')) return;
-        }
-
-        var today = new Date();
-        var y = today.getFullYear();
-        var m = today.getMonth();
-
-        smartwallet.transactions = [
-            { id: 1, date: y + '-' + String(m+1).padStart(2,'0') + '-05', amount: 5000, category: 'salario', description: 'Salário', statusOk: true, paymentMethod: 'transfer', accountId: '' },
-            { id: 2, date: y + '-' + String(m+1).padStart(2,'0') + '-10', amount: -1500, category: 'moradia', description: 'Aluguel', statusOk: true, paymentMethod: 'auto', accountId: '' },
-            { id: 3, date: y + '-' + String(m+1).padStart(2,'0') + '-15', amount: -800, category: 'alimentacao', description: 'Supermercado', statusOk: true, paymentMethod: 'debit', accountId: '' },
-            { id: 4, date: y + '-' + String(m+1).padStart(2,'0') + '-20', amount: -200, category: 'transporte', description: 'Combustível', statusOk: false, paymentMethod: 'pix', accountId: '' },
-            { id: 5, date: y + '-' + String(m+1).padStart(2,'0') + '-25', amount: 500, category: 'freelancer', description: 'Freelance', statusOk: true, paymentMethod: 'pix', accountId: '' }
-        ];
-
-        smartwallet.accounts = [
-            { id: 'acc_1', name: 'Conta Principal', type: 'checking', balance: 5000, color: '#6366f1' },
-            { id: 'acc_2', name: 'Poupança', type: 'investment', balance: 10000, color: '#10b981' }
-        ];
-
-        smartwallet.cards = [
-            { id: 'card_1', name: 'Nubank', brand: 'Mastercard', last4: '1234', closingDay: 20, dueDay: 27, limit: 5000, color: '#8b5cf6' }
-        ];
-
-        smartwallet.cardPurchases = [
-            { id: 1, cardId: 'card_1', date: y + '-' + String(m+1).padStart(2,'0') + '-10', amount: 300, description: 'Amazon', category: 'lazer', installments: 1, status: true }
-        ];
-
-        smartwallet.investments = [
-            { id: 'inv_1', name: 'CDB Banco XYZ', type: 'cdb', initial: 10000, current: 10500, date: y + '-01-15', rate: 10.5 }
-        ];
-
-        smartwallet.saveTransactions();
-        smartwallet.saveAccounts();
-        smartwallet.saveCards();
-        smartwallet.saveCardPurchases();
-        smartwallet.saveInvestments();
-
-        smartwallet.populateAccountSelects();
-        smartwallet.populatePaymentMethodSelects();
-        smartwallet.render();
-        smartwallet.updateCharts();
-        smartwallet.updateAlertBadge();
-
-        document.getElementById('mainMenu').classList.remove('active');
-        smartwallet.showToast('🧪 Dados de teste carregados!');
-    };
-
-    // ===== INICIALIZAÇÃO =====
     function updatePrintDate() {
         var dateEl = document.getElementById('printDate');
         if (dateEl) dateEl.textContent = 'Gerado em: ' + new Date().toLocaleString('pt-BR');
