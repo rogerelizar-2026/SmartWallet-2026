@@ -87,12 +87,11 @@
         { id: 'freelancer', name: 'Freelancer', color: '#b3e6e0', type: 'income' }
     ];
 
-    // ===== CONTEÚDO DO MANUAL =====
     var manualHTML = '<div class="manual-cover">' +
         '<h1>📘 Manual do Usuário</h1>' +
         '<h2>Smart Wallet Brasil</h2>' +
         '<p>Controle Financeiro Pessoal Inteligente</p>' +
-        '<p class="version">Versão 2.0.2 - 2026</p>' +
+        '<p class="version">Versão 2.0.3 - 2026</p>' +
         '<p class="author">Idealizado por RogerElizar™</p>' +
         '</div>' +
         '<div class="manual-quote">' +
@@ -104,7 +103,7 @@
         '<h3>💝 Aos meus filhos</h3>' +
         '<div class="manual-quote">' +
         '<p>Dedico este trabalho a vocês, meus amados filhos. Que este seja um legado de ensino, organização e sabedoria financeira.</p>' +
-        '<div class="quote-author">— Com todo amor: Rogério</div>' +
+        '<div class="quote-author">— Com todo amor, pai</div>' +
         '</div>' +
         '</div>' +
         '<h2>🎯 Bem-vindo ao Smart Wallet Brasil!</h2>' +
@@ -148,16 +147,16 @@
         '<li><strong>Saldo do Mês:</strong> Quanto você ganhou menos quanto gastou</li>' +
         '<li><strong>Receitas:</strong> Total de entradas (salário, freelas, etc)</li>' +
         '<li><strong>Despesas:</strong> Total de saídas</li>' +
-        '<li><strong>Meta de Reserva:</strong> Progresso em direção à sua meta</li>' +
+        '<li><strong>Acumulado C.Crédito:</strong> Total das faturas dos cartões</li>' +
         '</ul>' +
         '<div class="manual-success">' +
         '<strong>🎯 Dica de Coach:</strong> Uma boa regra é ter uma reserva de emergência equivalente a <strong>6 meses</strong> das suas despesas mensais. Isso te protege contra imprevistos sem precisar recorrer a empréstimos.' +
         '</div>' +
         '<h3>💳 Gestão de Cartões de Crédito</h3>' +
-        '<p>Controle todos os seus cartões em um só lugar:</p>' +
+        '<p>Controle todos os seus cartões em um só lugar. Para lançar uma compra no cartão, use o modal "Nova Transação" e selecione o cartão na forma de pagamento.</p>' +
         '<ul>' +
         '<li>Cadastre cartões com limite, dia de fechamento e vencimento</li>' +
-        '<li>Acompanhe faturas e compras parceladas</li>' +
+        '<li>Acompanhe faturas automaticamente</li>' +
         '<li>Veja quanto do limite já foi utilizado</li>' +
         '<li>Exporte faturas em CSV ou PDF</li>' +
         '</ul>' +
@@ -170,8 +169,8 @@
         '<p>Visualize seus dados de forma clara:</p>' +
         '<ul>' +
         '<li><strong>Entradas e Saídas:</strong> Evolução mensal</li>' +
+        '<li><strong>Cartões de Crédito:</strong> Evolução de 6 meses</li>' +
         '<li><strong>Despesas por Categoria:</strong> Onde seu dinheiro está indo</li>' +
-        '<li><strong>Projeção:</strong> Estimativa para o próximo mês</li>' +
         '</ul>' +
         '<h2>🚀 Guia do Sucesso Financeiro</h2>' +
         '<h3>💡 A Mentalidade da Prosperidade</h3>' +
@@ -269,6 +268,7 @@
         '</div>' +
         '</div>';
 
+    // ===== CLASSE PRINCIPAL =====
     function SmartWallet() {
         this.transactions = [];
         this.categories = [];
@@ -450,22 +450,25 @@
             if (!sel) return;
             var currentVal = sel.value;
             sel.innerHTML = '<option value="">Selecione...</option>';
+            var group = document.createElement('optgroup');
+            group.label = '💰 Formas de Pagamento';
             PAYMENT_METHODS.forEach(function(pm) {
                 var opt = document.createElement('option');
                 opt.value = pm.id;
                 opt.textContent = pm.icon + ' ' + pm.name;
-                sel.appendChild(opt);
+                group.appendChild(opt);
             });
+            sel.appendChild(group);
             if (self.cards.length > 0) {
-                var group = document.createElement('optgroup');
-                group.label = '💳 Cartões de Crédito';
+                var cardGroup = document.createElement('optgroup');
+                cardGroup.label = '💳 Cartões de Crédito';
                 self.cards.forEach(function(card) {
                     var opt = document.createElement('option');
                     opt.value = 'card:' + card.id;
-                    opt.textContent = card.name + ' •••• ' + (card.last4 || '****');
-                    group.appendChild(opt);
+                    opt.textContent = '💳 ' + card.name + ' •••• ' + (card.last4 || '****');
+                    cardGroup.appendChild(opt);
                 });
-                sel.appendChild(group);
+                sel.appendChild(cardGroup);
             }
             sel.value = currentVal;
         });
@@ -543,58 +546,61 @@
         return method;
     };
 
-SmartWallet.prototype.addTransaction = function() {
-    var date = document.getElementById('date').value;
-    var amount = parseFloat(document.getElementById('amount').value);
-    var category = document.getElementById('category').value;
-    var description = document.getElementById('description').value;
-    var statusOk = document.getElementById('statusOk').checked;
-    var paymentMethod = document.getElementById('paymentMethod').value;
-    var accountId = document.getElementById('transactionAccount').value;
+    // ===== FUNÇÃO PRINCIPAL - CORRIGIDA PARA REGISTRAR AUTOMATICAMENTE NO CARTÃO =====
+    SmartWallet.prototype.addTransaction = function() {
+        var date = document.getElementById('date').value;
+        var amount = parseFloat(document.getElementById('amount').value);
+        var category = document.getElementById('category').value;
+        var description = document.getElementById('description').value;
+        var statusOk = document.getElementById('statusOk').checked;
+        var paymentMethod = document.getElementById('paymentMethod').value;
+        var accountId = document.getElementById('transactionAccount').value;
 
-    if (!category) { this.showToast('Selecione uma categoria'); return; }
-    if (!paymentMethod) { this.showToast('Selecione a forma de pagamento'); return; }
+        if (!category) { this.showToast('Selecione uma categoria'); return; }
+        if (!paymentMethod) { this.showToast('Selecione a forma de pagamento'); return; }
 
-    var transaction = {
-        id: Date.now(),
-        date: date,
-        amount: this.currentTransactionType === 'expense' ? -Math.abs(amount) : Math.abs(amount),
-        category: category,
-        description: description,
-        statusOk: statusOk,
-        paymentMethod: paymentMethod,
-        accountId: accountId
+        var transaction = {
+            id: Date.now(),
+            date: date,
+            amount: this.currentTransactionType === 'expense' ? -Math.abs(amount) : Math.abs(amount),
+            category: category,
+            description: description,
+            statusOk: statusOk,
+            paymentMethod: paymentMethod,
+            accountId: accountId
+        };
+
+        // ✅ NOVO: Se for CARTÃO DE CRÉDITO e for DESPESA, registrar automaticamente na fatura
+        if (paymentMethod.indexOf('card:') === 0 && this.currentTransactionType === 'expense') {
+            var cardId = paymentMethod.replace('card:', '');
+            var card = this.getCardById(cardId);
+            
+            if (card) {
+                this.cardPurchases.push({
+                    id: Date.now() + 1,
+                    cardId: cardId,
+                    date: date,
+                    amount: Math.abs(amount),
+                    description: description,
+                    category: category,
+                    installments: 1,
+                    status: statusOk
+                });
+                this.saveCardPurchases();
+                console.log('✅ Compra registrada automaticamente na fatura do cartão:', description, amount);
+            }
+        }
+
+        this.transactions.push(transaction);
+        this.saveTransactions();
+        this.render();
+        this.updateCharts();
+        this.updateAlertBadge();
+        this.showToast('Transação adicionada!');
+        closeNewTransactionModal();
+        this.clearForm();
     };
 
-    // NOVO: Se for cartão de crédito, registrar também como compra de cartão
-    if (paymentMethod.indexOf('card:') === 0 && this.currentTransactionType === 'expense') {
-        var cardId = paymentMethod.replace('card:', '');
-        var card = this.getCardById(cardId);
-        
-        if (card) {
-            this.cardPurchases.push({
-                id: Date.now() + 1,
-                cardId: cardId,
-                date: date,
-                amount: Math.abs(amount),
-                description: description,
-                category: category,
-                installments: 1,
-                status: statusOk
-            });
-            this.saveCardPurchases();
-        }
-    }
-
-    this.transactions.push(transaction);
-    this.saveTransactions();
-    this.render();
-    this.updateCharts();
-    this.updateAlertBadge();
-    this.showToast('Transação adicionada!');
-    closeNewTransactionModal();
-    this.clearForm();
-};
     SmartWallet.prototype.clearForm = function() {
         var form = document.getElementById('transactionForm');
         if (form) form.reset();
@@ -722,8 +728,12 @@ SmartWallet.prototype.addTransaction = function() {
             if (a.type === 'checking') unifiedBalance += (parseFloat(a.balance) || 0);
         });
 
+        // ✅ Card "Acumulado C.Crédito" - calcula SOMENTE do cardPurchases do mês atual
         var creditCardTotal = 0;
         var self = this;
+        var currentMonth = this.currentMonth.getMonth();
+        var currentYear = this.currentMonth.getFullYear();
+        
         this.cards.forEach(function(card) {
             var period = self.getInvoicePeriod(card);
             var purchases = self.getCardPurchasesForInvoice(card.id, period.startDate, period.closingDate);
@@ -891,8 +901,9 @@ SmartWallet.prototype.addTransaction = function() {
                         x: { beginAtZero: true, ticks: { color: colors.textSecondary }, grid: { color: colors.grid } },
                         y: { ticks: { color: colors.textSecondary }, grid: { color: colors.grid } }
                     },
-                    barPercentage: 0.12,
-                    categoryPercentage: 0.15
+                    // ✅ Barras mais estreitas (metade da espessura)
+                    barPercentage: 0.3,
+                    categoryPercentage: 0.5
                 }
             });
         } catch (e) { console.error('Erro pie:', e); }
@@ -1159,6 +1170,7 @@ SmartWallet.prototype.addTransaction = function() {
         document.getElementById('newCardModal').classList.add('active');
     };
 
+    // ✅ FUNÇÃO openInvoice CORRIGIDA - SEM botão "Nova Compra"
     SmartWallet.prototype.openInvoice = function(cardId) {
         var card = this.getCardById(cardId);
         if (!card) return;
@@ -1185,7 +1197,7 @@ SmartWallet.prototype.addTransaction = function() {
         html += '<button class="btn btn-secondary btn-small" onclick="smartwallet.printInvoicePDF(\'' + cardId + '\')">🖨️ PDF</button></div></div>';
         html += '<div>';
         if (purchases.length === 0) {
-            html += '<p style="text-align:center; padding:20px; color:var(--text-secondary);">Nenhuma compra</p>';
+            html += '<p style="text-align:center; padding:20px; color:var(--text-secondary);">Nenhuma compra neste período. Use o modal "Nova Transação" e selecione este cartão na forma de pagamento.</p>';
         } else {
             purchases.sort(function(a,b) { return new Date(a.date) - new Date(b.date); }).forEach(function(p) {
                 var cat = self.getCategoryById(p.category);
@@ -1193,7 +1205,7 @@ SmartWallet.prototype.addTransaction = function() {
                 html += '<div style="flex:1;"><div style="font-weight:600;">' + self.escapeHtml(p.description) + '</div>';
                 html += '<div style="font-size:0.8rem; color:var(--text-secondary); display:flex; gap:10px;"><span>' + self.formatDate(p.date) + '</span><span style="color:' + cat.color + ';">● ' + self.escapeHtml(cat.name) + '</span></div></div>';
                 html += '<div style="font-weight:700;">' + self.formatCurrency(p.amount) + '</div>';
-                html += '<button class="btn btn-danger btn-small" onclick="smartwallet.deletePurchase(' + p.id + ', \'' + cardId + '\')">🗑️</button></div>';
+                html += '<button class="btn btn-danger btn-small" onclick="smartwallet.deleteCardPurchase(' + p.id + ', \'' + cardId + '\')">🗑️</button></div>';
             });
         }
         html += '</div>';
@@ -1203,6 +1215,27 @@ SmartWallet.prototype.addTransaction = function() {
 
         document.getElementById('invoiceContent').innerHTML = html;
         document.getElementById('invoiceModal').classList.add('active');
+    };
+
+    // ✅ Nova função para deletar compra de cartão
+    SmartWallet.prototype.deleteCardPurchase = function(id, cardId) {
+        if (!confirm('Excluir esta compra?')) return;
+        var purchase = null;
+        for (var i = 0; i < this.cardPurchases.length; i++) {
+            if (this.cardPurchases[i].id === id) { purchase = this.cardPurchases[i]; break; }
+        }
+        this.cardPurchases = this.cardPurchases.filter(function(p) { return p.id !== id; });
+        if (purchase) {
+            this.transactions = this.transactions.filter(function(t) {
+                return !(t.description === purchase.description && t.date === purchase.date && t.paymentMethod === 'card:' + cardId);
+            });
+            this.saveTransactions();
+        }
+        this.saveCardPurchases();
+        this.render();
+        this.updateCharts();
+        this.openInvoice(cardId);
+        this.showToast('Compra excluída!');
     };
 
     SmartWallet.prototype.payInvoice = function(cardId) {
@@ -1307,7 +1340,7 @@ SmartWallet.prototype.addTransaction = function() {
     SmartWallet.prototype.exportBackup = function() {
         try {
             var backup = {
-                version: '2.0.2',
+                version: '2.0.3',
                 exportDate: new Date().toISOString(),
                 appName: 'Smart Wallet',
                 transactions: this.transactions,
@@ -1785,11 +1818,11 @@ SmartWallet.prototype.addTransaction = function() {
             });
             var totalProfit = totalCurrent - totalInitial;
             var totalProfitPct = totalInitial > 0 ? (totalProfit / totalInitial * 100) : 0;
-summaryEl.innerHTML = '<div class="investment-summary"><h3>📊 Resumo</h3><div class="investment-summary-grid">' +
-    '<div class="investment-summary-item"><div class="investment-summary-label">Total Investido</div><div class="investment-summary-value privacy-value">' + this.formatCurrency(totalInitial) + '</div></div>' +
-    '<div class="investment-summary-item"><div class="investment-summary-label">Valor Atual</div><div class="investment-summary-value privacy-value">' + this.formatCurrency(totalCurrent) + '</div></div>' +
-    '<div class="investment-summary-item"><div class="investment-summary-label">Rendimento</div><div class="investment-summary-value privacy-value" style="color:' + (totalProfit >= 0 ? 'var(--success-color)' : 'var(--danger-color)') + ';">' + totalProfitPct.toFixed(2) + '% (' + this.formatCurrency(totalProfit) + ')</div></div>' +
-    '</div></div>';
+            summaryEl.innerHTML = '<div class="investment-summary"><h3>📊 Resumo</h3><div class="investment-summary-grid">' +
+                '<div class="investment-summary-item"><div class="investment-summary-label">Total Investido</div><div class="investment-summary-value privacy-value">' + this.formatCurrency(totalInitial) + '</div></div>' +
+                '<div class="investment-summary-item"><div class="investment-summary-label">Valor Atual</div><div class="investment-summary-value privacy-value">' + this.formatCurrency(totalCurrent) + '</div></div>' +
+                '<div class="investment-summary-item"><div class="investment-summary-label">Rendimento</div><div class="investment-summary-value privacy-value" style="color:' + (totalProfit >= 0 ? 'var(--success-color)' : 'var(--danger-color)') + ';">' + totalProfitPct.toFixed(2) + '% (' + this.formatCurrency(totalProfit) + ')</div></div>' +
+                '</div></div>';
         }
     };
 
@@ -1864,7 +1897,6 @@ summaryEl.innerHTML = '<div class="investment-summary"><h3>📊 Resumo</h3><div 
     SmartWallet.prototype.updateInvestmentValue = function() {
         var id = document.getElementById('updateInvestmentId').value;
         var newValue = parseFloat(document.getElementById('updateInvestmentValue').value) || 0;
-        var date = document.getElementById('updateInvestmentDate').value;
 
         for (var i = 0; i < this.investments.length; i++) {
             if (this.investments[i].id === id) {
@@ -1880,6 +1912,7 @@ summaryEl.innerHTML = '<div class="investment-summary"><h3>📊 Resumo</h3><div 
         this.showToast('Valor atualizado!');
     };
 
+    // ✅ renderInvestmentsModal CORRIGIDA com privacy-value
     SmartWallet.prototype.renderInvestmentsModal = function() {
         var container = document.getElementById('investmentsContent');
         if (!container) return;
@@ -1909,11 +1942,11 @@ summaryEl.innerHTML = '<div class="investment-summary"><h3>📊 Resumo</h3><div 
             html += '<button class="btn btn-danger btn-small" onclick="smartwallet.deleteInvestment(\'' + inv.id + '\')">🗑️</button>';
             html += '</div></div>';
             html += '<div class="investment-card-values">';
-            html += '<div class="investment-value-item"><div class="investment-value-label">Valor Inicial</div><div class="investment-value-amount">' + self.formatCurrency(inv.initial) + '</div></div>';
-            html += '<div class="investment-value-item"><div class="investment-value-label">Valor Atual</div><div class="investment-value-amount">' + self.formatCurrency(inv.current) + '</div></div>';
-            html += '<div class="investment-value-item"><div class="investment-value-label">Rendimento</div><div class="investment-value-amount ' + (profit >= 0 ? 'positive' : 'negative') + '">' + profitPct.toFixed(2) + '% (' + self.formatCurrency(profit) + ')</div></div>';
+            html += '<div class="investment-value-item"><div class="investment-value-label">Valor Inicial</div><div class="investment-value-amount privacy-value">' + self.formatCurrency(inv.initial) + '</div></div>';
+            html += '<div class="investment-value-item"><div class="investment-value-label">Valor Atual</div><div class="investment-value-amount privacy-value">' + self.formatCurrency(inv.current) + '</div></div>';
+            html += '<div class="investment-value-item"><div class="investment-value-label">Rendimento</div><div class="investment-value-amount privacy-value ' + (profit >= 0 ? 'positive' : 'negative') + '">' + profitPct.toFixed(2) + '% (' + self.formatCurrency(profit) + ')</div></div>';
             html += '</div>';
-            if (inv.rate > 0) html += '<div style="font-size:0.85rem; color:var(--text-secondary);">Taxa: ' + inv.rate + '% ao ano</div>';
+            if (inv.rate > 0) html += '<div style="font-size:0.85rem; color:var(--text-secondary);" class="privacy-value">Taxa: ' + inv.rate + '% ao ano</div>';
             html += '</div>';
         });
         html += '</div>';
@@ -1921,13 +1954,13 @@ summaryEl.innerHTML = '<div class="investment-summary"><h3>📊 Resumo</h3><div 
         var totalProfit = totalCurrent - totalInitial;
         var totalProfitPct = totalInitial > 0 ? (totalProfit / totalInitial * 100) : 0;
 
-            html += '<div class="investment-summary">';
-            html += '<h3>📊 Resumo Geral</h3>';
-            html += '<div class="investment-summary-grid">';
-            html += '<div class="investment-summary-item"><div class="investment-summary-label">Total Investido</div><div class="investment-summary-value privacy-value">' + this.formatCurrency(totalInitial) + '</div></div>';
-            html += '<div class="investment-summary-item"><div class="investment-summary-label">Valor Atual</div><div class="investment-summary-value privacy-value">' + this.formatCurrency(totalCurrent) + '</div></div>';
-            html += '<div class="investment-summary-item"><div class="investment-summary-label">Rendimento Total</div><div class="investment-summary-value privacy-value" style="color:' + (totalProfit >= 0 ? 'var(--success-color)' : 'var(--danger-color)') + ';">' + totalProfitPct.toFixed(2) + '% (' + this.formatCurrency(totalProfit) + ')</div></div>';
-            html += '</div></div>';
+        html += '<div class="investment-summary">';
+        html += '<h3>📊 Resumo Geral</h3>';
+        html += '<div class="investment-summary-grid">';
+        html += '<div class="investment-summary-item"><div class="investment-summary-label">Total Investido</div><div class="investment-summary-value privacy-value">' + this.formatCurrency(totalInitial) + '</div></div>';
+        html += '<div class="investment-summary-item"><div class="investment-summary-label">Valor Atual</div><div class="investment-summary-value privacy-value">' + this.formatCurrency(totalCurrent) + '</div></div>';
+        html += '<div class="investment-summary-item"><div class="investment-summary-label">Rendimento Total</div><div class="investment-summary-value privacy-value" style="color:' + (totalProfit >= 0 ? 'var(--success-color)' : 'var(--danger-color)') + ';">' + totalProfitPct.toFixed(2) + '% (' + this.formatCurrency(totalProfit) + ')</div></div>';
+        html += '</div></div>';
 
         container.innerHTML = html;
     };
@@ -1975,6 +2008,7 @@ summaryEl.innerHTML = '<div class="investment-summary"><h3>📊 Resumo</h3><div 
     var smartwallet = new SmartWallet();
     window.smartwallet = smartwallet;
 
+    // ===== FUNÇÕES GLOBAIS =====
     window.selectTransactionType = function(t) {
         smartwallet.currentTransactionType = t;
         var btns = document.querySelectorAll('#transactionForm .type-btn');
