@@ -275,7 +275,6 @@
         this.categories = [];
         this.accounts = [];
         this.cards = [];
-        // ❌ REMOVIDO: this.cardPurchases = [];
         this.investments = [];
         this.currentMonth = new Date();
         this.currentMonth.setDate(1);
@@ -302,7 +301,6 @@
             if (a) this.accounts = JSON.parse(a);
             var cd = localStorage.getItem('smartwallet_cards');
             if (cd) this.cards = JSON.parse(cd);
-            // ❌ REMOVIDO: carregar cardPurchases
             var inv = localStorage.getItem('smartwallet_investments');
             if (inv) this.investments = JSON.parse(inv);
             var dm = localStorage.getItem('smartwallet_dark');
@@ -375,26 +373,22 @@
         if (statusFilter) statusFilter.addEventListener('change', function() { self.render(); });
         var accountFilter = document.getElementById('accountFilter');
         if (accountFilter) accountFilter.addEventListener('change', function() { self.render(); });
-        // ✅ Toggle de opções de recorrência
+
+        // Toggle recorrência
         var recurringCheckbox = document.getElementById('recurring');
         if (recurringCheckbox) {
             recurringCheckbox.addEventListener('change', function() {
                 var options = document.getElementById('recurringOptions');
-                if (options) {
-                    options.style.display = this.checked ? 'block' : 'none';
-                }
+                if (options) options.style.display = this.checked ? 'block' : 'none';
             });
         }
-            // ✅ Toggle de opções de recorrência no edit
-    var editRecurringCheckbox = document.getElementById('editRecurring');
-    if (editRecurringCheckbox) {
-        editRecurringCheckbox.addEventListener('change', function() {
-            var options = document.getElementById('editRecurringOptions');
-            if (options) {
-                options.style.display = this.checked ? 'block' : 'none';
-            }
-        });
-    }
+        var editRecurringCheckbox = document.getElementById('editRecurring');
+        if (editRecurringCheckbox) {
+            editRecurringCheckbox.addEventListener('change', function() {
+                var options = document.getElementById('editRecurringOptions');
+                if (options) options.style.display = this.checked ? 'block' : 'none';
+            });
+        }
     };
 
     SmartWallet.prototype.setDefaultDate = function() {
@@ -430,16 +424,24 @@
         });
     };
 
-    // ✅ NOVA FUNÇÃO: Busca transações de cartão de crédito de um mês específico
     SmartWallet.prototype.getCardTransactions = function(cardId, date) {
         if (!date) date = this.currentMonth;
         var m = date.getMonth();
         var y = date.getFullYear();
         return this.transactions.filter(function(t) {
             if (t.paymentMethod !== 'card:' + cardId) return false;
-            if (t.amount >= 0) return false; // Apenas despesas
+            if (t.amount >= 0) return false;
             var d = new Date(t.date + 'T00:00:00');
             return d.getMonth() === m && d.getFullYear() === y;
+        });
+    };
+
+    SmartWallet.prototype.getCardTransactionsForPeriod = function(cardId, startDate, closingDate) {
+        return this.transactions.filter(function(t) {
+            if (t.paymentMethod !== 'card:' + cardId) return false;
+            if (t.amount >= 0) return false;
+            var tDate = new Date(t.date + 'T00:00:00');
+            return tDate >= startDate && tDate <= closingDate;
         });
     };
 
@@ -448,8 +450,7 @@
         var selects = [
             document.getElementById('category'),
             document.getElementById('editCategory'),
-            document.getElementById('categoryFilter'),
-            document.getElementById('purchaseCategory')
+            document.getElementById('categoryFilter')
         ];
         selects.forEach(function(sel, i) {
             if (!sel) return;
@@ -495,7 +496,7 @@
                 self.cards.forEach(function(card) {
                     var opt = document.createElement('option');
                     opt.value = 'card:' + card.id;
-                    opt.textContent = '💳 ' + card.name + ' •••• ' + (card.last4 || '****');
+                    opt.textContent = ' ' + card.name + ' •••• ' + (card.last4 || '****');
                     cardGroup.appendChild(opt);
                 });
                 sel.appendChild(cardGroup);
@@ -519,7 +520,7 @@
             self.accounts.forEach(function(acc) {
                 var opt = document.createElement('option');
                 opt.value = acc.id;
-                opt.textContent = (acc.type === 'checking' ? '💳 ' : ' ') + acc.name;
+                opt.textContent = (acc.type === 'checking' ? '💳 ' : '📈 ') + acc.name;
                 sel.appendChild(opt);
             });
             sel.value = val;
@@ -576,90 +577,87 @@
         return method;
     };
 
-    // ✅ FUNÇÃO addTransaction CORRIGIDA - Sistema unificado
-SmartWallet.prototype.addTransaction = function() {
-    var date = document.getElementById('date').value;
-    var amount = parseFloat(document.getElementById('amount').value);
-    var category = document.getElementById('category').value;
-    var description = document.getElementById('description').value;
-    var statusOk = document.getElementById('statusOk').checked;
-    var paymentMethod = document.getElementById('paymentMethod').value;
-    var accountId = document.getElementById('transactionAccount').value;
-    var isRecurring = document.getElementById('recurring').checked;
+    SmartWallet.prototype.addTransaction = function() {
+        var date = document.getElementById('date').value;
+        var amount = parseFloat(document.getElementById('amount').value);
+        var category = document.getElementById('category').value;
+        var description = document.getElementById('description').value;
+        var statusOk = document.getElementById('statusOk').checked;
+        var paymentMethod = document.getElementById('paymentMethod').value;
+        var accountId = document.getElementById('transactionAccount').value;
+        var isRecurring = document.getElementById('recurring').checked;
 
-    if (!category) { this.showToast('Selecione uma categoria'); return; }
-    if (!paymentMethod) { this.showToast('Selecione a forma de pagamento'); return; }
+        if (!category) { this.showToast('Selecione uma categoria'); return; }
+        if (!paymentMethod) { this.showToast('Selecione a forma de pagamento'); return; }
 
-    // ✅ Se for recorrente, criar múltiplas transações
-    if (isRecurring) {
-        var recurrenceType = document.getElementById('recurrenceType').value;
-        var recurrenceCount = parseInt(document.getElementById('recurrenceCount').value);
-        
-        if (recurrenceCount < 2) { this.showToast('Mínimo de 2 parcelas'); return; }
-        
-        var startDate = new Date(date + 'T00:00:00');
-        var baseAmount = this.currentTransactionType === 'expense' ? -Math.abs(amount) : Math.abs(amount);
-        var recurrenceGroupId = 'rec_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-        var createdCount = 0;
-        
-        for (var i = 0; i < recurrenceCount; i++) {
-            var transDate = new Date(startDate);
+        if (isRecurring) {
+            var recurrenceType = document.getElementById('recurrenceType').value;
+            var recurrenceCount = parseInt(document.getElementById('recurrenceCount').value);
             
-            if (recurrenceType === 'monthly') {
-                transDate.setMonth(startDate.getMonth() + i);
-            } else if (recurrenceType === 'yearly') {
-                transDate.setFullYear(startDate.getFullYear() + i);
-            } else if (recurrenceType === 'installment') {
-                transDate.setMonth(startDate.getMonth() + i);
-            }
+            if (recurrenceCount < 2) { this.showToast('Mínimo de 2 parcelas'); return; }
             
-            var transDescription = description;
-            if (recurrenceType === 'installment') {
-                transDescription = description + ' - Parcela ' + (i + 1) + '/' + recurrenceCount;
-            }
+            var startDate = new Date(date + 'T00:00:00');
+            var baseAmount = this.currentTransactionType === 'expense' ? -Math.abs(amount) : Math.abs(amount);
+            var recurrenceGroupId = 'rec_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            var createdCount = 0;
             
-            var transaction = {
-                id: Date.now() + i,
-                date: transDate.toISOString().split('T')[0],
-                amount: baseAmount,
-                category: category,
-                description: transDescription,
-                statusOk: statusOk,
-                paymentMethod: paymentMethod,
-                accountId: accountId,
-                recurrence: {
-                    groupId: recurrenceGroupId,
-                    type: recurrenceType,
-                    total: recurrenceCount,
-                    current: i + 1
+            for (var i = 0; i < recurrenceCount; i++) {
+                var transDate = new Date(startDate);
+                
+                if (recurrenceType === 'monthly') {
+                    transDate.setMonth(startDate.getMonth() + i);
+                } else if (recurrenceType === 'yearly') {
+                    transDate.setFullYear(startDate.getFullYear() + i);
+                } else if (recurrenceType === 'installment') {
+                    transDate.setMonth(startDate.getMonth() + i);
                 }
-            };
+                
+                var transDescription = description;
+                if (recurrenceType === 'installment') {
+                    transDescription = description + ' - Parcela ' + (i + 1) + '/' + recurrenceCount;
+                }
+                
+                var transaction = {
+                    id: Date.now() + i,
+                    date: transDate.toISOString().split('T')[0],
+                    amount: baseAmount,
+                    category: category,
+                    description: transDescription,
+                    statusOk: statusOk,
+                    paymentMethod: paymentMethod,
+                    accountId: accountId,
+                    recurrence: {
+                        groupId: recurrenceGroupId,
+                        type: recurrenceType,
+                        total: recurrenceCount,
+                        current: i + 1
+                    }
+                };
+                
+                this.transactions.push(transaction);
+                createdCount++;
+            }
             
-            this.transactions.push(transaction);
-            createdCount++;
+            this.saveTransactions();
+            this.render();
+            this.updateCharts();
+            this.updateAlertBadge();
+            this.showToast(createdCount + ' transações recorrentes criadas!');
+            closeNewTransactionModal();
+            this.clearForm();
+            return;
         }
-        
-        this.saveTransactions();
-        this.render();
-        this.updateCharts();
-        this.updateAlertBadge();
-        this.showToast(createdCount + ' transações recorrentes criadas!');
-        closeNewTransactionModal();
-        this.clearForm();
-        return;
-    }
 
-    // Transação única (não recorrente)
-    var transaction = {
-        id: Date.now(),
-        date: date,
-        amount: this.currentTransactionType === 'expense' ? -Math.abs(amount) : Math.abs(amount),
-        category: category,
-        description: description,
-        statusOk: statusOk,
-        paymentMethod: paymentMethod,
-        accountId: accountId
-    };
+        var transaction = {
+            id: Date.now(),
+            date: date,
+            amount: this.currentTransactionType === 'expense' ? -Math.abs(amount) : Math.abs(amount),
+            category: category,
+            description: description,
+            statusOk: statusOk,
+            paymentMethod: paymentMethod,
+            accountId: accountId
+        };
 
         this.transactions.push(transaction);
         this.saveTransactions();
@@ -671,31 +669,19 @@ SmartWallet.prototype.addTransaction = function() {
         this.clearForm();
     };
 
-        this.transactions.push(transaction);
-        this.saveTransactions();
-        this.render();
-        this.updateCharts();
-        this.updateAlertBadge();
-        this.showToast('Transação adicionada!');
-        closeNewTransactionModal();
-        this.clearForm();
+    SmartWallet.prototype.clearForm = function() {
+        var form = document.getElementById('transactionForm');
+        if (form) form.reset();
+        this.setDefaultDate();
+        this.currentTransactionType = 'expense';
+        var btns = document.querySelectorAll('#transactionForm .type-btn');
+        btns.forEach(function(b) {
+            b.classList.toggle('active', b.getAttribute('data-type') === 'expense');
+        });
+        this.filterCategoriesByType('category', 'expense');
+        var recurringOptions = document.getElementById('recurringOptions');
+        if (recurringOptions) recurringOptions.style.display = 'none';
     };
-
-SmartWallet.prototype.clearForm = function() {
-    var form = document.getElementById('transactionForm');
-    if (form) form.reset();
-    this.setDefaultDate();
-    this.currentTransactionType = 'expense';
-    var btns = document.querySelectorAll('#transactionForm .type-btn');
-    btns.forEach(function(b) {
-        b.classList.toggle('active', b.getAttribute('data-type') === 'expense');
-    });
-    this.filterCategoriesByType('category', 'expense');
-    
-    // ✅ Esconder opções de recorrência
-    var recurringOptions = document.getElementById('recurringOptions');
-    if (recurringOptions) recurringOptions.style.display = 'none';
-};
 
     SmartWallet.prototype.editTransaction = function(id) {
         var t = null;
@@ -714,16 +700,19 @@ SmartWallet.prototype.clearForm = function() {
         document.getElementById('editPaymentMethod').value = t.paymentMethod || '';
         document.getElementById('editTransactionAccount').value = t.accountId || '';
         document.getElementById('editDescription').value = t.description || '';
-    // ✅ Carregar dados de recorrência se existir
-    if (t.recurrence) {
-        document.getElementById('editRecurring').checked = true;
-        document.getElementById('editRecurringOptions').style.display = 'block';
-        document.getElementById('editRecurrenceType').value = t.recurrence.type;
-        document.getElementById('editRecurrenceCount').value = t.recurrence.total;
-    } else {
-        document.getElementById('editRecurring').checked = false;
-        document.getElementById('editRecurringOptions').style.display = 'none';
-    }
+        document.getElementById('editStatusOk').checked = !!t.statusOk;
+
+        if (t.recurrence) {
+            document.getElementById('editRecurring').checked = true;
+            document.getElementById('editRecurringOptions').style.display = 'block';
+            document.getElementById('editRecurrenceType').value = t.recurrence.type;
+            document.getElementById('editRecurrenceCount').value = t.recurrence.total;
+        } else {
+            document.getElementById('editRecurring').checked = false;
+            document.getElementById('editRecurringOptions').style.display = 'none';
+        }
+
+        var btns = document.querySelectorAll('#editForm .type-btn');
         var self = this;
         btns.forEach(function(b) {
             b.classList.toggle('active', b.getAttribute('data-type') === self.currentEditType);
@@ -733,46 +722,46 @@ SmartWallet.prototype.clearForm = function() {
         document.getElementById('editModal').classList.add('active');
     };
 
-SmartWallet.prototype.updateTransaction = function() {
-    var id = parseInt(document.getElementById('editId').value);
-    var idx = -1;
-    for (var i = 0; i < this.transactions.length; i++) {
-        if (this.transactions[i].id === id) { idx = i; break; }
-    }
-    if (idx === -1) return;
+    SmartWallet.prototype.updateTransaction = function() {
+        var id = parseInt(document.getElementById('editId').value);
+        var idx = -1;
+        for (var i = 0; i < this.transactions.length; i++) {
+            if (this.transactions[i].id === id) { idx = i; break; }
+        }
+        if (idx === -1) return;
 
-    var isRecurring = document.getElementById('editRecurring').checked;
-    var recurrenceData = null;
-    
-    if (isRecurring) {
-        var recurrenceType = document.getElementById('editRecurrenceType').value;
-        var recurrenceCount = parseInt(document.getElementById('editRecurrenceCount').value);
-        recurrenceData = {
-            type: recurrenceType,
-            total: recurrenceCount,
-            current: this.transactions[idx].recurrence ? this.transactions[idx].recurrence.current : 1
+        var isRecurring = document.getElementById('editRecurring').checked;
+        var recurrenceData = null;
+        
+        if (isRecurring) {
+            var recurrenceType = document.getElementById('editRecurrenceType').value;
+            var recurrenceCount = parseInt(document.getElementById('editRecurrenceCount').value);
+            recurrenceData = {
+                type: recurrenceType,
+                total: recurrenceCount,
+                current: this.transactions[idx].recurrence ? this.transactions[idx].recurrence.current : 1
+            };
+        }
+
+        this.transactions[idx] = {
+            id: id,
+            date: document.getElementById('editDate').value,
+            amount: this.currentEditType === 'expense' ? -Math.abs(parseFloat(document.getElementById('editAmount').value)) : Math.abs(parseFloat(document.getElementById('editAmount').value)),
+            category: document.getElementById('editCategory').value,
+            description: document.getElementById('editDescription').value,
+            statusOk: document.getElementById('editStatusOk').checked,
+            paymentMethod: document.getElementById('editPaymentMethod').value,
+            accountId: document.getElementById('editTransactionAccount').value,
+            recurrence: recurrenceData
         };
-    }
 
-    this.transactions[idx] = {
-        id: id,
-        date: document.getElementById('editDate').value,
-        amount: this.currentEditType === 'expense' ? -Math.abs(parseFloat(document.getElementById('editAmount').value)) : Math.abs(parseFloat(document.getElementById('editAmount').value)),
-        category: document.getElementById('editCategory').value,
-        description: document.getElementById('editDescription').value,
-        statusOk: document.getElementById('editStatusOk').checked,
-        paymentMethod: document.getElementById('editPaymentMethod').value,
-        accountId: document.getElementById('editTransactionAccount').value,
-        recurrence: recurrenceData
+        this.saveTransactions();
+        this.render();
+        this.updateCharts();
+        this.updateAlertBadge();
+        closeEditModal();
+        this.showToast('Atualizada!');
     };
-
-    this.saveTransactions();
-    this.render();
-    this.updateCharts();
-    this.updateAlertBadge();
-    closeEditModal();
-    this.showToast('Atualizada!');
-};
 
     SmartWallet.prototype.deleteFromEdit = function() {
         if (!this.currentEditId) return;
@@ -785,6 +774,16 @@ SmartWallet.prototype.updateTransaction = function() {
         this.updateAlertBadge();
         closeEditModal();
         this.showToast('Excluída!');
+    };
+
+    SmartWallet.prototype.deleteTransaction = function(id) {
+        if (!confirm('Excluir esta transação?')) return;
+        this.transactions = this.transactions.filter(function(t) { return t.id !== id; });
+        this.saveTransactions();
+        this.render();
+        this.updateCharts();
+        this.updateAlertBadge();
+        this.showToast('Transação excluída!');
     };
 
     SmartWallet.prototype.getFilteredTransactions = function() {
@@ -820,7 +819,6 @@ SmartWallet.prototype.updateTransaction = function() {
         return div.innerHTML;
     };
 
-    // ✅ updateDashboard CORRIGIDO - Busca cartão de transactions
     SmartWallet.prototype.updateDashboard = function() {
         var mt = this.getMonthTransactions();
         var inc = 0, exp = 0;
@@ -834,7 +832,6 @@ SmartWallet.prototype.updateTransaction = function() {
             if (a.type === 'checking') unifiedBalance += (parseFloat(a.balance) || 0);
         });
 
-        // ✅ Card "Acumulado C.Crédito" - busca DIRETAMENTE de transactions
         var creditCardTotal = 0;
         var self = this;
         this.cards.forEach(function(card) {
@@ -899,11 +896,11 @@ SmartWallet.prototype.updateTransaction = function() {
             var recurrenceHtml = '';
             if (t.recurrence) {
                 if (t.recurrence.type === 'installment') {
-                    recurrenceHtml = '<span class="recurrence-badge"> ' + (t.recurrence.current || 1) + '/' + (t.recurrence.total || 1) + '</span>';
+                    recurrenceHtml = '<span class="recurrence-badge">📅 ' + (t.recurrence.current || 1) + '/' + (t.recurrence.total || 1) + '</span>';
                 } else if (t.recurrence.type === 'monthly') {
-                    recurrenceHtml = '<span class="recurrence-badge"> Mensal</span>';
+                    recurrenceHtml = '<span class="recurrence-badge">📅 Mensal</span>';
                 } else if (t.recurrence.type === 'yearly') {
-                    recurrenceHtml = '<span class="recurrence-badge"> Anual</span>';
+                    recurrenceHtml = '<span class="recurrence-badge">📅 Anual</span>';
                 }
             }
 
@@ -1046,7 +1043,6 @@ SmartWallet.prototype.updateTransaction = function() {
         });
     };
 
-    // ✅ updateCharts CORRIGIDO - Gráfico de cartões busca de transactions
     SmartWallet.prototype.updateCharts = function() {
         var self = this;
         var lLabels = [], lInc = [], lExp = [];
@@ -1086,7 +1082,6 @@ SmartWallet.prototype.updateTransaction = function() {
             this.charts.pie.update();
         }
 
-        // ✅ Gráfico de Cartões - busca DIRETAMENTE de transactions
         if (this.charts.cards) {
             var cardLabels = [];
             var cardDatasets = [];
@@ -1163,23 +1158,12 @@ SmartWallet.prototype.updateTransaction = function() {
         return { startDate: startDate, closingDate: closingDate, dueDate: dueDate };
     };
 
-    // ✅ NOVA FUNÇÃO: Busca compras de cartão de um período específico
-    SmartWallet.prototype.getCardTransactionsForPeriod = function(cardId, startDate, closingDate) {
-        return this.transactions.filter(function(t) {
-            if (t.paymentMethod !== 'card:' + cardId) return false;
-            if (t.amount >= 0) return false;
-            var tDate = new Date(t.date + 'T00:00:00');
-            return tDate >= startDate && tDate <= closingDate;
-        });
-    };
-
     SmartWallet.prototype.calculateInvoiceTotal = function(purchases) {
         var total = 0;
         purchases.forEach(function(p) { total += Math.abs(p.amount); });
         return total;
     };
 
-    // ✅ renderCreditCardsList CORRIGIDO - Busca de transactions
     SmartWallet.prototype.renderCreditCardsList = function() {
         var container = document.getElementById('creditCardsList');
         if (!container) return;
@@ -1196,7 +1180,7 @@ SmartWallet.prototype.updateTransaction = function() {
             var available = card.limit - total;
             var usedPct = Math.min(100, (total / card.limit) * 100);
             html += '<div class="credit-card-visual" style="background:linear-gradient(135deg, ' + card.color + ' 0%, ' + self.adjustColor(card.color, -30) + ' 100%);" onclick="openInvoiceModal(\'' + card.id + '\')">';
-            html += '<div class="cc-actions"><button class="cc-action-btn" onclick="event.stopPropagation(); smartwallet.editCard(\'' + card.id + '\')">✏️</button><button class="cc-action-btn" onclick="event.stopPropagation(); smartwallet.deleteCard(\'' + card.id + '\')">️</button></div>';
+            html += '<div class="cc-actions"><button class="cc-action-btn" onclick="event.stopPropagation(); smartwallet.editCard(\'' + card.id + '\')">✏️</button><button class="cc-action-btn" onclick="event.stopPropagation(); smartwallet.deleteCard(\'' + card.id + '\')">🗑️</button></div>';
             html += '<div class="cc-header"><div class="cc-brand">' + self.escapeHtml(card.brand) + '</div><div class="cc-chip"></div></div>';
             html += '<div class="cc-name">' + self.escapeHtml(card.name) + '</div>';
             html += '<div class="cc-number">•••• •••• •••• ' + self.escapeHtml(card.last4 || '****') + '</div>';
@@ -1247,7 +1231,7 @@ SmartWallet.prototype.updateTransaction = function() {
     };
 
     SmartWallet.prototype.deleteCard = function(id) {
-        if (!confirm('Excluir este cartão? As transações associadas serão mantidas no histórico.')) return;
+        if (!confirm('Excluir este cartão? As transações associadas serão mantidas.')) return;
         this.cards = this.cards.filter(function(c) { return c.id !== id; });
         this.saveCards();
         this.populatePaymentMethodSelects();
@@ -1270,7 +1254,6 @@ SmartWallet.prototype.updateTransaction = function() {
         document.getElementById('newCardModal').classList.add('active');
     };
 
-    // ✅ openInvoice CORRIGIDO - Busca de transactions
     SmartWallet.prototype.openInvoice = function(cardId) {
         var card = this.getCardById(cardId);
         if (!card) return;
@@ -1293,11 +1276,11 @@ SmartWallet.prototype.updateTransaction = function() {
         html += '<div style="display:flex; justify-content:space-between; margin-bottom:12px; flex-wrap:wrap; gap:10px;">';
         html += '<h3 style="font-size:1.1rem;">Compras (' + purchases.length + ')</h3>';
         html += '<div style="display:flex; gap:8px;">';
-        html += '<button class="btn btn-secondary btn-small" onclick="smartwallet.exportInvoiceCSV(\'' + cardId + '\')">📥 CSV</button>';
-        html += '<button class="btn btn-secondary btn-small" onclick="smartwallet.printInvoicePDF(\'' + cardId + '\')">🖨️ PDF</button></div></div>';
+        html += '<button class="btn btn-secondary btn-small" onclick="smartwallet.exportInvoiceCSV(\'' + cardId + '\')"> CSV</button>';
+        html += '<button class="btn btn-secondary btn-small" onclick="smartwallet.printInvoicePDF(\'' + cardId + '\')">️ PDF</button></div></div>';
         html += '<div>';
         if (purchases.length === 0) {
-            html += '<p style="text-align:center; padding:20px; color:var(--text-secondary);">Nenhuma compra neste período. Use o modal "Nova Transação" e selecione este cartão na forma de pagamento.</p>';
+            html += '<p style="text-align:center; padding:20px; color:var(--text-secondary);">Nenhuma compra neste período.</p>';
         } else {
             purchases.sort(function(a,b) { return new Date(a.date) - new Date(b.date); }).forEach(function(p) {
                 var cat = self.getCategoryById(p.category);
@@ -1315,16 +1298,6 @@ SmartWallet.prototype.updateTransaction = function() {
 
         document.getElementById('invoiceContent').innerHTML = html;
         document.getElementById('invoiceModal').classList.add('active');
-    };
-
-    SmartWallet.prototype.deleteTransaction = function(id) {
-        if (!confirm('Excluir esta transação?')) return;
-        this.transactions = this.transactions.filter(function(t) { return t.id !== id; });
-        this.saveTransactions();
-        this.render();
-        this.updateCharts();
-        this.updateAlertBadge();
-        this.showToast('Transação excluída!');
     };
 
     SmartWallet.prototype.payInvoice = function(cardId) {
@@ -1429,7 +1402,7 @@ SmartWallet.prototype.updateTransaction = function() {
     SmartWallet.prototype.exportBackup = function() {
         try {
             var backup = {
-                version: '2.0.4',
+                version: '2.0.5',
                 exportDate: new Date().toISOString(),
                 appName: 'Smart Wallet',
                 transactions: this.transactions,
@@ -1453,17 +1426,17 @@ SmartWallet.prototype.updateTransaction = function() {
             this.showToast('✅ Backup exportado!');
             document.getElementById('mainMenu').classList.remove('active');
         } catch (e) {
-            this.showToast(' Erro: ' + e.message);
+            this.showToast('❌ Erro: ' + e.message);
         }
     };
 
     SmartWallet.prototype.importBackup = function() {
-        if (!this.pendingBackupData) { this.showToast('⚠️ Selecione um arquivo'); return; }
+        if (!this.pendingBackupData) { this.showToast('️ Selecione um arquivo'); return; }
         try {
             var cleanData = this.pendingBackupData;
             if (cleanData.charCodeAt(0) === 0xFEFF) cleanData = cleanData.substring(1);
             cleanData = cleanData.trim();
-            if (!cleanData) { this.showToast('❌ Arquivo vazio!'); return; }
+            if (!cleanData) { this.showToast(' Arquivo vazio!'); return; }
             var data = JSON.parse(cleanData);
             if (!data || typeof data !== 'object') { this.showToast('❌ Estrutura inválida'); return; }
 
@@ -1716,7 +1689,7 @@ SmartWallet.prototype.updateTransaction = function() {
         container.innerHTML = '<div class="accounts-grid">' + this.accounts.map(function(acc) {
             return '<div class="account-card" style="background:linear-gradient(135deg, ' + acc.color + ' 0%, ' + self.adjustColor(acc.color, -30) + ' 100%);">' +
                 '<div class="account-card-actions"><button class="cc-action-btn" onclick="event.stopPropagation(); smartwallet.editAccount(\'' + acc.id + '\')">✏️</button><button class="cc-action-btn" onclick="event.stopPropagation(); smartwallet.deleteAccount(\'' + acc.id + '\')">🗑️</button></div>' +
-                '<div class="account-card-header"><div class="account-card-type">' + (acc.type === 'checking' ? '💳 Conta Corrente' : '📈 Investimento') + '</div></div>' +
+                '<div class="account-card-header"><div class="account-card-type">' + (acc.type === 'checking' ? '💳 Conta Corrente' : ' Investimento') + '</div></div>' +
                 '<div class="account-card-name">' + self.escapeHtml(acc.name) + '</div>' +
                 '<div class="account-card-balance">' + self.formatCurrency(acc.balance) + '</div></div>';
         }).join('') + '</div>';
@@ -2002,7 +1975,7 @@ SmartWallet.prototype.updateTransaction = function() {
         var typeLabels = { cdb: 'CDB', tesouro: 'Tesouro Direto', lci: 'LCI/LCA', fundo: 'Fundo', acao: 'Ações', fiis: 'FIIs', poupanca: 'Poupança', outro: 'Outro' };
 
         if (!this.investments.length) {
-            container.innerHTML = '<div style="text-align:center; padding:40px 20px; color:var(--text-secondary);"><div style="font-size:3rem; margin-bottom:12px; opacity:0.5;">📈</div><h3>Nenhuma aplicação cadastrada</h3><p>Clique em "Nova Aplicação" para começar</p></div>';
+            container.innerHTML = '<div style="text-align:center; padding:40px 20px; color:var(--text-secondary);"><div style="font-size:3rem; margin-bottom:12px; opacity:0.5;"></div><h3>Nenhuma aplicação cadastrada</h3><p>Clique em "Nova Aplicação" para começar</p></div>';
             return;
         }
 
@@ -2050,7 +2023,7 @@ SmartWallet.prototype.updateTransaction = function() {
     SmartWallet.prototype.printManual = function() {
         var printWindow = window.open('', '_blank');
         if (!printWindow) { alert('Permita popups para imprimir'); return; }
-        printWindow.document.write('<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Manual do Usuário - Smart Wallet</title><style>');
+        printWindow.document.write('<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Manual - Smart Wallet</title><style>');
         printWindow.document.write('@page { size: A4; margin: 2cm; }');
         printWindow.document.write('body { font-family: Georgia, serif; color: #1e293b; line-height: 1.6; font-size: 11pt; padding: 20px; }');
         printWindow.document.write('.manual-cover { text-align: center; padding: 60px 30px; border: 3px solid #6366f1; border-radius: 16px; margin-bottom: 40px; page-break-after: always; }');
@@ -2075,11 +2048,11 @@ SmartWallet.prototype.updateTransaction = function() {
         printWindow.document.write('</style></head><body>');
         printWindow.document.write(manualHTML);
         printWindow.document.write('<div class="disclaimer-print">');
-        printWindow.document.write('<h4>⚠️ Termos de Uso e Aviso Legal</h4>');
-        printWindow.document.write('<p><strong>Sobre o Smart Wallet:</strong> Ferramenta de controle financeiro pessoal.</p>');
-        printWindow.document.write('<p><strong>Privacidade:</strong> 100% Offline. Dados armazenados localmente.</p>');
+        printWindow.document.write('<h4>⚠️ Termos de Uso</h4>');
+        printWindow.document.write('<p><strong>Sobre:</strong> Ferramenta de controle financeiro pessoal.</p>');
+        printWindow.document.write('<p><strong>Privacidade:</strong> 100% Offline. Dados locais.</p>');
         printWindow.document.write('<p><strong>Limitações:</strong> Não substitui consultoria profissional.</p>');
-        printWindow.document.write('<p><small>Ao utilizar o Smart Wallet, você concorda com estes termos.</small></p>');
+        printWindow.document.write('<p><small>Ao utilizar, você concorda com estes termos.</small></p>');
         printWindow.document.write('</div>');
         printWindow.document.write('</body></html>');
         printWindow.document.close();
@@ -2168,11 +2141,11 @@ SmartWallet.prototype.updateTransaction = function() {
         var file = event.target.files[0];
         if (!file) return;
         if (file.name.toLowerCase().indexOf('.csv') === -1) {
-            alert('⚠️ Selecione um arquivo .csv');
+            alert('️ Selecione um arquivo .csv');
             event.target.value = '';
             return;
         }
-        document.getElementById('csvFileName').textContent = '📄 ' + file.name + ' (' + (file.size/1024).toFixed(1) + ' KB)';
+        document.getElementById('csvFileName').textContent = ' ' + file.name + ' (' + (file.size/1024).toFixed(1) + ' KB)';
         var reader = new FileReader();
         reader.onload = function(e) { smartwallet.pendingCsvData = e.target.result; };
         reader.readAsText(file, 'UTF-8');
@@ -2532,5 +2505,5 @@ SmartWallet.prototype.updateTransaction = function() {
         });
     }
 
-    console.log(' Smart Wallet v2.0.2 carregado com sucesso!');
+    console.log(' Smart Wallet v2.0.5 carregado com sucesso!');
 })();
