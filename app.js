@@ -1395,9 +1395,147 @@
         closeExportModal();
     };
 
-    SmartWallet.prototype.printPDF = function() {
-        window.print();
-    };
+SmartWallet.prototype.printExtratoPDF = function() {
+    var self = this;
+    var filtered = self.getFilteredTransactions();
+    
+    if (!filtered.length) {
+        self.showToast('Nenhuma transação para imprimir');
+        return;
+    }
+
+    var months = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+    var monthName = months[self.currentMonth.getMonth()];
+    var year = self.currentMonth.getFullYear();
+    var period = monthName + ' de ' + year;
+    var generatedAt = new Date().toLocaleString('pt-BR');
+
+    // Calcular totais
+    var totalReceitas = 0;
+    var totalDespesas = 0;
+    var sorted = filtered.slice().sort(function(a, b) { return new Date(a.date) - new Date(b.date); });
+    
+    sorted.forEach(function(t) {
+        if (t.amount > 0) totalReceitas += t.amount;
+        else totalDespesas += Math.abs(t.amount);
+    });
+    var saldo = totalReceitas - totalDespesas;
+
+    // Gerar linhas da tabela
+    var rowsHtml = sorted.map(function(t) {
+        var cat = self.getCategoryById(t.category);
+        var acc = self.accounts.find(function(a) { return a.id === t.accountId; });
+        var paymentName = self.getPaymentMethodName(t.paymentMethod);
+        var statusText = t.statusOk ? 'Concluído' : 'Pendente';
+        var amountClass = t.amount >= 0 ? 'receita' : 'despesa';
+        
+        return '<tr>' +
+            '<td>' + self.formatDate(t.date) + '</td>' +
+            '<td>' + self.escapeHtml(t.description || '-') + '</td>' +
+            '<td><span class="cat-badge" style="background:' + cat.color + '">' + self.escapeHtml(cat.name) + '</span></td>' +
+            '<td>' + (acc ? self.escapeHtml(acc.name) : '-') + '</td>' +
+            '<td>' + paymentName + '</td>' +
+            '<td class="status-' + (t.statusOk ? 'ok' : 'pendente') + '">' + statusText + '</td>' +
+            '<td class="' + amountClass + '">' + self.formatCurrency(t.amount) + '</td>' +
+            '</tr>';
+    }).join('');
+
+    // HTML completo do extrato
+    var html = '<!DOCTYPE html>' +
+        '<html lang="pt-BR">' +
+        '<head>' +
+        '<meta charset="UTF-8">' +
+        '<title>Extrato Smart Wallet - ' + period + '</title>' +
+        '<style>' +
+        '@page { size: A4; margin: 2cm; }' +
+        'body { font-family: Arial, sans-serif; color: #1e293b; padding: 20px; max-width: 900px; margin: 0 auto; }' +
+        '.header { text-align: center; border-bottom: 3px solid #6366f1; padding-bottom: 20px; margin-bottom: 30px; }' +
+        '.header h1 { color: #6366f1; font-size: 28pt; margin: 0 0 8px 0; }' +
+        '.header .subtitle { color: #64748b; font-size: 11pt; margin: 0; }' +
+        '.header .period { color: #6366f1; font-size: 14pt; font-weight: bold; margin: 12px 0 0 0; }' +
+        '.info-bar { display: flex; justify-content: space-between; background: #f8fafc; padding: 12px 16px; border-radius: 8px; margin-bottom: 24px; font-size: 10pt; color: #64748b; }' +
+        'table { width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 9pt; }' +
+        'th { background: #6366f1; color: white; padding: 10px 8px; text-align: left; font-weight: 600; font-size: 9pt; }' +
+        'td { padding: 8px; border-bottom: 1px solid #e5e7eb; }' +
+        'tr:nth-child(even) { background: #f8fafc; }' +
+        '.cat-badge { display: inline-block; padding: 3px 8px; border-radius: 12px; color: white; font-size: 8pt; font-weight: 600; }' +
+        '.status-ok { color: #10b981; font-weight: 600; }' +
+        '.status-pendente { color: #f59e0b; font-weight: 600; }' +
+        '.receita { color: #10b981; font-weight: 600; text-align: right; }' +
+        '.despesa { color: #ef4444; font-weight: 600; text-align: right; }' +
+        '.summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; }' +
+        '.summary-box { background: #f8fafc; border-radius: 8px; padding: 16px; text-align: center; border: 2px solid #e5e7eb; }' +
+        '.summary-box .label { font-size: 9pt; color: #64748b; text-transform: uppercase; margin-bottom: 6px; }' +
+        '.summary-box .value { font-size: 16pt; font-weight: bold; }' +
+        '.summary-box.receitas .value { color: #10b981; }' +
+        '.summary-box.despesas .value { color: #ef4444; }' +
+        '.summary-box.saldo .value { color: #6366f1; }' +
+        '.footer { margin-top: 40px; padding-top: 20px; border-top: 2px solid #6366f1; text-align: center; font-size: 9pt; color: #64748b; }' +
+        '.footer .author { font-weight: 600; color: #6366f1; margin-top: 6px; }' +
+        '@media print { body { padding: 0; } .no-print { display: none; } }' +
+        '</style>' +
+        '</head>' +
+        '<body>' +
+        '<div class="header">' +
+        '<h1>Smart Wallet</h1>' +
+        '<p class="subtitle">Controle Financeiro Pessoal Inteligente</p>' +
+        '<p class="period">Extrato do Mês: ' + period + '</p>' +
+        '</div>' +
+        '<div class="info-bar">' +
+        '<span><strong>Total de transações:</strong> ' + filtered.length + '</span>' +
+        '<span><strong>Gerado em:</strong> ' + generatedAt + '</span>' +
+        '</div>' +
+        '<table>' +
+        '<thead>' +
+        '<tr>' +
+        '<th>Data</th>' +
+        '<th>Descrição</th>' +
+        '<th>Categoria</th>' +
+        '<th>Conta</th>' +
+        '<th>Pagamento</th>' +
+        '<th>Status</th>' +
+        '<th style="text-align:right;">Valor</th>' +
+        '</tr>' +
+        '</thead>' +
+        '<tbody>' + rowsHtml + '</tbody>' +
+        '</table>' +
+        '<div class="summary">' +
+        '<div class="summary-box receitas">' +
+        '<div class="label">Total de Receitas</div>' +
+        '<div class="value">' + self.formatCurrency(totalReceitas) + '</div>' +
+        '</div>' +
+        '<div class="summary-box despesas">' +
+        '<div class="label">Total de Despesas</div>' +
+        '<div class="value">' + self.formatCurrency(totalDespesas) + '</div>' +
+        '</div>' +
+        '<div class="summary-box saldo">' +
+        '<div class="label">Saldo do Mês</div>' +
+        '<div class="value">' + self.formatCurrency(saldo) + '</div>' +
+        '</div>' +
+        '</div>' +
+        '<div class="footer">' +
+        '<p>Smart Wallet - Extrato gerado automaticamente</p>' +
+        '<p class="author">Idealizado por RogerElizar™ | rogerelizar@gmail.com</p>' +
+        '</div>' +
+        '<div class="no-print" style="text-align:center; margin-top:24px;">' +
+        '<button onclick="window.print()" style="background:#6366f1; color:white; border:none; padding:12px 24px; border-radius:8px; font-size:11pt; cursor:pointer;">🖨️ Imprimir / Salvar PDF</button>' +
+        '</div>' +
+        '</body>' +
+        '</html>';
+
+    var printWindow = window.open('', '_blank');
+    if (!printWindow) {
+        alert('Por favor, permita popups para imprimir o extrato.');
+        return;
+    }
+    printWindow.document.write(html);
+    printWindow.document.close();
+    
+    setTimeout(function() {
+        printWindow.focus();
+        printWindow.print();
+    }, 300);
+};
 
     SmartWallet.prototype.exportBackup = function() {
         try {
