@@ -375,6 +375,16 @@
         if (statusFilter) statusFilter.addEventListener('change', function() { self.render(); });
         var accountFilter = document.getElementById('accountFilter');
         if (accountFilter) accountFilter.addEventListener('change', function() { self.render(); });
+        // ✅ Toggle de opções de recorrência
+        var recurringCheckbox = document.getElementById('recurring');
+        if (recurringCheckbox) {
+            recurringCheckbox.addEventListener('change', function() {
+                var options = document.getElementById('recurringOptions');
+                if (options) {
+                    options.style.display = this.checked ? 'block' : 'none';
+                }
+            });
+        }
     };
 
     SmartWallet.prototype.setDefaultDate = function() {
@@ -641,15 +651,15 @@ SmartWallet.prototype.addTransaction = function() {
         accountId: accountId
     };
 
-    this.transactions.push(transaction);
-    this.saveTransactions();
-    this.render();
-    this.updateCharts();
-    this.updateAlertBadge();
-    this.showToast('Transação adicionada!');
-    closeNewTransactionModal();
-    this.clearForm();
-};
+        this.transactions.push(transaction);
+        this.saveTransactions();
+        this.render();
+        this.updateCharts();
+        this.updateAlertBadge();
+        this.showToast('Transação adicionada!');
+        closeNewTransactionModal();
+        this.clearForm();
+    };
 
         this.transactions.push(transaction);
         this.saveTransactions();
@@ -661,17 +671,21 @@ SmartWallet.prototype.addTransaction = function() {
         this.clearForm();
     };
 
-    SmartWallet.prototype.clearForm = function() {
-        var form = document.getElementById('transactionForm');
-        if (form) form.reset();
-        this.setDefaultDate();
-        this.currentTransactionType = 'expense';
-        var btns = document.querySelectorAll('#transactionForm .type-btn');
-        btns.forEach(function(b) {
-            b.classList.toggle('active', b.getAttribute('data-type') === 'expense');
-        });
-        this.filterCategoriesByType('category', 'expense');
-    };
+SmartWallet.prototype.clearForm = function() {
+    var form = document.getElementById('transactionForm');
+    if (form) form.reset();
+    this.setDefaultDate();
+    this.currentTransactionType = 'expense';
+    var btns = document.querySelectorAll('#transactionForm .type-btn');
+    btns.forEach(function(b) {
+        b.classList.toggle('active', b.getAttribute('data-type') === 'expense');
+    });
+    this.filterCategoriesByType('category', 'expense');
+    
+    // ✅ Esconder opções de recorrência
+    var recurringOptions = document.getElementById('recurringOptions');
+    if (recurringOptions) recurringOptions.style.display = 'none';
+};
 
     SmartWallet.prototype.editTransaction = function(id) {
         var t = null;
@@ -690,9 +704,16 @@ SmartWallet.prototype.addTransaction = function() {
         document.getElementById('editPaymentMethod').value = t.paymentMethod || '';
         document.getElementById('editTransactionAccount').value = t.accountId || '';
         document.getElementById('editDescription').value = t.description || '';
-        document.getElementById('editStatusOk').checked = !!t.statusOk;
-
-        var btns = document.querySelectorAll('#editForm .type-btn');
+    // ✅ Carregar dados de recorrência se existir
+    if (t.recurrence) {
+        document.getElementById('editRecurring').checked = true;
+        document.getElementById('editRecurringOptions').style.display = 'block';
+        document.getElementById('editRecurrenceType').value = t.recurrence.type;
+        document.getElementById('editRecurrenceCount').value = t.recurrence.total;
+    } else {
+        document.getElementById('editRecurring').checked = false;
+        document.getElementById('editRecurringOptions').style.display = 'none';
+    }
         var self = this;
         btns.forEach(function(b) {
             b.classList.toggle('active', b.getAttribute('data-type') === self.currentEditType);
