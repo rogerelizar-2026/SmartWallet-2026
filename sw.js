@@ -1,67 +1,75 @@
-// Service Worker do Smart Wallet
-// Versão: 2.0.1
+// sw.js
+// Smart Wallet Service Worker - Fase 4 (Otimizado)
 
-const CACHE_NAME = 'smart-wallet-v2.0.1';
-
-const ASSETS_TO_CACHE = [
+const CACHE_NAME = 'smart-wallet-v4.0.0';
+const SHELL_ASSETS = [
     './',
     './index.html',
     './styles.css',
-    './app.js',
+    './js/app.js',
+    './js/handlers.js',
+    './js/delegation.js',
+    './js/lazy-loader.js',
+    './js/validators.js',
+    './js/storage-manager.js',
+    './js/a11y.js',
+    './js/workers/parser-worker.js',
     './manifest.json',
     './favicon.svg'
 ];
 
-// Instalação
+// ===== INSTALAÇÃO =====
 self.addEventListener('install', function(event) {
-    console.log('📦 SW v2.0.1 instalando...');
+    console.log('[SW] Instalando v4.0.0...');
     event.waitUntil(
         caches.open(CACHE_NAME)
             .then(function(cache) {
-                console.log('✅ Cache aberto');
-                return cache.addAll(ASSETS_TO_CACHE);
+                console.log('[SW] Cacheando shell do app');
+                return cache.addAll(SHELL_ASSETS);
             })
-            .then(function() {
-                console.log('✅ Assets cacheados');
-                return self.skipWaiting();
-            })
-            .catch(function(err) {
-                console.warn('⚠️ Erro ao cachear:', err);
-            })
+            .then(() => self.skipWaiting())
     );
 });
 
-// Ativação
+// ===== ATIVAÇÃO =====
 self.addEventListener('activate', function(event) {
-    console.log('🔄 SW v2.0.1 ativando...');
+    console.log('[SW] Ativando...');
     event.waitUntil(
         caches.keys().then(function(cacheNames) {
             return Promise.all(
-                cacheNames.filter(function(cacheName) {
-                    return cacheName !== CACHE_NAME;
-                }).map(function(cacheName) {
-                    console.log('🗑️ Removendo cache antigo:', cacheName);
-                    return caches.delete(cacheName);
-                })
+                cacheNames
+                    .filter(function(name) { return name !== CACHE_NAME; })
+                    .map(function(name) { 
+                        console.log('[SW] Removendo cache antigo:', name);
+                        return caches.delete(name); 
+                    })
             );
-        }).then(function() {
-            console.log('✅ Cache limpo');
-            return self.clients.claim();
-        })
+        }).then(() => self.clients.claim())
     );
 });
 
-// Interceptação de requisições
+// ===== INTERCEPTAÇÃO DE REQUISIÇÕES =====
 self.addEventListener('fetch', function(event) {
-    // Ignora requisições de extensões
-    if (event.request.url.indexOf('chrome-extension') !== -1) return;
-    
-    event.respondWith(
-        caches.match(event.request)
-            .then(function(cached) {
-                if (cached) {
-                    return cached;
-                }
+    const url = new URL(event.request.url);
+
+    // Ignora extensões e requisições externas não essenciais
+    if (url.origin !== location.origin && !url.hostname.includes('cdn.jsdelivr.net') && !url.hostname.includes('fonts.googleapis.com')) {
+        return;
+    }
+
+    // Estratégia: Cache-First para assets estáticos e CDN
+    if (event.request.destination === 'style' || 
+        event.request.destination === 'script' || 
+        event.request.destination === 'font' ||
+        event.request.destination === 'image' ||
+        url.hostname.includes('cdn.jsdelivr.net') ||
+        url.hostname.includes('fonts.googleapis.com') ||
+        url.hostname.includes('fonts.gstatic.com')) {
+        
+        event.respondWith(
+            caches.match(event.request).then(function(cachedResponse) {
+                if (cachedResponse) return cachedResponse;
+                
                 return fetch(event.request).then(function(response) {
                     if (!response || response.status !== 200 || response.type !== 'basic') {
                         return response;
@@ -72,19 +80,43 @@ self.addEventListener('fetch', function(event) {
                     });
                     return response;
                 }).catch(function() {
-                    if (event.request.mode === 'navigate') {
+                    // Fallback para offline
+                    if (event.request.destination === 'document') {
                         return caches.match('./index.html');
                     }
                 });
             })
-    );
+        );
+        return;
+    }
+
+    // Estratégia: Network-First para HTML principal (sempre tenta rede primeiro)
+    if (event.request.destination === 'document') {
+        event.respondWith(
+            fetch(event.request)
+                .then(function(response) {
+                    var responseToCache = response.clone();
+                    caches.open(CACHE_NAME).then(function(cache) {
+                        cache.put(event.request, responseToCache);
+                    });
+                    return response;
+                })
+                .catch(function() {
+                    return caches.match('./index.html');
+                })
+        );
+        return;
+    }
 });
 
-// Mensagens do cliente
+// ===== MENSAGENS DO CLIENTE =====
 self.addEventListener('message', function(event) {
     if (event.data === 'skipWaiting') {
         self.skipWaiting();
     }
+    if (event.data === 'clearCache') {
+        caches.keys().then(names => Promise.all(names.map(n => caches.delete(n))));
+    }
 });
 
-console.log('✅ Service Worker v2.0.1 carregado');
+console.log('[SW] Smart Wallet Service Worker v4.0.0 carregado');
