@@ -2542,7 +2542,12 @@ function showQuoteModal() {
     
     if (quoteText) quoteText.textContent = '"' + quote.text + '"';
     if (quoteAuthor) quoteAuthor.textContent = '— ' + quote.author;
-    if (quoteModal) quoteModal.classList.add('active');
+    
+    if (quoteModal) {
+        // ✅ Remove o display:none inline e mostra o modal
+        quoteModal.style.display = 'flex';
+        quoteModal.classList.add('active');
+    }
 }
 
 document.addEventListener('click', (e) => {
