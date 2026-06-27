@@ -595,97 +595,144 @@ var DEFAULT_CATEGORIES = [
         return method;
     };
 
-    SmartWallet.prototype.addTransaction = function() {
-        var date = document.getElementById('date').value;
-        var amount = parseFloat(document.getElementById('amount').value);
-        var category = document.getElementById('category').value;
-        var description = document.getElementById('description').value;
-        var statusOk = document.getElementById('statusOk').checked;
-        var paymentMethod = document.getElementById('paymentMethod').value;
-        var accountId = document.getElementById('transactionAccount').value;
-        var isRecurring = document.getElementById('recurring').checked;
+SmartWallet.prototype.addTransaction = function() {
+    var date = document.getElementById('date').value;
+    var amount = parseFloat(document.getElementById('amount').value);
+    var category = document.getElementById('category').value;
+    var description = document.getElementById('description').value;
+    var statusOk = document.getElementById('statusOk').checked;
+    var paymentMethod = document.getElementById('paymentMethod').value;
+    var accountId = document.getElementById('transactionAccount').value;
+    var isRecurring = document.getElementById('recurring').checked;
 
-        if (!category) { this.showToast('Selecione uma categoria'); return; }
-        if (!paymentMethod) { this.showToast('Selecione a forma de pagamento'); return; }
+    if (!category) { this.showToast('Selecione uma categoria'); return; }
+    if (!paymentMethod) { this.showToast('Selecione a forma de pagamento'); return; }
 
-        if (isRecurring) {
-            var recurrenceType = document.getElementById('recurrenceType').value;
-            var recurrenceCount = parseInt(document.getElementById('recurrenceCount').value);
+    if (isRecurring) {
+        var recurrenceType = document.getElementById('recurrenceType').value;
+        var recurrenceCount = parseInt(document.getElementById('recurrenceCount').value);
+        
+        if (recurrenceCount < 2) { this.showToast('Mínimo de 2 parcelas'); return; }
+        
+        var startDate = new Date(date + 'T12:00:00'); // Meio-dia para evitar problemas de fuso
+        var baseAmount = this.currentTransactionType === 'expense' ? -Math.abs(amount) : Math.abs(amount);
+        var recurrenceGroupId = 'rec_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        var createdCount = 0;
+        var createdIds = [];
+        
+        console.log('🔄 Criando recorrência:', {
+            type: recurrenceType,
+            count: recurrenceCount,
+            startDate: startDate.toISOString(),
+            amount: baseAmount,
+            description: description,
+            paymentMethod: paymentMethod
+        });
+        
+        for (var i = 0; i < recurrenceCount; i++) {
+            var transDate = new Date(startDate);
             
-            if (recurrenceCount < 2) { this.showToast('Mínimo de 2 parcelas'); return; }
-            
-            var startDate = new Date(date + 'T00:00:00');
-            var baseAmount = this.currentTransactionType === 'expense' ? -Math.abs(amount) : Math.abs(amount);
-            var recurrenceGroupId = 'rec_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-            var createdCount = 0;
-            
-            for (var i = 0; i < recurrenceCount; i++) {
-                var transDate = new Date(startDate);
-                
-                if (recurrenceType === 'monthly') {
-                    transDate.setMonth(startDate.getMonth() + i);
-                } else if (recurrenceType === 'yearly') {
-                    transDate.setFullYear(startDate.getFullYear() + i);
-                } else if (recurrenceType === 'installment') {
-                    transDate.setMonth(startDate.getMonth() + i);
+            // ✅ Cálculo correto de datas
+            if (recurrenceType === 'monthly') {
+                transDate.setMonth(startDate.getMonth() + i);
+                // Ajusta para último dia do mês se necessário
+                var lastDay = new Date(transDate.getFullYear(), transDate.getMonth() + 1, 0).getDate();
+                if (startDate.getDate() > lastDay) {
+                    transDate.setDate(lastDay);
+                } else {
+                    transDate.setDate(startDate.getDate());
                 }
-                
-                var transDescription = description;
-                if (recurrenceType === 'installment') {
-                    transDescription = description + ' - Parcela ' + (i + 1) + '/' + recurrenceCount;
+            } else if (recurrenceType === 'yearly') {
+                transDate.setFullYear(startDate.getFullYear() + i);
+                // Ajusta ano bissexto
+                var lastDay = new Date(transDate.getFullYear(), transDate.getMonth() + 1, 0).getDate();
+                if (startDate.getDate() > lastDay) {
+                    transDate.setDate(lastDay);
+                } else {
+                    transDate.setDate(startDate.getDate());
                 }
-                
-                var transaction = {
-                    id: Date.now() + i,
-                    date: transDate.toISOString().split('T')[0],
-                    amount: baseAmount,
-                    category: category,
-                    description: transDescription,
-                    statusOk: statusOk,
-                    paymentMethod: paymentMethod,
-                    accountId: accountId,
-                    recurrence: {
-                        groupId: recurrenceGroupId,
-                        type: recurrenceType,
-                        total: recurrenceCount,
-                        current: i + 1
-                    }
-                };
-                
-                this.transactions.push(transaction);
-                createdCount++;
+            } else if (recurrenceType === 'installment') {
+                transDate.setMonth(startDate.getMonth() + i);
+                var lastDay = new Date(transDate.getFullYear(), transDate.getMonth() + 1, 0).getDate();
+                if (startDate.getDate() > lastDay) {
+                    transDate.setDate(lastDay);
+                } else {
+                    transDate.setDate(startDate.getDate());
+                }
             }
             
-            this.saveTransactions();
-            this.render();
-            this.updateCharts();
-            this.updateAlertBadge();
-            this.showToast(createdCount + ' transações recorrentes criadas!');
-            closeNewTransactionModal();
-            this.clearForm();
-            return;
+            var transDescription = description;
+            if (recurrenceType === 'installment') {
+                transDescription = description + ' - Parcela ' + (i + 1) + '/' + recurrenceCount;
+            }
+            
+            // ✅ ID único garantido
+            var uniqueId = Date.now() + (i * 1000) + Math.floor(Math.random() * 999);
+            
+            var transaction = {
+                id: uniqueId,
+                date: transDate.toISOString().split('T')[0],
+                amount: baseAmount,
+                category: category,
+                description: transDescription,
+                statusOk: statusOk,
+                paymentMethod: paymentMethod,
+                accountId: accountId,
+                recurrence: {
+                    groupId: recurrenceGroupId,
+                    type: recurrenceType,
+                    total: recurrenceCount,
+                    current: i + 1
+                }
+            };
+            
+            this.transactions.push(transaction);
+            createdIds.push(uniqueId);
+            createdCount++;
+            
+            console.log('✅ Transação criada:', {
+                id: uniqueId,
+                date: transaction.date,
+                description: transDescription,
+                month: transDate.getMonth() + 1,
+                year: transDate.getFullYear()
+            });
         }
-
-        var transaction = {
-            id: Date.now(),
-            date: date,
-            amount: this.currentTransactionType === 'expense' ? -Math.abs(amount) : Math.abs(amount),
-            category: category,
-            description: description,
-            statusOk: statusOk,
-            paymentMethod: paymentMethod,
-            accountId: accountId
-        };
-
-        this.transactions.push(transaction);
+        
         this.saveTransactions();
+        console.log('💾 Transações salvas. Total no array:', this.transactions.length);
+        
         this.render();
         this.updateCharts();
         this.updateAlertBadge();
-        this.showToast('Transação adicionada!');
+        
+        this.showToast('✅ ' + createdCount + ' transações recorrentes criadas!');
         closeNewTransactionModal();
         this.clearForm();
+        return;
+    }
+
+    // Transação única (não recorrente)
+    var transaction = {
+        id: Date.now(),
+        date: date,
+        amount: this.currentTransactionType === 'expense' ? -Math.abs(amount) : Math.abs(amount),
+        category: category,
+        description: description,
+        statusOk: statusOk,
+        paymentMethod: paymentMethod,
+        accountId: accountId
     };
+
+    this.transactions.push(transaction);
+    this.saveTransactions();
+    this.render();
+    this.updateCharts();
+    this.updateAlertBadge();
+    this.showToast('Transação adicionada!');
+    closeNewTransactionModal();
+    this.clearForm();
+};
 
     SmartWallet.prototype.clearForm = function() {
         var form = document.getElementById('transactionForm');
