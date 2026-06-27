@@ -1,14 +1,14 @@
 // js/delegation.js
-// Event delegation global - captura data-action e data-form
+// Event Delegation Global - Captura data-action, data-form e data-bind
 
 console.log('[Delegation] Registrando event delegation...');
 
+// ===== CLICK DELEGATION =====
 document.addEventListener('click', (e) => {
-    // Encontra o elemento mais próximo com data-action
     const target = e.target.closest('[data-action]');
     if (!target) return;
 
-    // Ignora se está dentro de um form (deixa o submit cuidar)
+    // Ignora se está dentro de um form com submit button
     if (target.closest('form') && target.type === 'submit') return;
 
     const action = target.dataset.action;
@@ -17,7 +17,6 @@ document.addEventListener('click', (e) => {
     e.preventDefault();
     e.stopPropagation();
 
-    // Dispara evento global
     window.dispatchEvent(new CustomEvent(`action:${action}`, {
         detail: { target, params, originalEvent: e }
     }));
@@ -25,6 +24,7 @@ document.addEventListener('click', (e) => {
     console.log(`[Delegation] → action:${action}`, params);
 });
 
+// ===== SUBMIT DELEGATION =====
 document.addEventListener('submit', (e) => {
     const form = e.target.closest('[data-form]');
     if (!form) return;
@@ -40,6 +40,7 @@ document.addEventListener('submit', (e) => {
     console.log(`[Delegation] → form:${formName}`, data);
 });
 
+// ===== CHANGE DELEGATION =====
 document.addEventListener('change', (e) => {
     const target = e.target.closest('[data-bind]');
     if (!target) return;
@@ -52,7 +53,7 @@ document.addEventListener('change', (e) => {
     }));
 });
 
-// ===== Helpers =====
+// ===== HELPERS =====
 function extractParams(element) {
     const params = {};
     Array.from(element.attributes).forEach(attr => {
