@@ -1,8 +1,10 @@
 // js/app.js
-// Smart Wallet v3.0.0 - Entry Point (Fase 2: Event Delegation)
+// Smart Wallet v3.0.0 - Entry Point 
 
 // ===== IMPORTS =====
-import './handlers.js';  // ← Handlers + Delegation (Fase 1 e 2)
+import './handlers.js';
+import { storageManager } from './storage-manager.js';
+import { lazyLoader } from './lazy-loader.js';
 
 console.log('🚀 Smart Wallet v3.0.0 iniciando...');
 
@@ -300,33 +302,29 @@ class SmartWallet {
         this.init();
     }
 
-    loadData() {
-        try {
-            const t = localStorage.getItem('smartwallet_transactions');
-            if (t) this.transactions = JSON.parse(t);
-            
-            const c = localStorage.getItem('smartwallet_categories');
-            if (c) this.categories = JSON.parse(c);
-            else this.categories = JSON.parse(JSON.stringify(DEFAULT_CATEGORIES));
-            
-            const a = localStorage.getItem('smartwallet_accounts');
-            if (a) this.accounts = JSON.parse(a);
-            
-            const cd = localStorage.getItem('smartwallet_cards');
-            if (cd) this.cards = JSON.parse(cd);
-            
-            const inv = localStorage.getItem('smartwallet_investments');
-            if (inv) this.investments = JSON.parse(inv);
-            
-            const dm = localStorage.getItem('smartwallet_dark');
-            if (dm !== null) this.darkMode = dm === 'true';
-            
-            const pv = localStorage.getItem('smartwallet_privacy');
-            if (pv !== null) this.privacyOn = pv === 'true';
-        } catch (e) {
-            console.error('Erro ao carregar dados:', e);
+loadData() {
+    try {
+        this.transactions = storageManager.get(storageManager.KEYS.TRANSACTIONS, []);
+        
+        const c = storageManager.get(storageManager.KEYS.CATEGORIES);
+        this.categories = c || JSON.parse(JSON.stringify(DEFAULT_CATEGORIES));
+        
+        this.accounts = storageManager.get(storageManager.KEYS.ACCOUNTS, []);
+        this.cards = storageManager.get(storageManager.KEYS.CARDS, []);
+        this.investments = storageManager.get(storageManager.KEYS.INVESTMENTS, []);
+        
+        const prefs = storageManager.getPreferences();
+        this.darkMode = prefs.darkMode;
+        this.privacyOn = prefs.privacyMode;
+        
+        // Restaura offset do mês
+        if (prefs.monthOffset) {
+            this.currentMonth.setMonth(this.currentMonth.getMonth() + prefs.monthOffset);
         }
+    } catch (e) {
+        console.error('Erro ao carregar dados:', e);
     }
+}
 
     saveTransactions() {
         try { localStorage.setItem('smartwallet_transactions', JSON.stringify(this.transactions)); } catch (e) { console.error(e); }
@@ -348,20 +346,44 @@ class SmartWallet {
         try { localStorage.setItem('smartwallet_investments', JSON.stringify(this.investments)); } catch (e) { console.error(e); }
     }
 
-    init() {
-        console.log('✅ Smart Wallet inicializado');
-        this.applyTheme();
-        this.applyPrivacy();
-        this.setupEventListeners();
-        this.setDefaultDate();
-        this.updateMonthDisplay();
-        this.populateCategorySelects();
-        this.populatePaymentMethodSelects();
-        this.populateAccountSelects();
-        this.render();
-        this.initCharts();
-        this.updateAlertBadge();
-    }
+init() {
+    console.log('✅ Smart Wallet inicializado');
+    this.applyTheme();
+    this.applyPrivacy();
+    this.setupEventListeners();
+    this.setDefaultDate();
+    this.updateMonthDisplay();
+    this.populateCategorySelects();
+    this.populatePaymentMethodSelects();
+    this.populateAccountSelects();
+    this.restoreFilters();  // ← NOVO
+    this.render();
+    this.initCharts();
+    this.updateAlertBadge();
+}
+
+// NOVO MÉTODO
+restoreFilters() {
+    const filters = storageManager.getFilters();
+    
+    const typeFilter = document.getElementById('typeFilter');
+    if (typeFilter && filters.type) typeFilter.value = filters.type;
+    
+    const statusFilter = document.getElementById('statusFilter');
+    if (statusFilter && filters.status) statusFilter.value = filters.status;
+    
+    const accountFilter = document.getElementById('accountFilter');
+    if (accountFilter && filters.account) accountFilter.value = filters.account;
+    
+    const searchFilter = document.getElementById('searchFilter');
+    if (searchFilter && filters.search) searchFilter.value = filters.search;
+    
+    // categoryFilter será restaurado após populateCategorySelects
+    setTimeout(() => {
+        const categoryFilter = document.getElementById('categoryFilter');
+        if (categoryFilter && filters.category) categoryFilter.value = filters.category;
+    }, 100);
+}
 
     setupEventListeners() {
         const self = this;
