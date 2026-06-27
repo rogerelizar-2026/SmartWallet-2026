@@ -16,7 +16,7 @@
     <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="styles.css">
     
-    <!-- ✅ CHART.JS - ESSENCIAL PARA OS GRÁFICOS -->
+    <!-- ✅ CHART.JS - ESSENCIAL -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" crossorigin="anonymous"></script>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -55,7 +55,7 @@
     </div>
 
     <!-- DISCLAIMER MODAL -->
-   <div class="quote-modal" id="quoteModal" role="dialog" aria-modal="true" aria-labelledby="quoteText">
+    <div class="disclaimer-modal" id="disclaimerModal" role="dialog" aria-modal="true" aria-labelledby="disclaimerTitle">
         <div class="disclaimer-content">
             <div class="disclaimer-header">
                 <div class="disclaimer-icon" aria-hidden="true">⚠️</div>
@@ -63,7 +63,7 @@
                 <p class="text-secondary">Por favor, leia atentamente antes de continuar</p>
             </div>
             <div class="disclaimer-body">
-                <h3> Sobre o Smart Wallet</h3>
+                <h3>📋 Sobre o Smart Wallet</h3>
                 <p>O Smart Wallet é uma ferramenta de <strong>controle financeiro pessoal</strong> desenvolvida para ajudar você a organizar suas finanças.</p>
                 <h3>🔒 Privacidade e Segurança</h3>
                 <ul>
@@ -82,24 +82,24 @@
                 <p>Ao continuar, você declara que leu e concorda com estes termos.</p>
             </div>
             <div class="disclaimer-footer">
-                <div class="disclaimer-timer" id="disclaimerTimer" aria-live="polite">️ Aguarde <span id="countdown">12</span> segundos para continuar</div>
-                <button class="disclaimer-accept-btn" id="acceptDisclaimerBtn" data-action="accept-disclaimer" disabled aria-label="Aceitar termos de uso">✓ Li e Concordo com os Termos</button>
+                <div class="disclaimer-timer" id="disclaimerTimer" aria-live="polite">⏱️ Aguarde <span id="countdown">12</span> segundos para continuar</div>
+                <button class="disclaimer-accept-btn" id="acceptDisclaimerBtn" onclick="acceptDisclaimer()" disabled aria-label="Aceitar termos de uso">✓ Li e Concordo com os Termos</button>
             </div>
         </div>
     </div>
 
     <!-- QUOTE MODAL -->
-    <div class="quote-modal" id="quoteModal" role="dialog" aria-modal="true" aria-labelledby="quoteText" style="display: none;">
+    <div class="quote-modal" id="quoteModal" role="dialog" aria-modal="true" aria-labelledby="quoteText">
         <div class="quote-content">
             <svg class="quote-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3M3.343 18.657l.707-.707M12 21a9 9 0 1 1 0-18 9 9 0 0 1 0 18z"/></svg>
             <p class="quote-text" id="quoteText"></p>
             <p class="quote-author" id="quoteAuthor"></p>
-            <button class="quote-btn" data-action="start-app" aria-label="Iniciar aplicativo">Gerenciar Minhas Finanças</button>
+            <button class="quote-btn" onclick="startApp()" aria-label="Iniciar aplicativo">Gerenciar Minhas Finanças</button>
         </div>
     </div>
 
     <!-- APP PRINCIPAL -->
-    <div class="container" id="mainApp" style="display: none;" role="main">
+    <div class="container" id="mainApp" role="main">
         <header>
             <div class="header-content">
                 <div>
@@ -107,19 +107,19 @@
                     <p>Controle financeiro pessoal inteligente</p>
                 </div>
                 <div class="info-wrapper">
-                    <button class="info-btn" data-action="toggle-info-menu" aria-label="Informações" aria-expanded="false" aria-controls="infoMenu">
+                    <button class="info-btn" onclick="toggleInfoMenu(event)" aria-label="Informações" aria-expanded="false" aria-controls="infoMenu">
                         <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
                     </button>
                     <div class="info-dropdown" id="infoMenu" role="menu" aria-label="Menu de informações">
-                        <button class="info-item" role="menuitem" data-action="investments">
+                        <button class="info-item" role="menuitem" onclick="openInvestmentsModal()">
                             <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/></svg>
                             <span>📈 Acompanhamento de Aplicações</span>
                         </button>
-                        <button class="info-item" role="menuitem" data-action="terms">
+                        <button class="info-item" role="menuitem" onclick="openTermsModal()">
                             <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
                             <span>📜 Termos de Uso</span>
                         </button>
-                        <button class="info-item" role="menuitem" data-action="thanks">
+                        <button class="info-item" role="menuitem" onclick="openThanksModal()">
                             <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
                             <span>☕ Apoie o Projeto</span>
                         </button>
@@ -131,72 +131,72 @@
         <div class="toolbar">
             <div class="toolbar-row">
                 <div class="month-selector" role="navigation" aria-label="Navegação de meses">
-                    <button data-action="change-month" data-param-delta="-1" aria-label="Mês anterior">
+                    <button onclick="smartwallet.changeMonth(-1)" aria-label="Mês anterior">
                         <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
                     </button>
                     <div class="current-month" id="currentMonth" aria-live="polite">Janeiro 2026</div>
-                    <button data-action="change-month" data-param-delta="1" aria-label="Próximo mês">
+                    <button onclick="smartwallet.changeMonth(1)" aria-label="Próximo mês">
                         <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
                     </button>
                 </div>
             </div>
             <div class="toolbar-actions">
-                <button class="icon-btn" id="privacyBtn" data-action="toggle-privacy" aria-label="Ocultar valores" aria-pressed="false">
+                <button class="icon-btn" id="privacyBtn" onclick="togglePrivacy()" aria-label="Ocultar valores" aria-pressed="false">
                     <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                 </button>
-                <button class="icon-btn" id="themeBtn" data-action="toggle-theme" aria-label="Alternar tema">
+                <button class="icon-btn" id="themeBtn" onclick="toggleTheme()" aria-label="Alternar tema">
                     <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
                 </button>
-                <button class="dollar-btn" data-action="goal" aria-label="Meta de Reserva">
+                <button class="dollar-btn" onclick="openGoalModal()" aria-label="Meta de Reserva">
                     <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
                 </button>
-                <button class="alert-btn" id="alertBtn" data-action="bills" aria-label="Contas a vencer">
+                <button class="alert-btn" id="alertBtn" onclick="openBillsModal()" aria-label="Contas a vencer">
                     <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
                     <span class="alert-badge" id="alertBadge" aria-live="polite">0</span>
                 </button>
                 <div class="menu-wrapper">
-                    <button class="menu-btn" data-action="toggle-menu" data-param-menu="mainMenu" aria-label="Menu principal" aria-expanded="false" aria-controls="mainMenu">
+                    <button class="menu-btn" onclick="toggleMenu(event)" aria-label="Menu principal" aria-expanded="false" aria-controls="mainMenu">
                         <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
                     </button>
                     <div class="dropdown-menu" id="mainMenu" role="menu" aria-label="Menu principal">
-                        <button class="dropdown-item" role="menuitem" data-action="export">
+                        <button class="dropdown-item" role="menuitem" onclick="openExportModal()">
                             <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
                             <span>📄 Extrato do Mês</span>
                         </button>
                         <div class="dropdown-divider" role="separator"></div>
-                        <button class="dropdown-item" role="menuitem" data-action="manual">
+                        <button class="dropdown-item" role="menuitem" onclick="openManualModal()">
                             <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
                             <span>📘 Manual do Usuário</span>
                         </button>
                         <div class="dropdown-divider" role="separator"></div>
-                        <button class="dropdown-item" role="menuitem" data-action="accounts">
+                        <button class="dropdown-item" role="menuitem" onclick="openAccountsModal()">
                             <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
                             <span>🏦 Minhas Contas</span>
                         </button>
-                        <button class="dropdown-item" role="menuitem" data-action="credit-cards">
+                        <button class="dropdown-item" role="menuitem" onclick="openCreditCardsModal()">
                             <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
                             <span>💳 Meus Cartões</span>
                         </button>
-                        <button class="dropdown-item" role="menuitem" data-action="new-card">
+                        <button class="dropdown-item" role="menuitem" onclick="openNewCardModal()">
                             <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="12" y1="9" x2="12" y2="15"/><line x1="9" y1="12" x2="15" y2="12"/></svg>
                             <span>➕ Novo Cartão</span>
                         </button>
                         <div class="dropdown-divider" role="separator"></div>
-                        <button class="dropdown-item" role="menuitem" data-action="import-csv">
+                        <button class="dropdown-item" role="menuitem" onclick="openImportCsvModal()">
                             <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                            <span> Importar CSV</span>
+                            <span>📥 Importar CSV</span>
                         </button>
                         <div class="dropdown-divider" role="separator"></div>
-                        <button class="dropdown-item" role="menuitem" data-action="export-backup">
+                        <button class="dropdown-item" role="menuitem" onclick="smartwallet.exportBackup()">
                             <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
                             <span>💾 Backup (JSON)</span>
                         </button>
-                        <button class="dropdown-item" role="menuitem" data-action="import-backup">
+                        <button class="dropdown-item" role="menuitem" onclick="openImportBackupModal()">
                             <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
                             <span>📂 Restaurar Backup</span>
                         </button>
                         <div class="dropdown-divider" role="separator"></div>
-                        <button class="dropdown-item danger" role="menuitem" data-action="clear-data">
+                        <button class="dropdown-item danger" role="menuitem" onclick="openClearDataModal()">
                             <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
                             <span>🗑️ Limpar Dados</span>
                         </button>
@@ -230,7 +230,7 @@
                 <div class="chart-container"><canvas id="lineChart" aria-label="Gráfico de linhas de receitas e despesas"></canvas></div>
             </div>
             <div class="chart-card">
-                <h3> Cartões de Crédito (6 meses)</h3>
+                <h3>💳 Cartões de Crédito (6 meses)</h3>
                 <div class="chart-container"><canvas id="cardsChart" aria-label="Gráfico de evolução dos cartões de crédito"></canvas></div>
             </div>
             <div class="chart-card">
@@ -242,7 +242,7 @@
         <div class="transactions-section" role="region" aria-label="Histórico de transações">
             <h2>Histórico do Mês</h2>
             <div class="filters" role="search" aria-label="Filtros de transações">
-                <input type="text" id="searchFilter" placeholder=" Buscar..." aria-label="Buscar transações">
+                <input type="text" id="searchFilter" placeholder="🔍 Buscar..." aria-label="Buscar transações">
                 <select id="typeFilter" aria-label="Filtrar por tipo">
                     <option value="">Todos os tipos</option>
                     <option value="income">Receitas</option>
@@ -278,14 +278,14 @@
                     <tbody id="transactionsTable"></tbody>
                 </table>
             </div>
-            <div class="empty-state" id="emptyState" style="display: none;" role="status">
+            <div class="empty-state" id="emptyState" role="status">
                 <svg class="empty-state-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/></svg>
                 <h3>Nenhuma transação encontrada</h3>
                 <p>Comece adicionando sua primeira transação!</p>
             </div>
         </div>
 
-        <div class="charts-section" id="investmentsChartSection" style="display: none;" role="region" aria-label="Gráfico de investimentos">
+        <div class="charts-section" id="investmentsChartSection" role="region" aria-label="Gráfico de investimentos">
             <div class="chart-card" style="grid-column: 1 / -1;">
                 <h3>📊 Acompanhamento de Aplicações</h3>
                 <div class="chart-container" style="height: 400px;"><canvas id="investChart" aria-label="Gráfico de evolução dos investimentos"></canvas></div>
@@ -294,7 +294,7 @@
         </div>
     </div>
 
-    <button class="fab" data-action="new-transaction" id="fabBtn" style="display:none;" aria-label="Adicionar nova transação">
+    <button class="fab" onclick="openNewTransactionModal()" id="fabBtn" aria-label="Adicionar nova transação">
         <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
     </button>
 
@@ -303,16 +303,16 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2 id="newTransactionTitle">Nova Transação</h2>
-                <button class="modal-close" data-action="close-new-transaction" aria-label="Fechar modal">
+                <button class="modal-close" onclick="closeNewTransactionModal()" aria-label="Fechar modal">
                     <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 </button>
             </div>
-            <form id="transactionForm" data-form="new-transaction">
+            <form id="transactionForm" onsubmit="event.preventDefault(); smartwallet.addTransaction();">
                 <div class="form-group">
                     <label>Tipo</label>
                     <div class="type-selector" role="radiogroup" aria-label="Tipo de transação">
-                        <button type="button" class="type-btn active" data-action="select-type" data-param-target="new" data-param-type="expense" role="radio" aria-checked="true">💸 Despesa</button>
-                        <button type="button" class="type-btn" data-action="select-type" data-param-target="new" data-param-type="income" role="radio" aria-checked="false">💰 Receita</button>
+                        <button type="button" class="type-btn active" onclick="selectTransactionType('expense')" role="radio" aria-checked="true">💸 Despesa</button>
+                        <button type="button" class="type-btn" onclick="selectTransactionType('income')" role="radio" aria-checked="false">💰 Receita</button>
                     </div>
                 </div>
                 <div class="form-row">
@@ -330,7 +330,7 @@
                     <select id="category" required><option value="">Selecione...</option></select>
                 </div>
                 <div class="form-group">
-                    <label for="paymentMethod"> Efetuado com</label>
+                    <label for="paymentMethod">💳 Efetuado com</label>
                     <select id="paymentMethod" required><option value="">Selecione...</option></select>
                 </div>
                 <div class="form-group">
@@ -371,7 +371,7 @@
                 </div>
                 <div class="action-buttons">
                     <button type="submit" class="btn btn-primary">➕ Adicionar</button>
-                    <button type="button" class="btn btn-secondary" data-action="close-new-transaction">Cancelar</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeNewTransactionModal()">Cancelar</button>
                 </div>
             </form>
         </div>
@@ -382,17 +382,17 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2 id="editTitle">Editar Transação</h2>
-                <button class="modal-close" data-action="close-edit" aria-label="Fechar modal">
+                <button class="modal-close" onclick="closeEditModal()" aria-label="Fechar modal">
                     <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 </button>
             </div>
-            <form id="editForm" data-form="edit-transaction">
+            <form id="editForm" onsubmit="event.preventDefault(); smartwallet.updateTransaction();">
                 <input type="hidden" id="editId">
                 <div class="form-group">
                     <label>Tipo</label>
                     <div class="type-selector" role="radiogroup" aria-label="Tipo de transação">
-                        <button type="button" class="type-btn active" data-action="select-type" data-param-target="edit" data-param-type="expense" role="radio" aria-checked="true">💸 Despesa</button>
-                        <button type="button" class="type-btn" data-action="select-type" data-param-target="edit" data-param-type="income" role="radio" aria-checked="false">💰 Receita</button>
+                        <button type="button" class="type-btn active" onclick="selectEditType('expense')" role="radio" aria-checked="true">💸 Despesa</button>
+                        <button type="button" class="type-btn" onclick="selectEditType('income')" role="radio" aria-checked="false">💰 Receita</button>
                     </div>
                 </div>
                 <div class="form-row">
@@ -451,8 +451,8 @@
                 </div>
                 <div class="action-buttons">
                     <button type="submit" class="btn btn-primary">💾 Salvar</button>
-                    <button type="button" class="btn btn-danger" data-action="delete-from-edit">🗑️ Excluir</button>
-                    <button type="button" class="btn btn-secondary" data-action="close-edit">Cancelar</button>
+                    <button type="button" class="btn btn-danger" onclick="smartwallet.deleteFromEdit()">🗑️ Excluir</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancelar</button>
                 </div>
             </form>
         </div>
@@ -463,7 +463,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2 id="categoryTitle">Gerenciar Categorias</h2>
-                <button class="modal-close" data-action="close-category" aria-label="Fechar modal">
+                <button class="modal-close" onclick="closeCategoryManager()" aria-label="Fechar modal">
                     <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 </button>
             </div>
@@ -474,10 +474,10 @@
                     <input type="color" id="newCategoryColor" value="#6366f1" style="width:54px;padding:4px;cursor:pointer;">
                 </div>
                 <div class="type-selector" role="radiogroup" aria-label="Tipo de categoria">
-                    <button type="button" class="type-btn active" data-action="select-type" data-param-target="category" data-param-type="expense" role="radio" aria-checked="true">💸 Despesa</button>
-                    <button type="button" class="type-btn" data-action="select-type" data-param-target="category" data-param-type="income" role="radio" aria-checked="false">💰 Receita</button>
+                    <button type="button" class="type-btn active" onclick="selectNewCategoryType('expense')" role="radio" aria-checked="true">💸 Despesa</button>
+                    <button type="button" class="type-btn" onclick="selectNewCategoryType('income')" role="radio" aria-checked="false">💰 Receita</button>
                 </div>
-                <button type="button" class="btn btn-primary" style="width:100%;" data-action="add-category">➕ Adicionar</button>
+                <button type="button" class="btn btn-primary" style="width:100%;" onclick="smartwallet.addCategory()">➕ Adicionar</button>
             </div>
             <div style="margin-top:24px;">
                 <label class="font-semibold mb-16" style="display:block;">Categorias existentes</label>
@@ -491,13 +491,13 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2 id="exportTitle">Exportar Extrato</h2>
-                <button class="modal-close" data-action="close-export" aria-label="Fechar modal">
+                <button class="modal-close" onclick="closeExportModal()" aria-label="Fechar modal">
                     <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 </button>
             </div>
             <div class="action-buttons" style="flex-direction:column;gap:12px;">
-                <button class="btn btn-primary" data-action="export-csv"> Baixar CSV</button>
-                <button class="btn btn-secondary" data-action="print-pdf">️ Imprimir / PDF</button>
+                <button class="btn btn-primary" onclick="smartwallet.exportCSV()">📥 Baixar CSV</button>
+                <button class="btn btn-secondary" onclick="smartwallet.printExtratoPDF()">🖨️ Imprimir / PDF</button>
             </div>
         </div>
     </div>
@@ -507,7 +507,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2 id="goalTitle">Meta de Reserva</h2>
-                <button class="modal-close" data-action="close-goal" aria-label="Fechar modal">
+                <button class="modal-close" onclick="closeGoalModal()" aria-label="Fechar modal">
                     <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 </button>
             </div>
@@ -523,7 +523,7 @@
                 <div id="goalResult" style="background:var(--input-bg);padding:16px;border-radius:14px;margin:16px 0;display:none;"></div>
                 <div class="action-buttons">
                     <button type="submit" class="btn btn-primary">💾 Calcular & Salvar</button>
-                    <button type="button" class="btn btn-secondary" data-action="close-goal">Fechar</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeGoalModal()">Fechar</button>
                 </div>
             </form>
         </div>
@@ -534,14 +534,14 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2 id="importCsvTitle">Importar CSV</h2>
-                <button class="modal-close" data-action="close-import-csv" aria-label="Fechar modal">
+                <button class="modal-close" onclick="closeImportCsvModal()" aria-label="Fechar modal">
                     <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 </button>
             </div>
             <div class="form-group">
                 <label>Selecione o arquivo CSV</label>
                 <label class="file-input-wrapper">
-                    <input type="file" id="csvFileInput" accept=".csv" data-action="select-csv-file">
+                    <input type="file" id="csvFileInput" accept=".csv" onchange="handleCsvFileSelect(event)">
                     <div id="csvFileName">Clique para selecionar</div>
                 </label>
             </div>
@@ -552,8 +552,8 @@
                 </div>
             </div>
             <div class="action-buttons">
-                <button class="btn btn-primary" data-action="import-csv">📥 Importar</button>
-                <button class="btn btn-secondary" data-action="close-import-csv">Cancelar</button>
+                <button class="btn btn-primary" onclick="smartwallet.importCSV()">📥 Importar</button>
+                <button class="btn btn-secondary" onclick="closeImportCsvModal()">Cancelar</button>
             </div>
         </div>
     </div>
@@ -563,7 +563,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2 id="importBackupTitle">Restaurar Backup</h2>
-                <button class="modal-close" data-action="close-import-backup" aria-label="Fechar modal">
+                <button class="modal-close" onclick="closeImportBackupModal()" aria-label="Fechar modal">
                     <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 </button>
             </div>
@@ -571,13 +571,13 @@
             <div class="form-group">
                 <label>Selecione o arquivo JSON</label>
                 <label class="file-input-wrapper">
-                    <input type="file" id="backupFileInput" accept=".json" data-action="select-backup-file">
+                    <input type="file" id="backupFileInput" accept=".json" onchange="handleBackupFileSelect(event)">
                     <div id="backupFileName">Clique para selecionar</div>
                 </label>
             </div>
             <div class="action-buttons">
-                <button class="btn btn-primary" data-action="import-backup">📂 Restaurar</button>
-                <button class="btn btn-secondary" data-action="close-import-backup">Cancelar</button>
+                <button class="btn btn-primary" onclick="smartwallet.importBackup()">📂 Restaurar</button>
+                <button class="btn btn-secondary" onclick="closeImportBackupModal()">Cancelar</button>
             </div>
         </div>
     </div>
@@ -587,7 +587,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2 id="clearDataTitle" style="color:var(--danger-color);">Limpar Dados</h2>
-                <button class="modal-close" data-action="close-clear-data" aria-label="Fechar modal">
+                <button class="modal-close" onclick="closeClearDataModal()" aria-label="Fechar modal">
                     <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 </button>
             </div>
@@ -598,16 +598,16 @@
             <div id="clearStep1">
                 <p class="font-semibold mb-16">Você tem certeza?</p>
                 <div class="action-buttons">
-                    <button class="btn btn-danger-full" data-action="show-clear-step2">Sim, tenho certeza</button>
-                    <button class="btn btn-secondary" data-action="close-clear-data">Cancelar</button>
+                    <button class="btn btn-danger-full" onclick="showClearStep2()">Sim, tenho certeza</button>
+                    <button class="btn btn-secondary" onclick="closeClearDataModal()">Cancelar</button>
                 </div>
             </div>
             <div id="clearStep2" style="display:none;">
                 <p class="font-semibold mb-16">Digite <strong style="color:var(--danger-color);">LIMPAR</strong> para confirmar</p>
-                <input type="text" class="confirm-input" id="clearConfirmInput" placeholder="LIMPAR" data-action="check-clear-confirm" aria-label="Digite LIMPAR para confirmar">
+                <input type="text" class="confirm-input" id="clearConfirmInput" placeholder="LIMPAR" oninput="checkClearConfirm()" aria-label="Digite LIMPAR para confirmar">
                 <div class="action-buttons" style="margin-top:16px;">
-                    <button class="btn btn-danger-full" id="finalClearBtn" data-action="clear-all-data" disabled style="opacity:0.5;">🗑️ Apagar Tudo</button>
-                    <button class="btn btn-secondary" data-action="close-clear-data">Cancelar</button>
+                    <button class="btn btn-danger-full" id="finalClearBtn" onclick="smartwallet.clearAllData()" disabled style="opacity:0.5;">🗑️ Apagar Tudo</button>
+                    <button class="btn btn-secondary" onclick="closeClearDataModal()">Cancelar</button>
                 </div>
             </div>
         </div>
@@ -618,13 +618,13 @@
         <div class="modal-content wide">
             <div class="modal-header">
                 <h2 id="accountsTitle">🏦 Minhas Contas</h2>
-                <button class="modal-close" data-action="close-accounts" aria-label="Fechar modal">
+                <button class="modal-close" onclick="closeAccountsModal()" aria-label="Fechar modal">
                     <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 </button>
             </div>
             <div class="flex-gap-10 mb-20" style="justify-content:space-between;align-items:center;flex-wrap:wrap;">
                 <p class="text-secondary">Gerencie suas contas correntes e investimentos</p>
-                <button class="btn btn-primary btn-small" data-action="new-account">➕ Nova Conta</button>
+                <button class="btn btn-primary btn-small" onclick="openNewAccountModal()">➕ Nova Conta</button>
             </div>
             <div id="accountsList"></div>
         </div>
@@ -635,11 +635,11 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2 id="newAccountTitle">Nova Conta</h2>
-                <button class="modal-close" data-action="close-new-account" aria-label="Fechar modal">
+                <button class="modal-close" onclick="closeNewAccountModal()" aria-label="Fechar modal">
                     <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 </button>
             </div>
-            <form id="accountForm" data-form="account">
+            <form id="accountForm" onsubmit="event.preventDefault(); smartwallet.saveAccount();">
                 <input type="hidden" id="accountEditId">
                 <div class="form-group">
                     <label for="accountName">Nome da Conta</label>
@@ -662,7 +662,7 @@
                 </div>
                 <div class="action-buttons">
                     <button type="submit" class="btn btn-primary">💾 Salvar</button>
-                    <button type="button" class="btn btn-secondary" data-action="close-new-account">Cancelar</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeNewAccountModal()">Cancelar</button>
                 </div>
             </form>
         </div>
@@ -673,13 +673,13 @@
         <div class="modal-content wide">
             <div class="modal-header">
                 <h2 id="creditCardsTitle">💳 Meus Cartões</h2>
-                <button class="modal-close" data-action="close-credit-cards" aria-label="Fechar modal">
+                <button class="modal-close" onclick="closeCreditCardsModal()" aria-label="Fechar modal">
                     <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 </button>
             </div>
             <div class="flex-gap-10 mb-20" style="justify-content:space-between;align-items:center;flex-wrap:wrap;">
                 <p class="text-secondary">Gerencie seus cartões</p>
-                <button class="btn btn-primary btn-small" data-action="new-card">➕ Novo Cartão</button>
+                <button class="btn btn-primary btn-small" onclick="openNewCardModal()">➕ Novo Cartão</button>
             </div>
             <div id="creditCardsList"></div>
         </div>
@@ -690,11 +690,11 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2 id="newCardTitle">Novo Cartão</h2>
-                <button class="modal-close" data-action="close-new-card" aria-label="Fechar modal">
+                <button class="modal-close" onclick="closeNewCardModal()" aria-label="Fechar modal">
                     <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 </button>
             </div>
-            <form id="cardForm" data-form="card">
+            <form id="cardForm" onsubmit="event.preventDefault(); smartwallet.saveCard();">
                 <input type="hidden" id="cardEditId">
                 <div class="form-group">
                     <label for="cardName">Nome</label>
@@ -736,7 +736,7 @@
                 </div>
                 <div class="action-buttons">
                     <button type="submit" class="btn btn-primary">💾 Salvar</button>
-                    <button type="button" class="btn btn-secondary" data-action="close-new-card">Cancelar</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeNewCardModal()">Cancelar</button>
                 </div>
             </form>
         </div>
@@ -747,7 +747,7 @@
         <div class="modal-content wide">
             <div class="modal-header">
                 <h2 id="invoiceTitle">Fatura</h2>
-                <button class="modal-close" data-action="close-invoice" aria-label="Fechar modal">
+                <button class="modal-close" onclick="closeInvoiceModal()" aria-label="Fechar modal">
                     <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 </button>
             </div>
@@ -760,7 +760,7 @@
         <div class="modal-content wide">
             <div class="modal-header">
                 <h2 id="billsTitle">🔔 Contas a Vencer</h2>
-                <button class="modal-close" data-action="close-bills" aria-label="Fechar modal">
+                <button class="modal-close" onclick="closeBillsModal()" aria-label="Fechar modal">
                     <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 </button>
             </div>
@@ -775,8 +775,8 @@
             <div class="modal-header">
                 <h2 id="investmentsTitle">📈 Acompanhamento de Aplicações</h2>
                 <div class="flex-gap-8">
-                    <button class="btn btn-primary btn-small" data-action="new-investment">➕ Nova Aplicação</button>
-                    <button class="modal-close" data-action="close-investments" aria-label="Fechar modal">
+                    <button class="btn btn-primary btn-small" onclick="openNewInvestmentModal()">➕ Nova Aplicação</button>
+                    <button class="modal-close" onclick="closeInvestmentsModal()" aria-label="Fechar modal">
                         <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                     </button>
                 </div>
@@ -790,11 +790,11 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2 id="newInvestmentTitle">Nova Aplicação</h2>
-                <button class="modal-close" data-action="close-new-investment" aria-label="Fechar modal">
+                <button class="modal-close" onclick="closeNewInvestmentModal()" aria-label="Fechar modal">
                     <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 </button>
             </div>
-            <form id="investmentForm" data-form="investment">
+            <form id="investmentForm" onsubmit="event.preventDefault(); smartwallet.saveInvestment();">
                 <input type="hidden" id="investmentEditId">
                 <div class="form-group">
                     <label for="investmentName">Nome da Aplicação</label>
@@ -833,7 +833,7 @@
                 </div>
                 <div class="action-buttons">
                     <button type="submit" class="btn btn-primary">💾 Salvar</button>
-                    <button type="button" class="btn btn-secondary" data-action="close-new-investment">Cancelar</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeNewInvestmentModal()">Cancelar</button>
                 </div>
             </form>
         </div>
@@ -844,11 +844,11 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2 id="updateInvestmentTitle">💰 Atualizar Valor</h2>
-                <button class="modal-close" data-action="close-update-investment" aria-label="Fechar modal">
+                <button class="modal-close" onclick="closeUpdateInvestmentModal()" aria-label="Fechar modal">
                     <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 </button>
             </div>
-            <form id="updateInvestmentForm" data-form="update-investment">
+            <form id="updateInvestmentForm" onsubmit="event.preventDefault(); smartwallet.updateInvestmentValue();">
                 <input type="hidden" id="updateInvestmentId">
                 <div class="form-group">
                     <label>Aplicação</label>
@@ -864,7 +864,7 @@
                 </div>
                 <div class="action-buttons">
                     <button type="submit" class="btn btn-primary">💾 Atualizar</button>
-                    <button type="button" class="btn btn-secondary" data-action="close-update-investment">Cancelar</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeUpdateInvestmentModal()">Cancelar</button>
                 </div>
             </form>
         </div>
@@ -876,8 +876,8 @@
             <div class="modal-header">
                 <h2 id="manualTitle">📘 Manual do Usuário</h2>
                 <div class="flex-gap-8">
-                    <button class="btn btn-secondary btn-small" data-action="print-manual">️ Imprimir</button>
-                    <button class="modal-close" data-action="close-manual" aria-label="Fechar modal">
+                    <button class="btn btn-secondary btn-small" onclick="printManual()">🖨️ Imprimir</button>
+                    <button class="modal-close" onclick="closeManualModal()" aria-label="Fechar modal">
                         <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                     </button>
                 </div>
@@ -891,7 +891,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2 id="thanksTitle">☕ Apoie o Projeto</h2>
-                <button class="modal-close" data-action="close-thanks" aria-label="Fechar modal">
+                <button class="modal-close" onclick="closeThanksModal()" aria-label="Fechar modal">
                     <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 </button>
             </div>
@@ -899,10 +899,10 @@
             <h3 class="thanks-title">Obrigado por Usar o Smart Wallet!</h3>
             <p style="font-size:1.1rem;line-height:1.8;margin-bottom:30px;text-align:center;">Se o Smart Wallet tem sido útil, que tal me pagar um cafezinho?</p>
             <div class="pix-section">
-                <div style="font-size:1.3rem;font-weight:700;color:var(--success-color);margin-bottom:12px;"> Doação via PIX</div>
+                <div style="font-size:1.3rem;font-weight:700;color:var(--success-color);margin-bottom:12px;">💚 Doação via PIX</div>
                 <p style="margin-bottom:12px;">Qualquer valor é bem-vindo!</p>
                 <div class="pix-key" id="pixKey">rogerelizar@gmail.com</div>
-                <button class="btn btn-success" data-action="copy-pix-key">📋 Copiar Chave PIX</button>
+                <button class="btn btn-success" onclick="copyPixKey()">📋 Copiar Chave PIX</button>
             </div>
             <div style="margin-top:30px;padding-top:20px;border-top:1px solid var(--border-color);text-align:center;">
                 <h3 style="margin-bottom:12px;">💬 Feedback</h3>
@@ -914,7 +914,7 @@
     <!-- TOAST NOTIFICATION -->
     <div class="toast" id="toast" role="alert" aria-live="assertive"></div>
 
-    <!-- SCRIPT PRINCIPAL (ES6 Module) -->
-    <script type="module" src="js/app.js"></script>
+    <!-- SCRIPT PRINCIPAL -->
+    <script src="js/app.js"></script>
 </body>
 </html>
