@@ -1,5 +1,5 @@
 // js/handlers.js
-// Fase 2: Handlers via event delegation
+// Fase 2: Handlers via event delegation (substitui onclick inline)
 
 import './delegation.js';
 
@@ -68,7 +68,7 @@ window.addEventListener('action:select-type', (e) => {
     }
 });
 
-// ===== MODAL OPENERS =====
+// ===== MODAL OPENERS/CLOSERS =====
 const modalMap = {
     'new-transaction': 'newTransactionModal',
     'close-new-transaction': 'newTransactionModal',
@@ -162,7 +162,7 @@ window.addEventListener('action:select-csv-file', (e) => {
     }
     
     document.getElementById('csvFileName').textContent = 
-        ` ${file.name} (${(file.size/1024).toFixed(1)} KB)`;
+        `📄 ${file.name} (${(file.size/1024).toFixed(1)} KB)`;
     
     const reader = new FileReader();
     reader.onload = (ev) => { window._pendingCsvData = ev.target.result; };
@@ -181,7 +181,7 @@ window.addEventListener('action:select-backup-file', (e) => {
     }
     
     if (file.size > 10 * 1024 * 1024) {
-        alert('⚠️ Arquivo muito grande (máx 10MB)');
+        alert('️ Arquivo muito grande (máx 10MB)');
         input.value = '';
         return;
     }
