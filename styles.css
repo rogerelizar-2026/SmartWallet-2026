@@ -1,6 +1,6 @@
 /* ============================================
    SMART WALLET - STYLESHEET COMPLETO
-   Versão 4.0.0
+   Versão 4.1.0 - Corrigido e Estável
    ============================================ */
 
 /* ===== RESET & BASE ===== */
@@ -36,7 +36,6 @@
     --gradient-card: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(6, 182, 212, 0.1) 100%);
     --gradient-danger: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
     --gradient-success: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    --gradient-warning: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
     --font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     --radius-sm: 8px;
     --radius-md: 12px;
@@ -81,10 +80,8 @@ body {
 body::before {
     content: '';
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
     background: 
         radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
         radial-gradient(circle at 80% 80%, rgba(6, 182, 212, 0.15) 0%, transparent 50%);
@@ -128,16 +125,14 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 /* ===== SPLASH SCREEN ===== */
 .splash-screen {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
     background: radial-gradient(ellipse at top, #1e1b4b 0%, #0a0e1a 50%, #000 100%);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    z-index: 10000;
+    z-index: 10000 !important;
     transition: opacity 1s ease-out;
     overflow: hidden;
 }
@@ -145,10 +140,8 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .splash-screen::before {
     content: '';
     position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 600px;
-    height: 600px;
+    top: 50%; left: 50%;
+    width: 600px; height: 600px;
     background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
     transform: translate(-50%, -50%);
     animation: splashGlow 4s ease-in-out infinite;
@@ -287,16 +280,14 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 /* ===== DISCLAIMER MODAL ===== */
 .disclaimer-modal {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
     background: rgba(10, 14, 26, 0.85);
     backdrop-filter: blur(8px);
     display: none;
     align-items: center;
     justify-content: center;
-    z-index: 10001;
+    z-index: 10001 !important;
     padding: 20px;
 }
 
@@ -423,10 +414,8 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 /* ===== QUOTE MODAL ===== */
 .quote-modal {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
     background: rgba(0, 0, 0, 0.85);
     backdrop-filter: blur(10px);
     display: none;
@@ -514,9 +503,7 @@ header {
 header::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
+    top: 0; left: 0; right: 0;
     height: 2px;
     background: var(--gradient-primary);
 }
@@ -760,8 +747,7 @@ header p {
 
 .alert-badge {
     position: absolute;
-    top: -4px;
-    right: -4px;
+    top: -4px; right: -4px;
     background: var(--danger-color);
     color: white;
     min-width: 20px;
@@ -912,13 +898,8 @@ header p {
     z-index: 1;
 }
 
-.card-value.positive {
-    color: var(--success-color);
-}
-
-.card-value.negative {
-    color: var(--danger-color);
-}
+.card-value.positive { color: var(--success-color); }
+.card-value.negative { color: var(--danger-color); }
 
 .goal-bar {
     height: 8px;
@@ -1013,9 +994,7 @@ table {
     border-collapse: collapse;
 }
 
-thead {
-    background: var(--bg-secondary);
-}
+thead { background: var(--bg-secondary); }
 
 th {
     padding: 14px;
@@ -1124,13 +1103,8 @@ tbody tr.transaction-row:hover {
     white-space: nowrap;
 }
 
-.amount.positive {
-    color: var(--success-color);
-}
-
-.amount.negative {
-    color: var(--danger-color);
-}
+.amount.positive { color: var(--success-color); }
+.amount.negative { color: var(--danger-color); }
 
 .balance {
     font-weight: 600;
@@ -1191,8 +1165,7 @@ body.privacy-on .investment-summary-label {
 /* ===== FAB ===== */
 .fab {
     position: fixed;
-    bottom: 28px;
-    right: 28px;
+    bottom: 28px; right: 28px;
     width: 64px;
     height: 64px;
     border-radius: 20px;
@@ -1222,10 +1195,8 @@ body.privacy-on .investment-summary-label {
 .modal {
     display: none;
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
     background: rgba(0, 0, 0, 0.7);
     backdrop-filter: blur(8px);
     z-index: 1000;
@@ -1517,10 +1488,8 @@ body.privacy-on .investment-summary-label {
 
 .file-input-wrapper input[type="file"] {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
     opacity: 0;
     cursor: pointer;
 }
@@ -1605,8 +1574,7 @@ body.privacy-on .investment-summary-label {
 
 .cc-actions {
     position: absolute;
-    top: 8px;
-    right: 8px;
+    top: 8px; right: 8px;
     display: flex;
     gap: 4px;
     opacity: 0;
@@ -1742,9 +1710,7 @@ body.privacy-on .investment-summary-label {
     border-radius: 12px;
 }
 
-.investment-value-item {
-    text-align: center;
-}
+.investment-value-item { text-align: center; }
 
 .investment-value-label {
     font-size: 0.75rem;
@@ -1758,13 +1724,8 @@ body.privacy-on .investment-summary-label {
     font-weight: 700;
 }
 
-.investment-value-amount.positive {
-    color: var(--success-color);
-}
-
-.investment-value-amount.negative {
-    color: var(--danger-color);
-}
+.investment-value-amount.positive { color: var(--success-color); }
+.investment-value-amount.negative { color: var(--danger-color); }
 
 .investment-card-actions {
     display: flex;
@@ -2069,8 +2030,7 @@ body.privacy-on .investment-summary-label {
 
 .account-card-actions {
     position: absolute;
-    top: 8px;
-    right: 8px;
+    top: 8px; right: 8px;
     display: flex;
     gap: 4px;
     opacity: 0;
@@ -2104,11 +2064,9 @@ body.privacy-on .investment-summary-label {
     body { background: white !important; color: black !important; }
     body::before { display: none !important; }
     header, .toolbar, .fab, .charts-section:not(.print-only), .filters, .modal:not(#manualModal):not(#exportModal), .toast, .splash-screen, .quote-modal, .disclaimer-modal, .info-btn, .info-dropdown, .dropdown-menu, #investmentsChartSection { display: none !important; }
-    
     .print-header { display: block !important; text-align: center; border-bottom: 3px solid #6366f1; padding-bottom: 15px; margin-bottom: 20px; }
     .print-header h1 { color: #6366f1 !important; font-size: 24pt; -webkit-text-fill-color: #6366f1 !important; }
     .print-footer { display: block !important; position: fixed; bottom: 0; left: 0; right: 0; text-align: center; border-top: 2px solid #6366f1; padding-top: 10px; font-size: 8pt; }
-    
     .dashboard { grid-template-columns: repeat(4,1fr) !important; }
     .card { box-shadow: none !important; border: 1px solid #ccc !important; background: white !important; color: black !important; }
     .transactions-section { box-shadow: none !important; border: 1px solid #ccc !important; padding: 10px 0 !important; background: white !important; }
@@ -2118,7 +2076,6 @@ body.privacy-on .investment-summary-label {
     .table-container { border: none !important; }
     body.privacy-on .privacy-value { filter: none !important; }
     body.privacy-on canvas { filter: none !important; }
-    
     #manualModal { display: block !important; position: static !important; background: white !important; }
     #manualModal .modal-content { max-width: 100% !important; box-shadow: none !important; border: none !important; padding: 0 !important; }
     #manualModal .modal-header { display: none !important; }
