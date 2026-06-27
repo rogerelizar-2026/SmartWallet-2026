@@ -1,0 +1,132 @@
+# .github/workflows/ci.yml
+# Smart Wallet - CI/CD Pipeline
+# Executa em cada push para a branch main
+
+name: Smart Wallet CI/CD
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:  # Permite execução manual
+
+jobs:
+  # ===== VALIDAÇÃO DE CÓDIGO =====
+  validate:
+    name: Validar Código
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Validar estrutura de arquivos
+        run: |
+          echo "🔍 Verificando arquivos essenciais..."
+          required_files=(
+            "index.html"
+            "styles.css"
+            "js/app.js"
+            "js/handlers.js"
+            "js/delegation.js"
+            "js/lazy-loader.js"
+            "js/validators.js"
+            "js/storage-manager.js"
+            "js/a11y.js"
+            "js/workers/parser-worker.js"
+            "manifest.json"
+            "sw.js"
+            "favicon.svg"
+          )
+          
+          missing=0
+          for file in "${required_files[@]}"; do
+            if [ ! -f "$file" ]; then
+              echo "❌ Arquivo faltando: $file"
+              missing=$((missing + 1))
+            else
+              echo "✅ $file encontrado"
+            fi
+          done
+          
+          if [ $missing -gt 0 ]; then
+            echo "❌ $missing arquivo(s) faltando!"
+            exit 1
+          fi
+
+      - name: Validar JSON (manifest e backups)
+        run: |
+          echo "🔍 Validando arquivos JSON..."
+          for file in manifest.json; do
+            if python3 -m json.tool "$file" > /dev/null 2>&1; then
+              echo "✅ $file é JSON válido"
+            else
+              echo "❌ $file tem JSON inválido"
+              exit 1
+            fi
+          done
+
+      - name: Validar HTML
+        run: |
+          echo "🔍 Validando HTML..."
+          if grep -q "<!DOCTYPE html>" index.html && \
+             grep -q "</html>" index.html && \
+             grep -q 'js/app.js' index.html; then
+            echo "✅ HTML estruturalmente válido"
+          else
+            echo "❌ HTML com problemas"
+            exit 1
+          fi
+
+      - name: Verificar tamanho dos arquivos
+        run: |
+          echo "📊 Tamanho dos arquivos:"
+          du -h js/*.js | sort -hr
+          echo ""
+          echo "⚠️ Alerta se app.js > 100KB:"
+          size=$(stat -f%z js/app.js 2>/dev/null || stat -c%s js/app.js)
+          if [ $size -gt 102400 ]; then
+            echo "⚠️ app.js tem $((size/1024))KB (considere refatorar)"
+          else
+            echo "✅ app.js tem $((size/1024))KB"
+          fi
+
+  # ===== DEPLOY NO GITHUB PAGES =====
+  deploy:
+    name: Deploy GitHub Pages
+    needs: validate
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configurar GitHub Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload do artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Notificar sucesso
+        if: success()
+        run: |
+          echo "🚀 Deploy realizado com sucesso!"
+          echo "URL: ${{ steps.deployment.outputs.page_url }}"
