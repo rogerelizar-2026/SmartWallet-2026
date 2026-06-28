@@ -2123,3 +2123,88 @@ body.privacy-on .investment-summary-label {
     .investment-summary-grid { grid-template-columns: 1fr; }
     .splash-loader { width: 260px; }
 }
+/* ===== SELETOR DE MÊS DO MODAL CARTÕES ===== */
+.card-month-selector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 10px 16px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+}
+
+.card-month-btn {
+    background: var(--gradient-primary);
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.card-month-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+}
+
+.card-month-btn:active {
+    transform: scale(0.95);
+}
+
+.card-month-btn .icon {
+    width: 20px;
+    height: 20px;
+}
+
+.card-month-label {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    min-width: 160px;
+    text-align: center;
+    text-transform: capitalize;
+}
+
+.card-month-today {
+    background: var(--input-bg);
+    border: 1px solid var(--glass-border);
+    color: var(--text-primary);
+    padding: 8px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.card-month-today:hover {
+    background: var(--glass-border);
+    border-color: var(--primary-color);
+}
+
+@media (max-width: 640px) {
+    .card-month-selector {
+        padding: 8px 12px;
+        gap: 8px;
+    }
+    .card-month-label {
+        min-width: 120px;
+        font-size: 1rem;
+    }
+    .card-month-today {
+        padding: 6px 10px;
+        font-size: 0.8rem;
+    }
+}
