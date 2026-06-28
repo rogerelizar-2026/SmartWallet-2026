@@ -943,20 +943,40 @@
                 }
             }
         }
-                getInvoicePeriod(card) {
-            const now = new Date();
-            let closingDate = new Date(now.getFullYear(), now.getMonth(), card.closingDay);
-            if (now.getDate() < card.closingDay) {
-                closingDate = new Date(now.getFullYear(), now.getMonth() - 1, card.closingDay);
-            }
-            const startDate = new Date(closingDate);
-            startDate.setMonth(startDate.getMonth() - 1);
-            startDate.setDate(startDate.getDate() + 1);
-            const dueDate = new Date(closingDate);
-            dueDate.setMonth(dueDate.getMonth() + 1);
-            dueDate.setDate(card.dueDay);
-            return { startDate, closingDate, dueDate };
-        }
+getInvoicePeriod(card) {
+    // Usa o mês selecionado no app em vez da data atual
+    const selectedDate = this.currentMonth || new Date();
+    const year = selectedDate.getFullYear();
+    const month = selectedDate.getMonth();
+    
+    // Dia de fechamento no mês selecionado
+    let closingDate = new Date(year, month, card.closingDay);
+    
+    // Se a data atual (real) ainda não passou do fechamento, usa o mês anterior
+    const today = new Date();
+    if (today.getFullYear() === year && today.getMonth() === month && today.getDate() < card.closingDay) {
+        closingDate = new Date(year, month - 1, card.closingDay);
+    }
+    
+    // Início do período: dia após o fechamento do mês anterior
+    const startDate = new Date(closingDate);
+    startDate.setMonth(startDate.getMonth() - 1);
+    startDate.setDate(startDate.getDate() + 1);
+    
+    // Vencimento: dia de vencimento no mês seguinte ao fechamento
+    const dueDate = new Date(closingDate);
+    dueDate.setMonth(dueDate.getMonth() + 1);
+    dueDate.setDate(card.dueDay);
+    
+    console.log('📅 Período da fatura:', {
+        card: card.name,
+        startDate: startDate.toISOString().split('T')[0],
+        closingDate: closingDate.toISOString().split('T')[0],
+        dueDate: dueDate.toISOString().split('T')[0]
+    });
+    
+    return { startDate, closingDate, dueDate };
+}
 
         calculateInvoiceTotal(purchases) {
             let total = 0;
