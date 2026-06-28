@@ -196,7 +196,8 @@
                 category: document.getElementById('categoryFilter')?.value || '',
                 status: document.getElementById('statusFilter')?.value || '',
                 account: document.getElementById('accountFilter')?.value || '',
-                search: document.getElementById('searchFilter')?.value || ''
+                search: document.getElementById('searchFilter')?.value || '',
+                cardMonth: this.cardModalMonth.toISOString()
             };
             try { localStorage.setItem('smartwallet_filters', JSON.stringify(filters)); } catch(e){}
         }
@@ -211,6 +212,11 @@
                 setTimeout(() => {
                     if (filters.category) document.getElementById('categoryFilter').value = filters.category;
                 }, 100);
+                if (filters.cardMonth) {
+            this.cardModalMonth = new Date(filters.cardMonth);
+                }
+        } catch(e){}
+    }
             } catch(e){}
         }
 
@@ -951,20 +957,14 @@ getCardTransactionsForPeriod(cardId, startDate, closingDate) {
                 }
             }
         }
-getInvoicePeriod(card) {
-    // Usa o mês selecionado no app em vez da data atual
-    const selectedDate = this.currentMonth || new Date();
-    const year = selectedDate.getFullYear();
-    const month = selectedDate.getMonth();
+getInvoicePeriod(card, referenceDate) {
+    // Usa a data de referência passada (ou o mês do modal de cartões)
+    const refDate = referenceDate || this.cardModalMonth || new Date();
+    const year = refDate.getFullYear();
+    const month = refDate.getMonth();
     
-    // Dia de fechamento no mês selecionado
+    // Dia de fechamento no mês de referência
     let closingDate = new Date(year, month, card.closingDay);
-    
-    // Se a data atual (real) ainda não passou do fechamento, usa o mês anterior
-    const today = new Date();
-    if (today.getFullYear() === year && today.getMonth() === month && today.getDate() < card.closingDay) {
-        closingDate = new Date(year, month - 1, card.closingDay);
-    }
     
     // Início do período: dia após o fechamento do mês anterior
     const startDate = new Date(closingDate);
@@ -976,13 +976,6 @@ getInvoicePeriod(card) {
     dueDate.setMonth(dueDate.getMonth() + 1);
     dueDate.setDate(card.dueDay);
     
-    console.log('📅 Período da fatura:', {
-        card: card.name,
-        startDate: startDate.toISOString().split('T')[0],
-        closingDate: closingDate.toISOString().split('T')[0],
-        dueDate: dueDate.toISOString().split('T')[0]
-    });
-    
     return { startDate, closingDate, dueDate };
 }
 
@@ -992,39 +985,43 @@ getInvoicePeriod(card) {
             return total;
         }
 
-        renderCreditCardsList() {
-            const container = document.getElementById('creditCardsList');
-            if (!container) return;
-            if (!this.cards.length) {
-                container.innerHTML = '<div style="text-align:center; padding:40px 20px; color:var(--text-secondary);"><div style="font-size:3rem; margin-bottom:12px; opacity:0.5;">💳</div><h3>Nenhum cartão cadastrado</h3></div>';
-                return;
-            }
-            const self = this;
-            let html = '<div class="credit-cards-grid">';
-            this.cards.forEach(card => {
-                const period = self.getInvoicePeriod(card);
-                const purchases = self.getCardTransactionsForPeriod(card.id, period.startDate, period.closingDate);
-                const total = self.calculateInvoiceTotal(purchases);
-                const available = card.limit - total;
-                const usedPct = Math.min(100, (total / card.limit) * 100);
-                        
-                console.log('Cartão:', card.name);
-                console.log('Limite:', card.limit);
-                console.log('Gasto:', total);
-                console.log('Disponível:', available);
-                
-                html += '<div class="credit-card-visual" style="background:linear-gradient(135deg, ' + card.color + ' 0%, ' + self.adjustColor(card.color, -30) + ' 100%);" onclick="openInvoiceModal(\'' + card.id + '\')">';
-                html += '<div class="cc-actions"><button class="cc-action-btn" onclick="event.stopPropagation(); smartwallet.editCard(\'' + card.id + '\')">✏️</button><button class="cc-action-btn" onclick="event.stopPropagation(); smartwallet.deleteCard(\'' + card.id + '\')">🗑️</button></div>';
-                html += '<div class="cc-header"><div class="cc-brand">' + self.escapeHtml(card.brand) + '</div><div class="cc-chip"></div></div>';
-                html += '<div class="cc-name">' + self.escapeHtml(card.name) + '</div>';
-                html += '<div class="cc-number">•••• •••• •••• ' + self.escapeHtml(card.last4 || '****') + '</div>';
-                html += '<div class="cc-footer"><div><div class="cc-label">Fatura Atual</div><div class="cc-value">' + self.formatCurrency(total) + '</div></div><div style="text-align:right;"><div class="cc-label">Disponível</div><div class="cc-value">' + self.formatCurrency(available) + '</div></div></div>';
-                html += '<div style="position:absolute; bottom:0; left:0; right:0; height:4px; background:rgba(0,0,0,0.3);"><div style="height:100%; width:' + usedPct + '%; background:' + (usedPct > 80 ? '#ef4444' : usedPct > 50 ? '#f59e0b' : '#10b981') + ';"></div></div>';
-                html += '</div>';
-            });
-            html += '</div>';
-            container.innerHTML = html;
-        }
+renderCreditCardsList() {
+    const container = document.getElementById('creditCardsList');
+    if (!container) return;
+    
+    // Atualiza o label do mês
+    window.updateCardMonthLabel();
+    
+    if (!this.cards.length) {
+        container.innerHTML = '<div style="text-align:center; padding:40px 20px; color:var(--text-secondary);"><div style="font-size:3rem; margin-bottom:12px; opacity:0.5;">💳</div><h3>Nenhum cartão cadastrado</h3><p>Clique em "Novo Cartão" para começar</p></div>';
+        return;
+    }
+    
+    const self = this;
+    const refDate = this.cardModalMonth; // Usa o mês selecionado no modal
+    let html = '<div class="credit-cards-grid">';
+    
+    this.cards.forEach(card => {
+        // Período da fatura baseado no mês selecionado
+        const period = self.getInvoicePeriod(card, refDate);
+        const purchases = self.getCardTransactionsForPeriod(card.id, period.startDate, period.closingDate);
+        const total = self.calculateInvoiceTotal(purchases);
+        const available = card.limit - total;
+        const usedPct = Math.min(100, (total / card.limit) * 100);
+        
+        html += '<div class="credit-card-visual" style="background:linear-gradient(135deg, ' + card.color + ' 0%, ' + self.adjustColor(card.color, -30) + ' 100%);" onclick="openInvoiceModal(\'' + card.id + '\')">';
+        html += '<div class="cc-actions"><button class="cc-action-btn" onclick="event.stopPropagation(); smartwallet.editCard(\'' + card.id + '\')">✏️</button><button class="cc-action-btn" onclick="event.stopPropagation(); smartwallet.deleteCard(\'' + card.id + '\')">🗑️</button></div>';
+        html += '<div class="cc-header"><div class="cc-brand">' + self.escapeHtml(card.brand) + '</div><div class="cc-chip"></div></div>';
+        html += '<div class="cc-name">' + self.escapeHtml(card.name) + '</div>';
+        html += '<div class="cc-number">•••• •••• •••• ' + self.escapeHtml(card.last4 || '****') + '</div>';
+        html += '<div class="cc-footer"><div><div class="cc-label">Fatura Atual</div><div class="cc-value">' + self.formatCurrency(total) + '</div></div><div style="text-align:right;"><div class="cc-label">Disponível</div><div class="cc-value">' + self.formatCurrency(available) + '</div></div></div>';
+        html += '<div style="position:absolute; bottom:0; left:0; right:0; height:4px; background:rgba(0,0,0,0.3);"><div style="height:100%; width:' + usedPct + '%; background:' + (usedPct > 80 ? '#ef4444' : usedPct > 50 ? '#f59e0b' : '#10b981') + ';"></div></div>';
+        html += '</div>';
+    });
+    
+    html += '</div>';
+    container.innerHTML = html;
+}
 
         adjustColor(color, amount) {
             const hex = color.replace('#', '');
@@ -1667,8 +1664,13 @@ getInvoicePeriod(card) {
     window.closeAccountsModal = function() { document.getElementById('accountsModal').classList.remove('active'); };
     window.openNewAccountModal = function() { document.getElementById('accountEditId').value = ''; document.getElementById('accountForm').reset(); document.getElementById('accountColor').value = '#6366f1'; document.getElementById('newAccountTitle').textContent = 'Nova Conta'; document.getElementById('newAccountModal').classList.add('active'); };
     window.closeNewAccountModal = function() { document.getElementById('newAccountModal').classList.remove('active'); };
-    window.openCreditCardsModal = function() { smartwallet.renderCreditCardsList(); document.getElementById('creditCardsModal').classList.add('active'); document.getElementById('mainMenu').classList.remove('active'); };
-    window.closeCreditCardsModal = function() { document.getElementById('creditCardsModal').classList.remove('active'); };
+window.openCreditCardsModal = function() {
+    // Sincroniza o mês do modal de cartões com o mês principal do app
+    smartwallet.cardModalMonth = new Date(smartwallet.currentMonth);
+    smartwallet.renderCreditCardsList();
+    document.getElementById('creditCardsModal').classList.add('active');
+    document.getElementById('mainMenu').classList.remove('active');
+};    window.closeCreditCardsModal = function() { document.getElementById('creditCardsModal').classList.remove('active'); };
     window.openNewCardModal = function() { document.getElementById('cardEditId').value = ''; document.getElementById('cardForm').reset(); document.getElementById('cardClosingDay').value = 20; document.getElementById('cardDueDay').value = 27; document.getElementById('cardColor').value = '#6366f1'; document.getElementById('newCardTitle').textContent = 'Novo Cartão'; document.getElementById('newCardModal').classList.add('active'); };
     window.closeNewCardModal = function() { document.getElementById('newCardModal').classList.remove('active'); };
     window.openInvoiceModal = function(cardId) { smartwallet.openInvoice(cardId); };
@@ -1717,6 +1719,26 @@ getInvoicePeriod(card) {
     window.checkClearConfirm = function() { const input = document.getElementById('clearConfirmInput'); const btn = document.getElementById('finalClearBtn'); if (input.value.trim().toUpperCase() === 'LIMPAR') { input.classList.add('match'); btn.disabled = false; btn.style.opacity = '1'; } else { input.classList.remove('match'); btn.disabled = true; btn.style.opacity = '0.5'; } };
     window.copyPixKey = function() { const key = document.getElementById('pixKey').textContent; navigator.clipboard.writeText(key).then(() => smartwallet.showToast('✅ Chave PIX copiada!')).catch(() => smartwallet.showToast(' Copie manualmente: ' + key)); };
 
+// ===== NAVEGAÇÃO DE MÊS NO MODAL CARTÕES =====
+window.changeCardMonth = function(delta) {
+    smartwallet.cardModalMonth.setMonth(smartwallet.cardModalMonth.getMonth() + delta);
+    smartwallet.renderCreditCardsList();
+};
+
+window.changeCardMonthToToday = function() {
+    smartwallet.cardModalMonth = new Date();
+    smartwallet.cardModalMonth.setDate(1);
+    smartwallet.renderCreditCardsList();
+};
+
+window.updateCardMonthLabel = function() {
+    const months = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+    const label = document.getElementById('cardMonthLabel');
+    if (label) {
+        label.textContent = months[smartwallet.cardModalMonth.getMonth()] + ' ' + smartwallet.cardModalMonth.getFullYear();
+    }
+};
+    
     // ===== FLUXO INICIAL (SPLASH -> DISCLAIMER -> QUOTE -> APP) =====
     function initDisclaimer() {
         let countdown = 12;
