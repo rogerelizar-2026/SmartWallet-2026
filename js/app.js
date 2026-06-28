@@ -979,6 +979,12 @@
                 const total = self.calculateInvoiceTotal(purchases);
                 const available = card.limit - total;
                 const usedPct = Math.min(100, (total / card.limit) * 100);
+                        
+                console.log('Cartão:', card.name);
+                console.log('Limite:', card.limit);
+                console.log('Gasto:', total);
+                console.log('Disponível:', available);
+                
                 html += '<div class="credit-card-visual" style="background:linear-gradient(135deg, ' + card.color + ' 0%, ' + self.adjustColor(card.color, -30) + ' 100%);" onclick="openInvoiceModal(\'' + card.id + '\')">';
                 html += '<div class="cc-actions"><button class="cc-action-btn" onclick="event.stopPropagation(); smartwallet.editCard(\'' + card.id + '\')">✏️</button><button class="cc-action-btn" onclick="event.stopPropagation(); smartwallet.deleteCard(\'' + card.id + '\')">🗑️</button></div>';
                 html += '<div class="cc-header"><div class="cc-brand">' + self.escapeHtml(card.brand) + '</div><div class="cc-chip"></div></div>';
