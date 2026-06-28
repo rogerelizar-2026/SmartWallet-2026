@@ -1836,6 +1836,72 @@ window.updateCardMonthLabel = function() {
             navigator.serviceWorker.register('sw.js').then(reg => console.log('✅ SW registrado:', reg.scope)).catch(err => console.log('❌ SW falhou:', err));
         });
     }
+// ===== AÇÕES DO DASHBOARD =====
+window.dashboardAction = function(action) {
+    const typeFilter = document.getElementById('typeFilter');
+    const statusFilter = document.getElementById('statusFilter');
+    const categoryFilter = document.getElementById('categoryFilter');
+    const accountFilter = document.getElementById('accountFilter');
+    const searchFilter = document.getElementById('searchFilter');
+    
+    // Remove destaque de todos os cards
+    document.querySelectorAll('.card.clickable').forEach(c => c.classList.remove('active-filter'));
+    
+    switch(action) {
+        case 'accounts':
+            // Abre modal de contas
+            openAccountsModal();
+            break;
+            
+        case 'income':
+            // Filtra por receitas no histórico
+            if (typeFilter) typeFilter.value = 'income';
+            if (statusFilter) statusFilter.value = '';
+            if (categoryFilter) categoryFilter.value = '';
+            if (accountFilter) accountFilter.value = '';
+            if (searchFilter) searchFilter.value = '';
+            
+            smartwallet.render();
+            smartwallet.saveFilters();
+            
+            // Destaca o card ativo
+            document.querySelectorAll('.card.clickable')[1].classList.add('active-filter');
+            
+            // Rola até o histórico
+            scrollToTransactions();
+            break;
+            
+        case 'expense':
+            // Filtra por despesas no histórico
+            if (typeFilter) typeFilter.value = 'expense';
+            if (statusFilter) statusFilter.value = '';
+            if (categoryFilter) categoryFilter.value = '';
+            if (accountFilter) accountFilter.value = '';
+            if (searchFilter) searchFilter.value = '';
+            
+            smartwallet.render();
+            smartwallet.saveFilters();
+            
+            // Destaca o card ativo
+            document.querySelectorAll('.card.clickable')[2].classList.add('active-filter');
+            
+            // Rola até o histórico
+            scrollToTransactions();
+            break;
+            
+        case 'cards':
+            // Abre modal de cartões
+            openCreditCardsModal();
+            break;
+    }
+};
 
+// Função auxiliar para rolar até o histórico
+function scrollToTransactions() {
+    const section = document.querySelector('.transactions-section');
+    if (section) {
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+}
     console.log('🎉 Smart Wallet v4.1.0 carregado com sucesso!');
 })();
