@@ -157,23 +157,27 @@
             this.updateAlertBadge();
         }
 
-        setupEventListeners() {
-            const self = this;
-            const search = document.getElementById('searchFilter');
-            if (search) {
-                search.addEventListener('input', () => {
-                    clearTimeout(self.searchTimeout);
-                    self.searchTimeout = setTimeout(() => self.render(), 300);
-                });
-            }
-            ['typeFilter', 'categoryFilter', 'statusFilter', 'accountFilter'].forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.addEventListener('change', () => {
-                    if (id === 'typeFilter') self.filterCategoriesByType('categoryFilter', el.value);
-                    self.render();
-                    self.saveFilters();
-                });
-            });
+setupEventListeners() {
+    const self = this;
+    const search = document.getElementById('searchFilter');
+    if (search) {
+        search.addEventListener('input', () => {
+            clearTimeout(self.searchTimeout);
+            self.searchTimeout = setTimeout(() => {
+                self.render();
+                self.clearDashboardHighlight(); // 🆕
+            }, 300);
+        });
+    }
+    ['typeFilter', 'categoryFilter', 'statusFilter', 'accountFilter'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('change', () => {
+            if (id === 'typeFilter') self.filterCategoriesByType('categoryFilter', el.value);
+            self.render();
+            self.saveFilters();
+            self.clearDashboardHighlight(); // 🆕
+        });
+    });
             const recurringCheckbox = document.getElementById('recurring');
             if (recurringCheckbox) {
                 recurringCheckbox.addEventListener('change', function() {
