@@ -1640,6 +1640,8 @@ renderCreditCardsList() {
         smartwallet.currentTransactionType = t;
         document.querySelectorAll('#transactionForm .type-btn').forEach(b => b.classList.toggle('active', b.getAttribute('data-type') === t));
         smartwallet.filterCategoriesByType('category', t);
+        console.log('Tipo selecionado:', t);
+        console.log('Categorias visíveis:', document.getElementById('category').options.length);
     };
     window.selectEditType = function(t) {
         smartwallet.currentEditType = t;
