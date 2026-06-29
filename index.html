@@ -111,10 +111,9 @@
                         <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
                     </button>
                     <div class="info-dropdown" id="infoMenu" role="menu" aria-label="Menu de informações">
-                        <button class="info-item" role="menuitem" onclick="openInvestmentsModal()">
-                            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/></svg>
-                            <span>📈 Acompanhamento de Aplicações</span>
-                        </button>
+                        <button class="info-item" role="menuitem" onclick="openManualModal()">
+                            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                            <span>📖Manual do Usuário</span>
                         <button class="info-item" role="menuitem" onclick="openTermsModal()">
                             <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
                             <span>📜 Termos de Uso</span>
@@ -163,10 +162,10 @@
                             <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
                             <span>Extrato do Mês</span>
                         </button>
-                        <div class="dropdown-divider" role="separator"></div>
-                        <button class="dropdown-item" role="menuitem" onclick="openManualModal()">
-                            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-                            <span>Manual do Usuário</span>
+                            <div class="dropdown-divider" role="separator"></div>
+                        <button class="dropdown-item" role="menuitem" onclick="openInvestmentsModal()">
+                            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/></svg>
+                            <span>Acompanhamento de Aplicações</span>
                         </button>
                         <div class="dropdown-divider" role="separator"></div>
                         <button class="dropdown-item" role="menuitem" onclick="openAccountsModal()">
