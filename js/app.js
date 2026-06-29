@@ -281,14 +281,11 @@
         '</div>' +
         '</div>';
 
-    // ===== CLASSE PRINCIPAL =====
     class SmartWallet {
         constructor() {
-            // ✅ CORREÇÃO CRÍTICA: Inicializar currentMonth PRIMEIRO
             this.currentMonth = new Date();
             this.currentMonth.setDate(1);
             this.currentMonth.setHours(0, 0, 0, 0);
-            
             this.transactions = [];
             this.categories = [];
             this.accounts = [];
@@ -306,7 +303,6 @@
             this.searchTimeout = null;
             this.toastT = null;
             this._cache = {};
-            
             this.loadData();
             this.init();
         }
@@ -441,7 +437,6 @@
             return String(date.getMonth() + 1).padStart(2, '0') + '-' + date.getFullYear();
         }
 
-        // ✅ CORREÇÃO: Gera timestamp no formato SmartWallet-AAAAMMDDHHMMSS
         generateTimestamp() {
             const now = new Date();
             const year = now.getFullYear();
@@ -453,32 +448,24 @@
             return 'SmartWallet-' + year + month + day + hours + minutes + seconds;
         }
 
-        // ✅ CORREÇÃO CRÍTICA: Validação robusta de date
         getMonthTransactions(date) {
-            // Camada 1: Se não passou date, usa currentMonth
             if (!date) {
                 date = this.currentMonth;
             }
-            
-            // Camada 2: Se currentMonth é inválido, cria novo Date
             if (!date || !(date instanceof Date) || isNaN(date.getTime())) {
                 date = new Date();
                 date.setDate(1);
                 date.setHours(0, 0, 0, 0);
                 this.currentMonth = date;
             }
-            
             const key = date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0');
-            
             if (!this._cache.monthTransactions) this._cache.monthTransactions = {};
             if (this._cache.monthTransactions[key]) return this._cache.monthTransactions[key];
-            
             const m = date.getMonth(), y = date.getFullYear();
             const result = this.transactions.filter(t => {
                 const d = new Date(t.date + 'T12:00:00');
                 return d.getMonth() === m && d.getFullYear() === y;
             });
-            
             this._cache.monthTransactions[key] = result;
             return result;
         }
@@ -646,49 +633,41 @@
             this.toastT = setTimeout(() => t.classList.remove('active'), 3000);
         }
 
-        // ✅ CORREÇÃO: Validação de currentMonth
-updateDashboard() {
-    if (!this.currentMonth || !(this.currentMonth instanceof Date) || isNaN(this.currentMonth.getTime())) {
-        this.currentMonth = new Date();
-        this.currentMonth.setDate(1);
-        this.currentMonth.setHours(0, 0, 0, 0);
-    }
-    
-    const mt = this.getMonthTransactions();
-    let inc = 0, exp = 0;
-    mt.forEach(t => { if (t.amount > 0) inc += t.amount; else exp += t.amount; });
-    
-    // 🆕 Saldo unificado: contas correntes + valor atual das aplicações vinculadas
-    let unifiedBalance = 0;
-    this.accounts.forEach(a => { 
-        if (a.type === 'checking') {
-            unifiedBalance += (parseFloat(a.balance) || 0);
+        updateDashboard() {
+            if (!this.currentMonth || !(this.currentMonth instanceof Date) || isNaN(this.currentMonth.getTime())) {
+                this.currentMonth = new Date();
+                this.currentMonth.setDate(1);
+                this.currentMonth.setHours(0, 0, 0, 0);
+            }
+            const mt = this.getMonthTransactions();
+            let inc = 0, exp = 0;
+            mt.forEach(t => { if (t.amount > 0) inc += t.amount; else exp += t.amount; });
+            let unifiedBalance = 0;
+            this.accounts.forEach(a => { 
+                if (a.type === 'checking') {
+                    unifiedBalance += (parseFloat(a.balance) || 0);
+                }
+            });
+            this.investments.forEach(inv => {
+                if (!inv.accountId) {
+                    unifiedBalance += inv.current;
+                }
+            });
+            let creditCardTotal = 0;
+            const self = this;
+            this.cards.forEach(card => {
+                const cardTrans = self.getCardTransactions(card.id);
+                cardTrans.forEach(t => { creditCardTotal += Math.abs(t.amount); });
+            });
+            const balEl = document.getElementById('totalBalance');
+            if (balEl) { balEl.textContent = this.formatCurrency(unifiedBalance); balEl.className = 'card-value privacy-value ' + (unifiedBalance >= 0 ? 'positive' : 'negative'); }
+            const incEl = document.getElementById('totalIncome');
+            if (incEl) incEl.textContent = this.formatCurrency(inc);
+            const expEl = document.getElementById('totalExpenses');
+            if (expEl) expEl.textContent = this.formatCurrency(Math.abs(exp));
+            const goalEl = document.getElementById('goalProgress');
+            if (goalEl) { goalEl.textContent = this.formatCurrency(creditCardTotal); goalEl.className = 'card-value privacy-value negative'; }
         }
-    });
-    
-    // Somar aplicações que NÃO têm conta vinculada (para evitar dupla contagem)
-    this.investments.forEach(inv => {
-        if (!inv.accountId) {
-            unifiedBalance += inv.current;
-        }
-    });
-    
-    let creditCardTotal = 0;
-    const self = this;
-    this.cards.forEach(card => {
-        const cardTrans = self.getCardTransactions(card.id);
-        cardTrans.forEach(t => { creditCardTotal += Math.abs(t.amount); });
-    });
-    
-    const balEl = document.getElementById('totalBalance');
-    if (balEl) { balEl.textContent = this.formatCurrency(unifiedBalance); balEl.className = 'card-value privacy-value ' + (unifiedBalance >= 0 ? 'positive' : 'negative'); }
-    const incEl = document.getElementById('totalIncome');
-    if (incEl) incEl.textContent = this.formatCurrency(inc);
-    const expEl = document.getElementById('totalExpenses');
-    if (expEl) expEl.textContent = this.formatCurrency(Math.abs(exp));
-    const goalEl = document.getElementById('goalProgress');
-    if (goalEl) { goalEl.textContent = this.formatCurrency(creditCardTotal); goalEl.className = 'card-value privacy-value negative'; }
-}
 
         render() {
             this.updateDashboard();
@@ -703,7 +682,6 @@ updateDashboard() {
             const reversed = sorted.slice().reverse();
             const self = this;
             reversed.forEach(t => { run += t.amount; balMap[t.id] = run; });
-            
             const fragment = document.createDocumentFragment();
             sorted.forEach(t => {
                 const cat = self.getCategoryById(t.category);
@@ -771,12 +749,10 @@ updateDashboard() {
             const paymentMethod = document.getElementById('paymentMethod').value;
             const accountId = document.getElementById('transactionAccount').value;
             const isRecurring = document.getElementById('recurring').checked;
-            
             if (!category) { this.showToast('Selecione uma categoria'); return; }
             if (!paymentMethod) { this.showToast('Selecione a forma de pagamento'); return; }
             if (!date) { this.showToast('Selecione uma data'); return; }
             if (isNaN(amount) || amount <= 0) { this.showToast('Valor inválido'); return; }
-            
             if (isRecurring) {
                 const recurrenceType = document.getElementById('recurrenceType').value;
                 const recurrenceCount = parseInt(document.getElementById('recurrenceCount').value);
@@ -842,13 +818,11 @@ updateDashboard() {
             const amount = parseFloat(document.getElementById('editAmount').value);
             const category = document.getElementById('editCategory').value;
             const paymentMethod = document.getElementById('editPaymentMethod').value;
-            
             if (!id) { this.showToast('❌ Erro: ID não encontrado'); return; }
             if (!date) { this.showToast('⚠️ Selecione uma data'); return; }
             if (isNaN(amount) || amount <= 0) { this.showToast('⚠️ Valor inválido'); return; }
             if (!category) { this.showToast('⚠️ Selecione uma categoria'); return; }
             if (!paymentMethod) { this.showToast('⚠️ Selecione a forma de pagamento'); return; }
-            
             let idx = -1;
             for (let i = 0; i < this.transactions.length; i++) {
                 if (String(this.transactions[i].id) === String(id)) {
@@ -856,9 +830,7 @@ updateDashboard() {
                     break;
                 }
             }
-            
             if (idx === -1) { this.showToast('❌ Transação não encontrada'); return; }
-            
             const isRecurring = document.getElementById('editRecurring').checked;
             let recurrenceData = null;
             if (isRecurring) {
@@ -866,7 +838,6 @@ updateDashboard() {
                 const recurrenceCount = parseInt(document.getElementById('editRecurrenceCount').value);
                 recurrenceData = { type: recurrenceType, total: recurrenceCount, current: this.transactions[idx].recurrence ? this.transactions[idx].recurrence.current : 1 };
             }
-            
             this.transactions[idx] = {
                 id: this.transactions[idx].id,
                 date: date,
@@ -878,7 +849,6 @@ updateDashboard() {
                 accountId: document.getElementById('editTransactionAccount').value,
                 recurrence: recurrenceData
             };
-            
             this.clearCache();
             this.saveTransactions(); this.render(); this.updateCharts(); this.updateAlertBadge();
             closeEditModal(); this.showToast('✅ Transação atualizada!');
@@ -969,314 +939,162 @@ updateDashboard() {
         }
 
         adjustColor(color, amount) { const hex = color.replace('#', ''); const r = Math.max(0, Math.min(255, parseInt(hex.substr(0, 2), 16) + amount)); const g = Math.max(0, Math.min(255, parseInt(hex.substr(2, 2), 16) + amount)); const b = Math.max(0, Math.min(255, parseInt(hex.substr(4, 2), 16) + amount)); return '#' + r.toString(16).padStart(2,'0') + g.toString(16).padStart(2,'0') + b.toString(16).padStart(2,'0'); }
-                saveCard() { 
-            const id = document.getElementById('cardEditId').value; 
-            const name = document.getElementById('cardName').value.trim(); 
-            const brand = document.getElementById('cardBrand').value; 
-            const last4 = document.getElementById('cardLast4').value.trim(); 
-            const closingDay = parseInt(document.getElementById('cardClosingDay').value); 
-            const dueDay = parseInt(document.getElementById('cardDueDay').value); 
-            const limit = parseFloat(document.getElementById('cardLimit').value); 
-            const color = document.getElementById('cardColor').value; 
-            if (!name) { this.showToast('Informe o nome'); return; } 
-            if (id) { 
-                for (let i = 0; i < this.cards.length; i++) { 
-                    if (this.cards[i].id === id) { this.cards[i] = { id, name, brand, last4, closingDay, dueDay, limit, color }; break; } 
-                } 
-            } else { 
-                this.cards.push({ id: this.generateUniqueId(), name, brand, last4, closingDay, dueDay, limit, color }); 
-            } 
-            this.clearCache(); this.saveCards(); this.populatePaymentMethodSelects(); this.renderCreditCardsList(); 
-            closeNewCardModal(); this.showToast(id ? 'Cartão atualizado!' : 'Cartão cadastrado!'); 
+                saveCard() {
+            const id = document.getElementById('cardEditId').value;
+            const name = document.getElementById('cardName').value.trim();
+            const brand = document.getElementById('cardBrand').value;
+            const last4 = document.getElementById('cardLast4').value.trim();
+            const closingDay = parseInt(document.getElementById('cardClosingDay').value);
+            const dueDay = parseInt(document.getElementById('cardDueDay').value);
+            const limit = parseFloat(document.getElementById('cardLimit').value);
+            const color = document.getElementById('cardColor').value;
+            if (!name) { this.showToast('Informe o nome'); return; }
+            if (id) {
+                for (let i = 0; i < this.cards.length; i++) {
+                    if (this.cards[i].id === id) { this.cards[i] = { id, name, brand, last4, closingDay, dueDay, limit, color }; break; }
+                }
+            } else {
+                this.cards.push({ id: this.generateUniqueId(), name, brand, last4, closingDay, dueDay, limit, color });
+            }
+            this.clearCache(); this.saveCards(); this.populatePaymentMethodSelects(); this.renderCreditCardsList();
+            closeNewCardModal(); this.showToast(id ? 'Cartão atualizado!' : 'Cartão cadastrado!');
         }
-        
+
         deleteCard(id) { if (!confirm('Excluir este cartão? As transações associadas serão mantidas.')) return; this.cards = this.cards.filter(c => c.id !== id); this.clearCache(); this.saveCards(); this.populatePaymentMethodSelects(); this.renderCreditCardsList(); this.showToast('Cartão removido!'); }
         
-        editCard(id) { 
-            const card = this.getCardById(id); if (!card) return; 
-            document.getElementById('cardEditId').value = card.id; document.getElementById('cardName').value = card.name; document.getElementById('cardBrand').value = card.brand; document.getElementById('cardLast4').value = card.last4 || ''; document.getElementById('cardClosingDay').value = card.closingDay; document.getElementById('cardDueDay').value = card.dueDay; document.getElementById('cardLimit').value = card.limit; document.getElementById('cardColor').value = card.color; document.getElementById('newCardTitle').textContent = 'Editar Cartão'; document.getElementById('newCardModal').classList.add('active'); 
+        editCard(id) {
+            const card = this.getCardById(id); if (!card) return;
+            document.getElementById('cardEditId').value = card.id; document.getElementById('cardName').value = card.name; document.getElementById('cardBrand').value = card.brand; document.getElementById('cardLast4').value = card.last4 || ''; document.getElementById('cardClosingDay').value = card.closingDay; document.getElementById('cardDueDay').value = card.dueDay; document.getElementById('cardLimit').value = card.limit; document.getElementById('cardColor').value = card.color; document.getElementById('newCardTitle').textContent = 'Editar Cartão'; document.getElementById('newCardModal').classList.add('active');
         }
-        
-        openInvoice(cardId) { 
-            const card = this.getCardById(cardId); if (!card) return; 
-            const period = this.getInvoicePeriod(card); 
-            const purchases = this.getCardTransactionsForPeriod(card.id, period.startDate, period.closingDate); 
-            const total = this.calculateInvoiceTotal(purchases); const minimum = total * 0.15; const available = card.limit - total; const self = this; 
-            document.getElementById('invoiceTitle').textContent = 'Fatura - ' + card.name; 
-            let html = '<div style="display:flex; justify-content:space-between; margin-bottom:16px; flex-wrap:wrap; gap:10px;">'; 
-            html += '<div><div style="font-size:0.85rem; color:var(--text-secondary);">Período</div><div style="font-weight:600;">' + this.formatDate(period.startDate.toISOString().split('T')[0]) + ' - ' + this.formatDate(period.closingDate.toISOString().split('T')[0]) + '</div></div>'; 
-            html += '<div style="text-align:right;"><div style="font-size:0.85rem; color:var(--text-secondary);">Vencimento</div><div style="font-weight:600; color:var(--warning-color);">' + this.formatDate(period.dueDate.toISOString().split('T')[0]) + '</div></div></div>'; 
-            html += '<div style="background:var(--input-bg); border-radius:14px; padding:16px; margin-bottom:16px;">'; 
-            html += '<div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border-color);"><span style="color:var(--text-secondary);">Limite Total</span><span style="font-weight:600;">' + this.formatCurrency(card.limit) + '</span></div>'; 
-            html += '<div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border-color);"><span style="color:var(--text-secondary);">Total da Fatura</span><span style="font-weight:600; color:var(--danger-color);">' + this.formatCurrency(total) + '</span></div>'; 
-            html += '<div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border-color);"><span style="color:var(--text-secondary);">Mínimo (15%)</span><span style="font-weight:600;">' + this.formatCurrency(minimum) + '</span></div>'; 
-            html += '<div style="display:flex; justify-content:space-between; padding:12px 0 0 0; margin-top:4px; border-top:2px solid var(--border-color); font-weight:700;"><span>Disponível</span><span style="color:var(--success-color);">' + this.formatCurrency(available) + '</span></div></div>'; 
-            html += '<div style="display:flex; justify-content:space-between; margin-bottom:12px; flex-wrap:wrap; gap:10px;">'; 
-            html += '<h3 style="font-size:1.1rem;">Compras (' + purchases.length + ')</h3>'; 
-            html += '<div style="display:flex; gap:8px;">'; 
-            html += '<button class="btn btn-secondary btn-small" onclick="smartwallet.exportInvoiceCSV(\'' + cardId + '\')">📥 CSV</button>'; 
-            html += '<button class="btn btn-secondary btn-small" onclick="smartwallet.printInvoicePDF(\'' + cardId + '\')">🖨️ PDF</button></div></div>'; 
-            html += '<div>'; 
-            if (purchases.length === 0) { html += '<p style="text-align:center; padding:20px; color:var(--text-secondary);">Nenhuma compra neste período.</p>'; } 
-            else { 
-                purchases.sort((a,b) => new Date(a.date) - new Date(b.date)).forEach(p => { 
-                    const cat = self.getCategoryById(p.category); 
-                    html += '<div style="background:var(--input-bg); border-radius:12px; padding:12px 16px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; gap:12px;">'; 
-                    html += '<div style="flex:1;"><div style="font-weight:600;">' + self.escapeHtml(p.description) + '</div>'; 
-                    html += '<div style="font-size:0.8rem; color:var(--text-secondary); display:flex; gap:10px;"><span>' + self.formatDate(p.date) + '</span><span style="color:' + cat.color + ';">● ' + self.escapeHtml(cat.name) + '</span></div></div>'; 
-                    html += '<div style="font-weight:700;">' + self.formatCurrency(Math.abs(p.amount)) + '</div>'; 
-                    html += '<button class="btn btn-danger btn-small" onclick="smartwallet.deleteTransaction(' + p.id + '); smartwallet.openInvoice(\'' + cardId + '\')">🗑️</button></div>'; 
-                }); 
-            } 
-            html += '</div>'; 
-            html += '<div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:20px;">'; 
-            html += '<button class="btn btn-success" onclick="smartwallet.payInvoice(\'' + cardId + '\')">💰 Pagar Fatura</button>'; 
-            html += '<button class="btn btn-secondary" onclick="closeInvoiceModal()">Fechar</button></div>'; 
-            document.getElementById('invoiceContent').innerHTML = html; document.getElementById('invoiceModal').classList.add('active'); 
+
+        openInvoice(cardId) {
+            const card = this.getCardById(cardId); if (!card) return;
+            const period = this.getInvoicePeriod(card);
+            const purchases = this.getCardTransactionsForPeriod(card.id, period.startDate, period.closingDate);
+            const total = this.calculateInvoiceTotal(purchases); const minimum = total * 0.15; const available = card.limit - total; const self = this;
+            document.getElementById('invoiceTitle').textContent = 'Fatura - ' + card.name;
+            let html = '<div style="display:flex; justify-content:space-between; margin-bottom:16px; flex-wrap:wrap; gap:10px;">';
+            html += '<div><div style="font-size:0.85rem; color:var(--text-secondary);">Período</div><div style="font-weight:600;">' + this.formatDate(period.startDate.toISOString().split('T')[0]) + ' - ' + this.formatDate(period.closingDate.toISOString().split('T')[0]) + '</div></div>';
+            html += '<div style="text-align:right;"><div style="font-size:0.85rem; color:var(--text-secondary);">Vencimento</div><div style="font-weight:600; color:var(--warning-color);">' + this.formatDate(period.dueDate.toISOString().split('T')[0]) + '</div></div></div>';
+            html += '<div style="background:var(--input-bg); border-radius:14px; padding:16px; margin-bottom:16px;">';
+            html += '<div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border-color);"><span style="color:var(--text-secondary);">Limite Total</span><span style="font-weight:600;">' + this.formatCurrency(card.limit) + '</span></div>';
+            html += '<div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border-color);"><span style="color:var(--text-secondary);">Total da Fatura</span><span style="font-weight:600; color:var(--danger-color);">' + this.formatCurrency(total) + '</span></div>';
+            html += '<div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border-color);"><span style="color:var(--text-secondary);">Mínimo (15%)</span><span style="font-weight:600;">' + this.formatCurrency(minimum) + '</span></div>';
+            html += '<div style="display:flex; justify-content:space-between; padding:12px 0 0 0; margin-top:4px; border-top:2px solid var(--border-color); font-weight:700;"><span>Disponível</span><span style="color:var(--success-color);">' + this.formatCurrency(available) + '</span></div></div>';
+            html += '<div style="display:flex; justify-content:space-between; margin-bottom:12px; flex-wrap:wrap; gap:10px;">';
+            html += '<h3 style="font-size:1.1rem;">Compras (' + purchases.length + ')</h3>';
+            html += '<div style="display:flex; gap:8px;">';
+            html += '<button class="btn btn-secondary btn-small" onclick="smartwallet.exportInvoiceCSV(\'' + cardId + '\')">📥 CSV</button>';
+            html += '<button class="btn btn-secondary btn-small" onclick="smartwallet.printInvoicePDF(\'' + cardId + '\')">🖨️ PDF</button></div></div>';
+            html += '<div>';
+            if (purchases.length === 0) { html += '<p style="text-align:center; padding:20px; color:var(--text-secondary);">Nenhuma compra neste período.</p>'; }
+            else {
+                purchases.sort((a,b) => new Date(a.date) - new Date(b.date)).forEach(p => {
+                    const cat = self.getCategoryById(p.category);
+                    html += '<div style="background:var(--input-bg); border-radius:12px; padding:12px 16px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; gap:12px;">';
+                    html += '<div style="flex:1;"><div style="font-weight:600;">' + self.escapeHtml(p.description) + '</div>';
+                    html += '<div style="font-size:0.8rem; color:var(--text-secondary); display:flex; gap:10px;"><span>' + self.formatDate(p.date) + '</span><span style="color:' + cat.color + ';">● ' + self.escapeHtml(cat.name) + '</span></div></div>';
+                    html += '<div style="font-weight:700;">' + self.formatCurrency(Math.abs(p.amount)) + '</div>';
+                    html += '<button class="btn btn-danger btn-small" onclick="smartwallet.deleteTransaction(' + p.id + '); smartwallet.openInvoice(\'' + cardId + '\')">🗑️</button></div>';
+                });
+            }
+            html += '</div>';
+            html += '<div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:20px;">';
+            html += '<button class="btn btn-success" onclick="smartwallet.payInvoice(\'' + cardId + '\')">💰 Pagar Fatura</button>';
+            html += '<button class="btn btn-secondary" onclick="closeInvoiceModal()">Fechar</button></div>';
+            document.getElementById('invoiceContent').innerHTML = html; document.getElementById('invoiceModal').classList.add('active');
         }
-        
+
         payInvoice(cardId) { const card = this.getCardById(cardId); if (!card) return; const period = this.getInvoicePeriod(card); const purchases = this.getCardTransactionsForPeriod(card.id, period.startDate, period.closingDate); const total = this.calculateInvoiceTotal(purchases); if (total <= 0) { this.showToast('Fatura sem valor'); return; } if (!confirm('Pagar fatura de ' + this.formatCurrency(total) + '?')) return; this.transactions.push({ id: this.generateUniqueId(), date: new Date().toISOString().split('T')[0], amount: -total, category: 'servicos', description: 'Pagamento Fatura ' + card.name, statusOk: false, paymentMethod: 'pix', accountId: '' }); this.clearCache(); this.saveTransactions(); this.render(); this.updateCharts(); this.updateAlertBadge(); this.showToast('Pagamento registrado!'); }
-        
+
         exportInvoiceCSV(cardId) { const card = this.getCardById(cardId); if (!card) return; const period = this.getInvoicePeriod(card); const purchases = this.getCardTransactionsForPeriod(card.id, period.startDate, period.closingDate); const self = this; let csv = '\ufeffFATURA - ' + card.name + '\n'; csv += 'Período:;' + this.formatDate(period.startDate.toISOString().split('T')[0]) + ' a ' + this.formatDate(period.closingDate.toISOString().split('T')[0]) + '\n'; csv += 'Vencimento:;' + this.formatDate(period.dueDate.toISOString().split('T')[0]) + '\n\n'; csv += 'Data;Descrição;Categoria;Valor\n'; purchases.forEach(p => { const cat = self.getCategoryById(p.category); csv += p.date + ';"' + (p.description || '').replace(/"/g,'""') + '";"' + cat.name + '";' + Math.abs(p.amount).toFixed(2) + '\n'; }); const total = this.calculateInvoiceTotal(purchases); csv += '\nTOTAL DA FATURA;;;' + this.formatCurrency(total) + '\n'; const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = this.generateTimestamp() + '_fatura_' + card.name.replace(/\s+/g,'_') + '.csv'; a.click(); this.showToast('Fatura exportada!'); }
-        
+
         printInvoicePDF(cardId) { const card = this.getCardById(cardId); if (!card) return; const period = this.getInvoicePeriod(card); const purchases = this.getCardTransactionsForPeriod(card.id, period.startDate, period.closingDate); const total = this.calculateInvoiceTotal(purchases); const self = this; const printWindow = window.open('', '_blank'); const rows = purchases.sort((a,b) => new Date(a.date) - new Date(b.date)).map(p => { const cat = self.getCategoryById(p.category); return '<tr><td>' + self.formatDate(p.date) + '</td><td>' + self.escapeHtml(p.description) + '</td><td>' + self.escapeHtml(cat.name) + '</td><td style="text-align:right;">' + self.formatCurrency(Math.abs(p.amount)) + '</td></tr>'; }).join(''); printWindow.document.write('<!DOCTYPE html><html><head><title>' + this.generateTimestamp() + '_fatura_' + card.name + '</title><style>body{font-family:Arial,sans-serif;padding:40px;max-width:800px;margin:0 auto;}.header{border-bottom:3px solid #6366f1;padding-bottom:20px;margin-bottom:30px;}.header h1{color:#6366f1;margin:0 0 5px 0;}table{width:100%;border-collapse:collapse;}th,td{padding:10px;text-align:left;border-bottom:1px solid #e5e7eb;}th{background:#f1f5f9;}.total{font-weight:700;font-size:1.2rem;}.footer{margin-top:40px;padding-top:20px;border-top:2px solid #6366f1;font-size:0.85rem;color:#64748b;text-align:center;}@media print{body{padding:20px;}}</style></head><body>'); printWindow.document.write('<div class="header"><h1>Fatura - ' + this.escapeHtml(card.name) + '</h1><div style="color:#64748b;">' + this.escapeHtml(card.brand) + ' •••• ' + this.escapeHtml(card.last4 || '****') + '</div></div>'); printWindow.document.write('<p><strong>Período:</strong> ' + this.formatDate(period.startDate.toISOString().split('T')[0]) + ' a ' + this.formatDate(period.closingDate.toISOString().split('T')[0]) + '</p>'); printWindow.document.write('<p><strong>Vencimento:</strong> ' + this.formatDate(period.dueDate.toISOString().split('T')[0]) + '</p>'); printWindow.document.write('<table><thead><tr><th>Data</th><th>Descrição</th><th>Categoria</th><th>Valor</th></tr></thead><tbody>' + rows + '</tbody>'); printWindow.document.write('<tfoot><tr class="total"><td colspan="3" style="text-align:right;">TOTAL:</td><td>' + this.formatCurrency(total) + '</td></tr></tfoot></table>'); printWindow.document.write('<div class="footer">Smart Wallet • Gerado em ' + new Date().toLocaleString('pt-BR') + '<br>Idealizado por RogerElizar™</div>'); printWindow.document.write('</body></html>'); printWindow.document.close(); setTimeout(() => printWindow.print(), 250); }
 
         exportCSV() { const mt = this.getMonthTransactions(); if (!mt.length) { this.showToast('Nenhuma transação'); return; } const self = this; let csv = '\ufeffData;Descrição;Categoria;Tipo;Pagamento;Status;Valor\n'; mt.sort((a,b) => new Date(a.date) - new Date(b.date)).forEach(t => { const c = self.getCategoryById(t.category); const status = t.statusOk ? 'Concluído' : 'Pendente'; const payment = self.getPaymentMethodName(t.paymentMethod); csv += t.date + ';"' + (t.description || '').replace(/"/g,'""') + '";"' + c.name + '";' + (t.amount > 0 ? 'Receita' : 'Despesa') + ';"' + payment + '";' + status + ';' + Math.abs(t.amount).toFixed(2) + '\n'; }); const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = this.generateTimestamp() + '_extrato_' + this.formatMonthYear(this.currentMonth) + '.csv'; a.click(); this.showToast('CSV exportado!'); closeExportModal(); }
-        
-        printExtratoPDF() { const filtered = this.getFilteredTransactions(); if (!filtered.length) { this.showToast('Nenhuma transação para imprimir'); return; } const months = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro']; const period = months[this.currentMonth.getMonth()] + ' de ' + this.currentMonth.getFullYear(); let totalReceitas = 0, totalDespesas = 0; const sorted = filtered.slice().sort((a, b) => new Date(a.date) - new Date(b.date)); sorted.forEach(t => { if (t.amount > 0) totalReceitas += t.amount; else totalDespesas += Math.abs(t.amount); }); const saldo = totalReceitas - totalDespesas; const rowsHtml = sorted.map(t => { const cat = this.getCategoryById(t.category); const acc = this.accounts.find(a => a.id === t.accountId); return '<tr><td>' + this.formatDate(t.date) + '</td><td>' + this.escapeHtml(t.description || '-') + '</td><td><span style="background:' + cat.color + ';color:white;padding:2px 6px;border-radius:8px;font-size:8pt;">' + this.escapeHtml(cat.name) + '</span></td><td>' + (acc ? this.escapeHtml(acc.name) : '-') + '</td><td>' + this.getPaymentMethodName(t.paymentMethod) + '</td><td style="color:' + (t.statusOk ? '#10b981' : '#f59e0b') + ';font-weight:600;">' + (t.statusOk ? 'Concluído' : 'Pendente') + '</td><td style="color:' + (t.amount >= 0 ? '#10b981' : '#ef4444') + ';font-weight:600;text-align:right;">' + this.formatCurrency(t.amount) + '</td></tr>'; }).join(''); const html = '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>' + this.generateTimestamp() + '_extrato_' + period.replace(/ de /g,'_').replace(' ','') + '</title><style>@page { size: A4; margin: 2cm; }body { font-family: Arial, sans-serif; color: #1e293b; padding: 20px; max-width: 900px; margin: 0 auto; }.header { text-align: center; border-bottom: 3px solid #6366f1; padding-bottom: 20px; margin-bottom: 30px; }.header h1 { color: #6366f1; font-size: 28pt; margin: 0 0 8px 0; }table { width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 9pt; }th { background: #6366f1; color: white; padding: 10px 8px; text-align: left; font-weight: 600; }td { padding: 8px; border-bottom: 1px solid #e5e7eb; }tr:nth-child(even) { background: #f8fafc; }.summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; }.summary-box { background: #f8fafc; border-radius: 8px; padding: 16px; text-align: center; border: 2px solid #e5e7eb; }.summary-box .label { font-size: 9pt; color: #64748b; text-transform: uppercase; margin-bottom: 6px; }.summary-box .value { font-size: 16pt; font-weight: bold; }.summary-box.receitas .value { color: #10b981; }.summary-box.despesas .value { color: #ef4444; }.summary-box.saldo .value { color: #6366f1; }.footer { margin-top: 40px; padding-top: 20px; border-top: 2px solid #6366f1; text-align: center; font-size: 9pt; color: #64748b; }.no-print { text-align:center; margin-top:24px; }@media print { body { padding: 0; } .no-print { display: none; } }</style></head><body><div class="header"><h1>Smart Wallet</h1><p style="color:#64748b;">Controle Financeiro Pessoal Inteligente</p><p style="color:#6366f1;font-size:14pt;font-weight:bold;margin:12px 0 0 0;">Extrato do Mês: ' + period + '</p></div><table><thead><tr><th>Data</th><th>Descrição</th><th>Categoria</th><th>Conta</th><th>Pagamento</th><th>Status</th><th style="text-align:right;">Valor</th></tr></thead><tbody>' + rowsHtml + '</tbody></table><div class="summary"><div class="summary-box receitas"><div class="label">Total de Receitas</div><div class="value">' + this.formatCurrency(totalReceitas) + '</div></div><div class="summary-box despesas"><div class="label">Total de Despesas</div><div class="value">' + this.formatCurrency(totalDespesas) + '</div></div><div class="summary-box saldo"><div class="label">Saldo do Mês</div><div class="value">' + this.formatCurrency(saldo) + '</div></div></div><div class="footer"><p>Smart Wallet - Extrato gerado automaticamente</p><p style="font-weight:600;color:#6366f1;margin-top:6px;">Idealizado por RogerElizar™ | rogerelizar@gmail.com</p></div><div class="no-print"><button onclick="window.print()" style="background:#6366f1;color:white;border:none;padding:12px 24px;border-radius:8px;font-size:11pt;cursor:pointer;">🖨️ Imprimir / Salvar PDF</button></div></body></html>'; const printWindow = window.open('', '_blank'); if (!printWindow) { alert('Por favor, permita popups para imprimir o extrato.'); return; } printWindow.document.write(html); printWindow.document.close(); setTimeout(() => { printWindow.focus(); printWindow.print(); }, 300); }
 
-        exportBackup() { try { const backup = { version: '4.0.1', exportDate: new Date().toISOString(), appName: 'Smart Wallet', transactions: this.transactions, categories: this.categories, accounts: this.accounts, cards: this.cards, investments: this.investments, darkMode: this.darkMode, privacyOn: this.privacyOn }; const jsonString = JSON.stringify(backup, null, 2); const blob = new Blob(['\ufeff' + jsonString], { type: 'application/json;charset=utf-8' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = this.generateTimestamp() + '_backup.json'; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(a.href); this.showToast('✅ Backup exportado!'); document.getElementById('mainMenu').classList.remove('active'); } catch (e) { this.showToast('❌ Erro: ' + e.message); } }
-        
+        printExtratoPDF() { const filtered = this.getFilteredTransactions(); if (!filtered.length) { this.showToast('Nenhuma transação para imprimir'); return; } const months = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro']; const period = months[this.currentMonth.getMonth()] + ' de ' + this.currentMonth.getFullYear(); let totalReceitas = 0, totalDespesas = 0; const sorted = filtered.slice().sort((a, b) => new Date(a.date) - new Date(b.date)); sorted.forEach(t => { if (t.amount > 0) totalReceitas += t.amount; else totalDespesas += Math.abs(t.amount); }); const saldo = totalReceitas - totalDespesas; const rowsHtml = sorted.map(t => { const cat = this.getCategoryById(t.category); const acc = this.accounts.find(a => a.id === t.accountId); return '<tr><td>' + this.formatDate(t.date) + '</td><td>' + this.escapeHtml(t.description || '-') + '</td><td><span style="background:' + cat.color + ';color:white;padding:2px 6px;border-radius:8px;font-size:8pt;">' + this.escapeHtml(cat.name) + '</span></td><td>' + (acc ? this.escapeHtml(acc.name) : '-') + '</td><td>' + this.getPaymentMethodName(t.paymentMethod) + '</td><td style="color:' + (t.statusOk ? '#10b981' : '#f59e0b') + ';font-weight:600;">' + (t.statusOk ? 'Concluído' : 'Pendente') + '</td><td style="color:' + (t.amount >= 0 ? '#10b981' : '#ef4444') + ';font-weight:600;text-align:right;">' + this.formatCurrency(t.amount) + '</td></tr>'; }).join(''); const html = '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>' + this.generateTimestamp() + '_extrato_' + period.replace(/ de /g,'_').replace(' ','') + '</title><style>@page { size: A4; margin: 2cm; }body { font-family: Arial, sans-serif; color: #1e293b; padding: 20px; max-width: 900px; margin: 0 auto; }.header { text-align: center; border-bottom: 3px solid #6366f1; padding-bottom: 20px; margin-bottom: 30px; }.header h1 { color: #6366f1; font-size: 28pt; margin: 0 0 8px 0; }table { width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 9pt; }th { background: #6366f1; color: white; padding: 10px 8px; text-align: left; font-weight: 600; }td { padding: 8px; border-bottom: 1px solid #e5e7eb; }tr:nth-child(even) { background: #f8fafc; }.summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; }.summary-box { background: #f8fafc; border-radius: 8px; padding: 16px; text-align: center; border: 2px solid #e5e7eb; }.summary-box .label { font-size: 9pt; color: #64748b; text-transform: uppercase; margin-bottom: 6px; }.summary-box .value { font-size: 16pt; font-weight: bold; }.summary-box.receitas .value { color: #10b981; }.summary-box.despesas .value { color: #ef4444; }.summary-box.saldo .value { color: #6366f1; }.footer { margin-top: 40px; padding-top: 20px; border-top: 2px solid #6366f1; text-align: center; font-size: 9pt; color: #64748b; }.no-print { text-align:center; margin-top:24px; }@media print { body { padding: 0; } .no-print { display: none; } }</style></head><body><div class="header"><h1>Smart Wallet</h1><p style="color:#64748b;">Controle Financeiro Pessoal Inteligente</p><p style="color:#6366f1;font-size:14pt;font-weight:bold;margin:12px 0 0 0;">Extrato do Mês: ' + period + '</p></div><table><thead><tr><th>Data</th><th>Descrição</th><th>Categoria</th><th>Conta</th><th>Pagamento</th><th>Status</th><th style="text-align:right;">Valor</th></tr></thead><tbody>' + rowsHtml + '</tbody></table><div class="summary"><div class="summary-box receitas"><div class="label">Total de Receitas</div><div class="value">' + this.formatCurrency(totalReceitas) + '</div></div><div class="summary-box despesas"><div class="label">Total de Despesas</div><div class="value">' + this.formatCurrency(totalDespesas) + '</div></div><div class="summary-box saldo"><div class="label">Saldo do Mês</div><div class="value">' + this.formatCurrency(saldo) + '</div></div></div><div class="footer"><p>Smart Wallet - Extrato gerado automaticamente</p><p style="font-weight:600;color:#6366f1;margin-top:6px;">Idealizado por RogerElizar™ | rogerelizar@gmail.com</p></div><div class="no-print"><button onclick="window.print()" style="background:#6366f1;color:white;border:none;padding:12px 24px;border-radius:8px;font-size:11pt;cursor:pointer;">️ Imprimir / Salvar PDF</button></div></body></html>'; const printWindow = window.open('', '_blank'); if (!printWindow) { alert('Por favor, permita popups para imprimir o extrato.'); return; } printWindow.document.write(html); printWindow.document.close(); setTimeout(() => { printWindow.focus(); printWindow.print(); }, 300); }
+
+        exportBackup() { try { const backup = { version: '4.0.3', exportDate: new Date().toISOString(), appName: 'Smart Wallet', transactions: this.transactions, categories: this.categories, accounts: this.accounts, cards: this.cards, investments: this.investments, darkMode: this.darkMode, privacyOn: this.privacyOn }; const jsonString = JSON.stringify(backup, null, 2); const blob = new Blob(['\ufeff' + jsonString], { type: 'application/json;charset=utf-8' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = this.generateTimestamp() + '_backup.json'; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(a.href); this.showToast('✅ Backup exportado!'); document.getElementById('mainMenu').classList.remove('active'); } catch (e) { this.showToast(' Erro: ' + e.message); } }
+
         importBackup() { if (!window._pendingBackupData) { this.showToast('⚠️ Selecione um arquivo'); return; } try { let cleanData = window._pendingBackupData; if (cleanData.charCodeAt(0) === 0xFEFF) cleanData = cleanData.substring(1); cleanData = cleanData.trim(); if (!cleanData) { this.showToast('❌ Arquivo vazio!'); return; } const data = JSON.parse(cleanData); if (!data || typeof data !== 'object') { this.showToast('❌ Estrutura inválida'); return; } const transactions = Array.isArray(data.transactions) ? data.transactions : []; const categories = Array.isArray(data.categories) ? data.categories : this.categories; const accounts = Array.isArray(data.accounts) ? data.accounts : []; const cards = Array.isArray(data.cards) ? data.cards : []; const investments = Array.isArray(data.investments) ? data.investments : []; if (!confirm('⚠️ Substituir TODOS os dados?')) return this.showToast('Cancelado'); this.transactions = transactions; this.categories = categories; this.accounts = accounts; this.cards = cards; this.investments = investments; if (typeof data.darkMode === 'boolean') this.darkMode = data.darkMode; if (typeof data.privacyOn === 'boolean') this.privacyOn = data.privacyOn; this.clearCache(); this.saveTransactions(); this.saveCategories(); this.saveAccounts(); this.saveCards(); this.saveInvestments(); localStorage.setItem('smartwallet_dark', this.darkMode); localStorage.setItem('smartwallet_privacy', this.privacyOn); this.populateCategorySelects(); this.populatePaymentMethodSelects(); this.populateAccountSelects(); this.applyTheme(); this.applyPrivacy(); this.render(); this.updateCharts(); this.updateAlertBadge(); closeImportBackupModal(); this.showToast('✅ Backup restaurado!'); window._pendingBackupData = null; } catch (e) { this.showToast('❌ Erro: ' + e.message); } }
-        
+
         importCSV() { if (!window._pendingCsvData) { this.showToast('Selecione um arquivo CSV'); return; } const replace = document.getElementById('csvReplaceData').checked; const lines = window._pendingCsvData.split(/\r?\n/).filter(l => l.trim()); if (lines.length < 2) { this.showToast('CSV vazio ou inválido'); return; } const header = lines[0].toLowerCase(); if (header.indexOf('data') === -1 || header.indexOf('valor') === -1) { this.showToast('Formato CSV inválido'); return; } const self = this; const transactionsToAdd = []; let skipped = 0; for (let i = 1; i < lines.length; i++) { const cols = this.parseCSVLine(lines[i]); if (cols.length < 6) { skipped++; continue; } const [date, desc, catName, tipo, payment, status, valor] = cols; if (!date || !valor) { skipped++; continue; } const category = this.findCategoryByName(catName); const amount = parseFloat(valor.replace(',', '.')); if (isNaN(amount)) { skipped++; continue; } const signedAmount = tipo.toLowerCase().indexOf('despesa') !== -1 ? -Math.abs(amount) : Math.abs(amount); let paymentMethod = 'pix'; const payLower = (payment || '').toLowerCase(); if (payLower.indexOf('pix') !== -1) paymentMethod = 'pix'; else if (payLower.indexOf('debit') !== -1 || payLower.indexOf('débito') !== -1) paymentMethod = 'debit'; else if (payLower.indexOf('auto') !== -1) paymentMethod = 'auto'; else if (payLower.indexOf('transf') !== -1) paymentMethod = 'transfer'; transactionsToAdd.push({ id: this.generateUniqueId(), date, amount: signedAmount, category: category ? category.id : '', description: desc, statusOk: status.toLowerCase().indexOf('conclu') !== -1, paymentMethod, accountId: '' }); } if (replace) { const m = this.currentMonth.getMonth(), y = this.currentMonth.getFullYear(); this.transactions = this.transactions.filter(t => { const d = new Date(t.date + 'T12:00:00'); return !(d.getMonth() === m && d.getFullYear() === y); }); } this.transactions = this.transactions.concat(transactionsToAdd); this.clearCache(); this.saveTransactions(); this.render(); this.updateCharts(); this.updateAlertBadge(); closeImportCsvModal(); this.showToast(transactionsToAdd.length + ' transações importadas!' + (skipped > 0 ? ' (' + skipped + ' ignoradas)' : '')); window._pendingCsvData = null; }
-        
+
         parseCSVLine(line) { const result = []; let current = ''; let inQuotes = false; for (let i = 0; i < line.length; i++) { const c = line[i]; if (c === '"') { if (inQuotes && line[i+1] === '"') { current += '"'; i++; } else { inQuotes = !inQuotes; } } else if (c === ';' && !inQuotes) { result.push(current.trim()); current = ''; } else { current += c; } } result.push(current.trim()); return result; }
-        
+
         clearAllData() { this.transactions = []; this.categories = JSON.parse(JSON.stringify(DEFAULT_CATEGORIES)); this.accounts = []; this.cards = []; this.investments = []; this.clearCache(); this.saveTransactions(); this.saveCategories(); this.saveAccounts(); this.saveCards(); this.saveInvestments(); this.populateCategorySelects(); this.populatePaymentMethodSelects(); this.populateAccountSelects(); this.render(); this.updateCharts(); this.updateAlertBadge(); closeClearDataModal(); this.showToast('🗑️ Dados apagados!'); }
 
         saveAccount() { const id = document.getElementById('accountEditId').value; const name = document.getElementById('accountName').value.trim(); const type = document.getElementById('accountType').value; const balance = parseFloat(document.getElementById('accountBalance').value) || 0; const color = document.getElementById('accountColor').value; if (!name) { this.showToast('Informe o nome'); return; } if (id) { for (let i = 0; i < this.accounts.length; i++) { if (this.accounts[i].id === id) { this.accounts[i] = { id, name, type, balance, color }; break; } } } else { this.accounts.push({ id: this.generateUniqueId(), name, type, balance, color }); } this.clearCache(); this.saveAccounts(); this.populateAccountSelects(); this.renderAccountsList(); this.render(); closeNewAccountModal(); this.showToast(id ? 'Conta atualizada!' : 'Conta cadastrada!'); }
         deleteAccount(id) { if (!confirm('Excluir esta conta?')) return; this.accounts = this.accounts.filter(a => a.id !== id); this.clearCache(); this.saveAccounts(); this.populateAccountSelects(); this.renderAccountsList(); this.render(); this.showToast('Conta removida!'); }
         editAccount(id) { let acc = null; for (let i = 0; i < this.accounts.length; i++) { if (this.accounts[i].id === id) { acc = this.accounts[i]; break; } } if (!acc) return; document.getElementById('accountEditId').value = acc.id; document.getElementById('accountName').value = acc.name; document.getElementById('accountType').value = acc.type; document.getElementById('accountBalance').value = acc.balance; document.getElementById('accountColor').value = acc.color; document.getElementById('newAccountTitle').textContent = 'Editar Conta'; document.getElementById('newAccountModal').classList.add('active'); }
-renderAccountsList() { 
-    const container = document.getElementById('accountsList'); 
-    if (!container) return; 
-    if (!this.accounts.length) { 
-        container.innerHTML = '<div style="text-align:center; padding:40px 20px; color:var(--text-secondary);"><div style="font-size:3rem; margin-bottom:12px; opacity:0.5;">🏦</div><h3>Nenhuma conta cadastrada</h3></div>'; 
-        return; 
-    } 
-    const self = this; 
-    container.innerHTML = '<div class="accounts-grid">' + this.accounts.map(acc => { 
-        // 🆕 Para contas investment, mostrar aplicações vinculadas
-        let investmentsHtml = '';
-        if (acc.type === 'investment') {
-            const linkedInvestments = self.investments.filter(inv => inv.accountId === acc.id);
-            if (linkedInvestments.length > 0) {
-                investmentsHtml = '<div style="margin-top:12px; padding-top:12px; border-top:1px solid rgba(255,255,255,0.2); font-size:0.85rem;">';
-                investmentsHtml += '<div style="opacity:0.9; margin-bottom:6px;">📊 Aplicações vinculadas:</div>';
-                linkedInvestments.forEach(inv => {
-                    const typeLabels = { cdb: 'CDB', tesouro: 'Tesouro', lci: 'LCI/LCA', fundo: 'Fundo', acao: 'Ações', fiis: 'FIIs', poupanca: 'Poupança', outro: 'Outro' };
-                    investmentsHtml += '<div style="display:flex; justify-content:space-between; margin-bottom:4px;">';
-                    investmentsHtml += '<span>' + (typeLabels[inv.type] || inv.type) + ': ' + self.escapeHtml(inv.name) + '</span>';
-                    investmentsHtml += '<span>' + self.formatCurrency(inv.current) + '</span>';
-                    investmentsHtml += '</div>';
-                });
-                investmentsHtml += '</div>';
-            }
-        }
-        
-        return '<div class="account-card" style="background:linear-gradient(135deg, ' + acc.color + ' 0%, ' + self.adjustColor(acc.color, -30) + ' 100%);">' +
-            '<div class="account-card-actions"><button class="cc-action-btn" onclick="event.stopPropagation(); smartwallet.editAccount(\'' + acc.id + '\')">✏️</button><button class="cc-action-btn" onclick="event.stopPropagation(); smartwallet.deleteAccount(\'' + acc.id + '\')">🗑️</button></div>' +
-            '<div class="account-card-header"><div class="account-card-type">' + (acc.type === 'checking' ? '💳 Conta Corrente' : '📈 Investimento') + '</div></div>' +
-            '<div class="account-card-name">' + self.escapeHtml(acc.name) + '</div>' +
-            '<div class="account-card-balance">' + self.formatCurrency(acc.balance) + '</div>' +
-            investmentsHtml +
-        '</div>'; 
-    }).join('') + '</div>'; 
-}        
-renderInvestmentsModal() { 
-    const container = document.getElementById('investmentsContent'); 
-    if (!container) return; 
-    const self = this; 
-    const typeLabels = { cdb: 'CDB', tesouro: 'Tesouro Direto', lci: 'LCI/LCA', fundo: 'Fundo', acao: 'Ações', fiis: 'FIIs', poupanca: 'Poupança', outro: 'Outro' }; 
-    
-    if (!this.investments.length) { 
-        container.innerHTML = '<div style="text-align:center; padding:40px 20px; color:var(--text-secondary);"><div style="font-size:3rem; margin-bottom:12px; opacity:0.5;">📈</div><h3>Nenhuma aplicação cadastrada</h3></div>'; 
-        return; 
-    } 
-    
-    let totalInitial = 0, totalCurrent = 0; 
-    let html = '<div>'; 
-    
-    this.investments.forEach(inv => { 
-        const profit = inv.current - inv.initial; 
-        const profitPct = inv.initial > 0 ? (profit / inv.initial * 100) : 0; 
-        totalInitial += inv.initial; 
-        totalCurrent += inv.current; 
-        
-        // 🆕 Mostrar conta vinculada
-        let accountInfo = '';
-        if (inv.accountId) {
-            const linkedAccount = self.accounts.find(a => a.id === inv.accountId);
-            if (linkedAccount) {
-                accountInfo = ' • 🏦 ' + self.escapeHtml(linkedAccount.name);
-            }
-        }
-        
-        html += '<div class="investment-card">';
-        html += '<div class="investment-card-header">';
-        html += '<div>';
-        html += '<div class="investment-card-title">' + self.escapeHtml(inv.name) + '</div>';
-        html += '<div class="investment-card-type">' + (typeLabels[inv.type] || inv.type) + ' • Aplicado em ' + self.formatDate(inv.date) + accountInfo + '</div>';
-        html += '</div>';
-        html += '<div class="investment-card-actions">';
-        html += '<button class="btn btn-secondary btn-small" onclick="smartwallet.openUpdateInvestment(\'' + inv.id + '\')">💰 Atualizar</button>';
-        html += '<button class="btn btn-secondary btn-small" onclick="smartwallet.editInvestment(\'' + inv.id + '\')">✏️</button>';
-        html += '<button class="btn btn-danger btn-small" onclick="smartwallet.deleteInvestment(\'' + inv.id + '\')">🗑️</button>';
-        html += '</div></div>';
-        
-        html += '<div class="investment-card-values">';
-        html += '<div class="investment-value-item"><div class="investment-value-label">Valor Inicial</div><div class="investment-value-amount privacy-value">' + self.formatCurrency(inv.initial) + '</div></div>';
-        html += '<div class="investment-value-item"><div class="investment-value-label">Valor Atual</div><div class="investment-value-amount privacy-value">' + self.formatCurrency(inv.current) + '</div></div>';
-        html += '<div class="investment-value-item"><div class="investment-value-label">Rendimento</div><div class="investment-value-amount privacy-value ' + (profit >= 0 ? 'positive' : 'negative') + '">' + profitPct.toFixed(2) + '% (' + self.formatCurrency(profit) + ')</div></div>';
-        html += '</div>';
-        
-        if (inv.rate > 0) {
-            html += '<div style="font-size:0.85rem; color:var(--text-secondary);" class="privacy-value">Taxa: ' + inv.rate + '% ao ano</div>';
-        }
-        
-        html += '</div>'; 
-    }); 
-    
-    html += '</div>'; 
-    
-    const totalProfit = totalCurrent - totalInitial; 
-    const totalProfitPct = totalInitial > 0 ? (totalProfit / totalInitial * 100) : 0; 
-    
-    html += '<div class="investment-summary">';
-    html += '<h3> Resumo Geral</h3>';
-    html += '<div class="investment-summary-grid">';
-    html += '<div class="investment-summary-item"><div class="investment-summary-label">Total Investido</div><div class="investment-summary-value privacy-value">' + this.formatCurrency(totalInitial) + '</div></div>';
-    html += '<div class="investment-summary-item"><div class="investment-summary-label">Valor Atual</div><div class="investment-summary-value privacy-value">' + this.formatCurrency(totalCurrent) + '</div></div>';
-    html += '<div class="investment-summary-item"><div class="investment-summary-label">Rendimento Total</div><div class="investment-summary-value privacy-value" style="color:' + (totalProfit >= 0 ? 'var(--success-color)' : 'var(--danger-color)') + ';">' + totalProfitPct.toFixed(2) + '% (' + this.formatCurrency(totalProfit) + ')</div></div>';
-    html += '</div></div>'; 
-    
-    container.innerHTML = html; 
-}
+        renderAccountsList() { const container = document.getElementById('accountsList'); if (!container) return; if (!this.accounts.length) { container.innerHTML = '<div style="text-align:center; padding:40px 20px; color:var(--text-secondary);"><div style="font-size:3rem; margin-bottom:12px; opacity:0.5;">🏦</div><h3>Nenhuma conta cadastrada</h3></div>'; return; } const self = this; container.innerHTML = '<div class="accounts-grid">' + this.accounts.map(acc => { let investmentsHtml = ''; if (acc.type === 'investment') { const linkedInvestments = self.investments.filter(inv => inv.accountId === acc.id); if (linkedInvestments.length > 0) { investmentsHtml = '<div style="margin-top:12px; padding-top:12px; border-top:1px solid rgba(255,255,255,0.2); font-size:0.85rem;">'; investmentsHtml += '<div style="opacity:0.9; margin-bottom:6px;"> Aplicações vinculadas:</div>'; linkedInvestments.forEach(inv => { const typeLabels = { cdb: 'CDB', tesouro: 'Tesouro', lci: 'LCI/LCA', fundo: 'Fundo', acao: 'Ações', fiis: 'FIIs', poupanca: 'Poupança', outro: 'Outro' }; investmentsHtml += '<div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>' + (typeLabels[inv.type] || inv.type) + ': ' + self.escapeHtml(inv.name) + '</span><span>' + self.formatCurrency(inv.current) + '</span></div>'; }); investmentsHtml += '</div>'; } } return '<div class="account-card" style="background:linear-gradient(135deg, ' + acc.color + ' 0%, ' + self.adjustColor(acc.color, -30) + ' 100%);"><div class="account-card-actions"><button class="cc-action-btn" onclick="event.stopPropagation(); smartwallet.editAccount(\'' + acc.id + '\')">✏️</button><button class="cc-action-btn" onclick="event.stopPropagation(); smartwallet.deleteAccount(\'' + acc.id + '\')">🗑️</button></div><div class="account-card-header"><div class="account-card-type">' + (acc.type === 'checking' ? '💳 Conta Corrente' : '📈 Investimento') + '</div></div><div class="account-card-name">' + self.escapeHtml(acc.name) + '</div><div class="account-card-balance">' + self.formatCurrency(acc.balance) + '</div>' + investmentsHtml + '</div>'; }).join('') + '</div>'; }
+
+        renderBillsModal() { const container = document.getElementById('billsList'); if (!container) return; const today = new Date(); today.setHours(0, 0, 0, 0); const in3Days = new Date(today); in3Days.setDate(in3Days.getDate() + 3); const self = this; const bills = this.transactions.filter(t => { if (t.statusOk || t.amount >= 0) return false; const tDate = new Date(t.date + 'T12:00:00'); return tDate <= in3Days; }).sort((a, b) => new Date(a.date) - new Date(b.date)); if (bills.length === 0) { container.innerHTML = '<div style="text-align:center; padding:40px 20px; color:var(--text-secondary);"><div style="font-size:3rem; margin-bottom:12px;">✅</div><h3>Nenhuma conta pendente!</h3></div>'; return; } let total = 0; bills.forEach(b => total += Math.abs(b.amount)); let html = '<div style="background:var(--input-bg); border-radius:14px; padding:16px; margin-bottom:16px;">'; html += '<div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border-color);"><span style="color:var(--text-secondary);">Total de contas</span><span style="font-weight:600;">' + bills.length + '</span></div>'; html += '<div style="display:flex; justify-content:space-between; padding:12px 0 0 0; margin-top:4px; border-top:2px solid var(--border-color); font-weight:700; font-size:1.1rem;"><span>Total a pagar</span><span style="color:var(--danger-color);">' + self.formatCurrency(total) + '</span></div></div>'; bills.forEach(bill => { const cat = self.getCategoryById(bill.category); const billDate = new Date(bill.date + 'T12:00:00'); const diffDays = Math.round((billDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)); let daysClass = 'warning', daysText = '', itemClass = ''; if (diffDays < 0) { daysClass = 'overdue'; daysText = Math.abs(diffDays) + 'd atrasada'; itemClass = 'overdue'; } else if (diffDays === 0) { daysClass = 'urgent'; daysText = 'Vence hoje'; itemClass = 'urgent'; } else if (diffDays === 1) { daysClass = 'urgent'; daysText = 'Vence amanhã'; itemClass = 'urgent'; } else { daysText = 'Em ' + diffDays + ' dias'; } html += '<div class="bill-item ' + itemClass + '"><div class="bill-info"><div class="bill-desc">' + self.escapeHtml(bill.description) + '<span class="bill-days ' + daysClass + '">' + daysText + '</span></div><div class="bill-meta"><span>📅 ' + self.formatDate(bill.date) + '</span><span style="color:' + cat.color + ';">● ' + self.escapeHtml(cat.name) + '</span></div></div><div class="bill-amount">' + self.formatCurrency(Math.abs(bill.amount)) + '</div><div style="display:flex; gap:4px;"><button class="btn btn-success btn-small" onclick="smartwallet.markBillAsPaid(' + bill.id + ')">✓</button><button class="btn btn-secondary btn-small" onclick="smartwallet.editTransaction(' + bill.id + '); closeBillsModal();">✏️</button></div></div>'; }); container.innerHTML = html; }
         markBillAsPaid(id) { for (let i = 0; i < this.transactions.length; i++) { if (this.transactions[i].id === id) { this.transactions[i].statusOk = true; break; } } this.clearCache(); this.saveTransactions(); this.render(); this.updateAlertBadge(); this.renderBillsModal(); this.showToast('✓ Conta paga!'); }
 
         updateInvestmentChart() { const section = document.getElementById('investmentsChartSection'); if (!section) return; if (!this.investments.length) { section.style.display = 'none'; return; } section.style.display = 'block'; const colors = this.getChartColors(); const now = new Date(); const monthlyData = {}; for (let i = 5; i >= 0; i--) { const d = new Date(now.getFullYear(), now.getMonth() - i, 1); const key = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0'); monthlyData[key] = { invested: 0, current: 0 }; } const self = this; this.investments.forEach(inv => { const invDate = new Date(inv.date + 'T12:00:00'); const invKey = invDate.getFullYear() + '-' + String(invDate.getMonth() + 1).padStart(2, '0'); Object.keys(monthlyData).forEach(key => { if (key >= invKey) monthlyData[key].invested += inv.initial; }); const currentKey = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0'); if (monthlyData[currentKey]) monthlyData[currentKey].current += inv.current; }); const labels = [], investedData = [], currentData = [], profitPctData = []; Object.keys(monthlyData).forEach(key => { const d = new Date(key + '-01'); const monthNames = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez']; labels.push(monthNames[d.getMonth()] + '/' + d.getFullYear()); const invested = monthlyData[key].invested; const current = monthlyData[key].current || invested; investedData.push(invested); currentData.push(current); profitPctData.push(invested > 0 ? ((current - invested) / invested * 100) : 0); }); if (!this.charts.invest) { const canvas = document.getElementById('investChart'); if (!canvas) return; this.charts.invest = new Chart(canvas.getContext('2d'), { type: 'line', data: { labels, datasets: [ { label: 'Valor Investido (R$)', data: investedData, borderColor: '#94a3b8', backgroundColor: 'rgba(148,163,184,0.1)', tension: 0.4, fill: false, yAxisID: 'y' }, { label: 'Valor Atual (R$)', data: currentData, borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.1)', tension: 0.4, fill: true, yAxisID: 'y' }, { label: 'Rendimento (%)', data: profitPctData, borderColor: '#06b6d4', backgroundColor: 'rgba(6,182,212,0.1)', tension: 0.4, fill: false, yAxisID: 'y1' } ]}, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top', labels: { color: colors.text } } }, scales: { y: { beginAtZero: true, ticks: { color: colors.textSecondary, callback: v => 'R$ ' + v.toLocaleString('pt-BR') }, grid: { color: colors.grid } }, y1: { position: 'right', ticks: { color: colors.textSecondary, callback: v => v + '%' }, grid: { display: false } }, x: { ticks: { color: colors.textSecondary }, grid: { color: colors.grid } } } } }); } else { this.charts.invest.data.labels = labels; this.charts.invest.data.datasets[0].data = investedData; this.charts.invest.data.datasets[1].data = currentData; this.charts.invest.data.datasets[2].data = profitPctData; this.charts.invest.update(); } const summaryEl = document.getElementById('investSummary'); if (summaryEl) { let totalInitial = 0, totalCurrent = 0; this.investments.forEach(inv => { totalInitial += inv.initial; totalCurrent += inv.current; }); const totalProfit = totalCurrent - totalInitial; const totalProfitPct = totalInitial > 0 ? (totalProfit / totalInitial * 100) : 0; summaryEl.innerHTML = '<div class="investment-summary"><h3>📊 Resumo</h3><div class="investment-summary-grid"><div class="investment-summary-item"><div class="investment-summary-label">Total Investido</div><div class="investment-summary-value privacy-value">' + this.formatCurrency(totalInitial) + '</div></div><div class="investment-summary-item"><div class="investment-summary-label">Valor Atual</div><div class="investment-summary-value privacy-value">' + this.formatCurrency(totalCurrent) + '</div></div><div class="investment-summary-item"><div class="investment-summary-label">Rendimento</div><div class="investment-summary-value privacy-value" style="color:' + (totalProfit >= 0 ? 'var(--success-color)' : 'var(--danger-color)') + ';">' + totalProfitPct.toFixed(2) + '% (' + this.formatCurrency(totalProfit) + ')</div></div></div></div>'; } }
 
-saveInvestment() { 
-    const id = document.getElementById('investmentEditId').value; 
-    const name = document.getElementById('investmentName').value.trim(); 
-    const type = document.getElementById('investmentType').value; 
-    const initial = parseFloat(document.getElementById('investmentInitial').value) || 0; 
-    const current = parseFloat(document.getElementById('investmentCurrent').value) || 0; 
-    const date = document.getElementById('investmentDate').value; 
-    const rate = parseFloat(document.getElementById('investmentRate').value) || 0;
-    const selectedAccountId = document.getElementById('investmentAccount').value;
-    const createLinked = document.getElementById('createLinkedAccount').checked;
-    
-    if (!name) { this.showToast('Informe o nome'); return; } 
-    
-    let accountId = selectedAccountId;
-    
-    // 🆕 Se não há conta vinculada e o checkbox está marcado, criar automaticamente
-    if (!accountId && createLinked) {
-        const newAccountId = this.generateUniqueId();
-        this.accounts.push({
-            id: newAccountId,
-            name: name,
-            type: 'investment',
-            balance: current,
-            color: '#10b981'
-        });
-        accountId = newAccountId;
-        this.saveAccounts();
-        this.populateAccountSelects();
-        this.showToast('🏦 Conta de investimento criada automaticamente!');
-    }
-    
-    if (id) { 
-        for (let i = 0; i < this.investments.length; i++) { 
-            if (this.investments[i].id === id) { 
-                this.investments[i] = { id, name, type, initial, current, date, rate, accountId }; 
-                break; 
-            } 
-        } 
-    } else { 
-        this.investments.push({ id: this.generateUniqueId(), name, type, initial, current, date, rate, accountId }); 
-    } 
-    
-    // 🆕 Sincronizar saldo da conta vinculada
-    if (accountId) {
-        for (let i = 0; i < this.accounts.length; i++) {
-            if (this.accounts[i].id === accountId) {
-                this.accounts[i].balance = current;
-                break;
+        saveInvestment() {
+            const id = document.getElementById('investmentEditId').value;
+            const name = document.getElementById('investmentName').value.trim();
+            const type = document.getElementById('investmentType').value;
+            const initial = parseFloat(document.getElementById('investmentInitial').value) || 0;
+            const current = parseFloat(document.getElementById('investmentCurrent').value) || 0;
+            const date = document.getElementById('investmentDate').value;
+            const rate = parseFloat(document.getElementById('investmentRate').value) || 0;
+            const selectedAccountId = document.getElementById('investmentAccount').value;
+            const createLinked = document.getElementById('createLinkedAccount').checked;
+            if (!name) { this.showToast('Informe o nome'); return; }
+            let accountId = selectedAccountId;
+            if (!accountId && createLinked) {
+                const newAccountId = this.generateUniqueId();
+                this.accounts.push({ id: newAccountId, name: name, type: 'investment', balance: current, color: '#10b981' });
+                accountId = newAccountId;
+                this.saveAccounts();
+                this.populateAccountSelects();
+                this.showToast('🏦 Conta de investimento criada automaticamente!');
             }
+            if (id) {
+                for (let i = 0; i < this.investments.length; i++) {
+                    if (this.investments[i].id === id) { this.investments[i] = { id, name, type, initial, current, date, rate, accountId }; break;
+                }
+            }
+            } else { this.investments.push({ id: this.generateUniqueId(), name, type, initial, current, date, rate, accountId }); }
+            if (accountId) {
+                for (let i = 0; i < this.accounts.length; i++) {
+                    if (this.accounts[i].id === accountId) { this.accounts[i].balance = current; break; }
+                }
+                this.saveAccounts();
+            }
+            this.clearCache(); this.saveInvestments(); this.renderInvestmentsModal(); this.updateInvestmentChart(); this.renderAccountsList(); this.updateDashboard();
+            closeNewInvestmentModal(); this.showToast(id ? 'Aplicação atualizada!' : 'Aplicação cadastrada!');
         }
-        this.saveAccounts();
-    }
- 
-    this.clearCache(); 
-    this.saveInvestments(); 
-    this.renderInvestmentsModal(); 
-    this.updateInvestmentChart(); 
-    this.renderAccountsList();
-    this.updateDashboard();
-    closeNewInvestmentModal(); 
-    this.showToast(id ? 'Aplicação atualizada!' : 'Aplicação cadastrada!'); 
-// ===== FUNÇÃO DE IMPRESSÃO DO MANUAL =====
+
+        deleteInvestment(id) { if (!confirm('Excluir esta aplicação?')) return; this.investments = this.investments.filter(i => i.id !== id); this.clearCache(); this.saveInvestments(); this.renderInvestmentsModal(); this.updateInvestmentChart(); this.showToast('Aplicação excluída!'); }
+        editInvestment(id) { let inv = null; for (let i = 0; i < this.investments.length; i++) { if (this.investments[i].id === id) { inv = this.investments[i]; break; } } if (!inv) return; document.getElementById('investmentEditId').value = inv.id; document.getElementById('investmentName').value = inv.name; document.getElementById('investmentType').value = inv.type; document.getElementById('investmentInitial').value = inv.initial; document.getElementById('investmentCurrent').value = inv.current; document.getElementById('investmentDate').value = inv.date; document.getElementById('investmentRate').value = inv.rate; document.getElementById('newInvestmentTitle').textContent = 'Editar Aplicação'; document.getElementById('newInvestmentModal').classList.add('active'); }
+        openUpdateInvestment(id) { let inv = null; for (let i = 0; i < this.investments.length; i++) { if (this.investments[i].id === id) { inv = this.investments[i]; break; } } if (!inv) return; document.getElementById('updateInvestmentId').value = inv.id; document.getElementById('updateInvestmentName').textContent = inv.name; document.getElementById('updateInvestmentValue').value = inv.current; document.getElementById('updateInvestmentDate').value = new Date().toISOString().split('T')[0]; document.getElementById('updateInvestmentModal').classList.add('active'); }
+        updateInvestmentValue() { const id = document.getElementById('updateInvestmentId').value; const newValue = parseFloat(document.getElementById('updateInvestmentValue').value) || 0; for (let i = 0; i < this.investments.length; i++) { if (this.investments[i].id === id) { this.investments[i].current = newValue; if (this.investments[i].accountId) { for (let j = 0; j < this.accounts.length; j++) { if (this.accounts[j].id === this.investments[i].accountId) { this.accounts[j].balance = newValue; break; } } this.saveAccounts(); this.renderAccountsList(); } break; } } this.clearCache(); this.saveInvestments(); this.renderInvestmentsModal(); this.updateInvestmentChart(); this.updateDashboard(); closeUpdateInvestmentModal(); this.showToast('Valor atualizado!'); }
+        renderInvestmentsModal() { const container = document.getElementById('investmentsContent'); if (!container) return; const self = this; const typeLabels = { cdb: 'CDB', tesouro: 'Tesouro Direto', lci: 'LCI/LCA', fundo: 'Fundo', acao: 'Ações', fiis: 'FIIs', poupanca: 'Poupança', outro: 'Outro' }; if (!this.investments.length) { container.innerHTML = '<div style="text-align:center; padding:40px 20px; color:var(--text-secondary);"><div style="font-size:3rem; margin-bottom:12px; opacity:0.5;">📈</div><h3>Nenhuma aplicação cadastrada</h3></div>'; return; } let totalInitial = 0, totalCurrent = 0; let html = '<div>'; this.investments.forEach(inv => { const profit = inv.current - inv.initial; const profitPct = inv.initial > 0 ? (profit / inv.initial * 100) : 0; totalInitial += inv.initial; totalCurrent += inv.current; let accountInfo = ''; if (inv.accountId) { const linkedAccount = self.accounts.find(a => a.id === inv.accountId); if (linkedAccount) { accountInfo = ' • 🏦 ' + self.escapeHtml(linkedAccount.name); } } html += '<div class="investment-card"><div class="investment-card-header"><div><div class="investment-card-title">' + self.escapeHtml(inv.name) + '</div><div class="investment-card-type">' + (typeLabels[inv.type] || inv.type) + ' • Aplicado em ' + self.formatDate(inv.date) + accountInfo + '</div></div><div class="investment-card-actions"><button class="btn btn-secondary btn-small" onclick="smartwallet.openUpdateInvestment(\'' + inv.id + '\')">💰 Atualizar</button><button class="btn btn-secondary btn-small" onclick="smartwallet.editInvestment(\'' + inv.id + '\')">️</button><button class="btn btn-danger btn-small" onclick="smartwallet.deleteInvestment(\'' + inv.id + '\')">🗑️</button></div></div><div class="investment-card-values"><div class="investment-value-item"><div class="investment-value-label">Valor Inicial</div><div class="investment-value-amount privacy-value">' + self.formatCurrency(inv.initial) + '</div></div><div class="investment-value-item"><div class="investment-value-label">Valor Atual</div><div class="investment-value-amount privacy-value">' + self.formatCurrency(inv.current) + '</div></div><div class="investment-value-item"><div class="investment-value-label">Rendimento</div><div class="investment-value-amount privacy-value ' + (profit >= 0 ? 'positive' : 'negative') + '">' + profitPct.toFixed(2) + '% (' + self.formatCurrency(profit) + ')</div></div></div>'; if (inv.rate > 0) html += '<div style="font-size:0.85rem; color:var(--text-secondary);" class="privacy-value">Taxa: ' + inv.rate + '% ao ano</div>'; html += '</div>'; }); html += '</div>'; const totalProfit = totalCurrent - totalInitial; const totalProfitPct = totalInitial > 0 ? (totalProfit / totalInitial * 100) : 0; html += '<div class="investment-summary"><h3>📊 Resumo Geral</h3><div class="investment-summary-grid"><div class="investment-summary-item"><div class="investment-summary-label">Total Investido</div><div class="investment-summary-value privacy-value">' + this.formatCurrency(totalInitial) + '</div></div><div class="investment-summary-item"><div class="investment-summary-label">Valor Atual</div><div class="investment-summary-value privacy-value">' + this.formatCurrency(totalCurrent) + '</div></div><div class="investment-summary-item"><div class="investment-summary-label">Rendimento Total</div><div class="investment-summary-value privacy-value" style="color:' + (totalProfit >= 0 ? 'var(--success-color)' : 'var(--danger-color)') + ';">' + totalProfitPct.toFixed(2) + '% (' + this.formatCurrency(totalProfit) + ')</div></div></div></div>'; container.innerHTML = html; }
+        
         printManual() {
             try {
                 const printWindow = window.open('', '_blank', 'width=900,height=700,scrollbars=yes,resizable=yes');
-                
-                if (!printWindow || printWindow.closed || typeof printWindow.closed === 'undefined') { 
-                    alert('⚠️ O navegador bloqueou a janela de impressão.\n\nPor favor, permita popups para este site e tente novamente.'); 
-                    return; 
-                }
-                
+                if (!printWindow || printWindow.closed || typeof printWindow.closed === 'undefined') { alert('⚠️ O navegador bloqueou a janela de impressão.\n\nPor favor, permita popups para este site e tente novamente.'); return; }
                 const content = '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Manual - Smart Wallet</title><style>@page { size: A4; margin: 2cm; }body { font-family: Georgia, serif; color: #1e293b; line-height: 1.6; font-size: 11pt; padding: 20px; max-width: 800px; margin: 0 auto; }h1 { color: #6366f1; font-size: 28pt; text-align: center; margin-bottom: 8px; }h2 { color: #6366f1; font-size: 16pt; margin-top: 30px; border-bottom: 2px solid #6366f1; padding-bottom: 8px; }h3 { color: #06b6d4; font-size: 13pt; margin-top: 20px; }p { margin-bottom: 12px; }ul, ol { margin-left: 24px; margin-bottom: 16px; }li { margin-bottom: 8px; }.manual-cover { text-align: center; padding: 40px 20px; border: 3px solid #6366f1; border-radius: 16px; margin-bottom: 30px; background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(6, 182, 212, 0.05) 100%); }.manual-cover h1 { margin-bottom: 12px; }.manual-cover p { color: #64748b; font-size: 10pt; }.manual-quote { margin: 24px 0; padding: 20px 30px; border-left: 4px solid #6366f1; background: #f8fafc; border-radius: 8px; font-style: italic; }.manual-quote .quote-author { font-size: 9pt; font-weight: 600; color: #6366f1; text-align: right; margin-top: 12px; font-style: normal; }.manual-blessing { text-align: center; margin-top: 40px; padding: 30px; background: #f8fafc; border-radius: 16px; }.version { color: #64748b; font-size: 9pt; margin-top: 20px; }.author { color: #6366f1; font-weight: 600; font-size: 10pt; }@media print { body { padding: 0; } .manual-cover { page-break-after: always; } h2 { page-break-after: avoid; } }</style></head><body>' + manualHTML + '</body></html>';
-                
                 printWindow.document.write(content);
                 printWindow.document.close();
-                
-                printWindow.onload = function() {
-                    setTimeout(() => {
-                        printWindow.focus();
-                        printWindow.print();
-                    }, 500);
-                };
-                
-                setTimeout(() => {
-                    try {
-                        if (!printWindow.closed) {
-                            printWindow.focus();
-                            printWindow.print();
-                        }
-                    } catch (e) {
-                        console.warn('[SmartWallet] Erro ao imprimir:', e);
-                    }
-                }, 1000);
-                
-            } catch (e) {
-                console.error('[SmartWallet] Erro em printManual:', e);
-                alert('❌ Erro ao abrir janela de impressão: ' + e.message);
-            }
+                printWindow.onload = function() { setTimeout(() => { printWindow.focus(); printWindow.print(); }, 500); };
+                setTimeout(() => { try { if (!printWindow.closed) { printWindow.focus(); printWindow.print(); } } catch (e) { console.warn('[SmartWallet] Erro ao imprimir:', e); } }, 1000);
+            } catch (e) { console.error('[SmartWallet] Erro em printManual:', e); alert('❌ Erro ao abrir janela de impressão: ' + e.message); }
         }
+    }
 
-    // FIM DA CLASSE
-
-    // ===== INSTANCIAÇÃO GLOBAL =====
     window.smartwallet = new SmartWallet();
 
-    // ===== SELEÇÃO DE TIPO =====
     window.selectTransactionType = function(t) { smartwallet.currentTransactionType = t; document.querySelectorAll('#transactionForm .type-btn').forEach(btn => { const isActive = btn.getAttribute('data-type') === t; btn.classList.toggle('active', isActive); btn.setAttribute('aria-checked', isActive); }); smartwallet.filterCategoriesByType('category', t); };
     window.selectEditType = function(t) { smartwallet.currentEditType = t; document.querySelectorAll('#editForm .type-btn').forEach(btn => { const isActive = btn.getAttribute('data-type') === t; btn.classList.toggle('active', isActive); btn.setAttribute('aria-checked', isActive); }); smartwallet.filterCategoriesByType('editCategory', t); };
 
-    // ===== AÇÕES DO DASHBOARD =====
     window.dashboardAction = function(action) {
         const typeFilter = document.getElementById('typeFilter'); const statusFilter = document.getElementById('statusFilter'); const categoryFilter = document.getElementById('categoryFilter'); const accountFilter = document.getElementById('accountFilter'); const searchFilter = document.getElementById('searchFilter');
         document.querySelectorAll('.card.clickable').forEach(c => c.classList.remove('active-filter'));
@@ -1289,12 +1107,10 @@ saveInvestment() {
     };
     function scrollToTransactions() { const section = document.querySelector('.transactions-section'); if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
 
-    // ===== NAVEGAÇÃO DE MÊS NO MODAL CARTÕES =====
     window.changeCardMonth = function(delta) { smartwallet.cardModalMonth.setMonth(smartwallet.cardModalMonth.getMonth() + delta); smartwallet.renderCreditCardsList(); };
     window.changeCardMonthToToday = function() { smartwallet.cardModalMonth = new Date(); smartwallet.cardModalMonth.setDate(1); smartwallet.renderCreditCardsList(); };
     window.updateCardMonthLabel = function() { const months = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro']; const label = document.getElementById('cardMonthLabel'); if (label) label.textContent = months[smartwallet.cardModalMonth.getMonth()] + ' ' + smartwallet.cardModalMonth.getFullYear(); };
 
-    // ===== MODAL OPENERS & CLOSERS =====
     window.openNewTransactionModal = function() { smartwallet.setDefaultDate(); smartwallet.currentTransactionType = 'expense'; document.querySelectorAll('#transactionForm .type-btn').forEach(btn => { const isExpense = btn.getAttribute('data-type') === 'expense'; btn.classList.toggle('active', isExpense); btn.setAttribute('aria-checked', isExpense); }); smartwallet.populateCategorySelects(); smartwallet.populatePaymentMethodSelects(); smartwallet.populateAccountSelects(); document.getElementById('newTransactionModal').classList.add('active'); };
     window.closeNewTransactionModal = function() { document.getElementById('newTransactionModal').classList.remove('active'); smartwallet.clearForm(); };
     window.closeEditModal = function() { document.getElementById('editModal').classList.remove('active'); smartwallet.currentEditId = null; };
@@ -1322,24 +1138,7 @@ saveInvestment() {
     window.closeBillsModal = function() { document.getElementById('billsModal').classList.remove('active'); };
     window.openInvestmentsModal = function() { smartwallet.renderInvestmentsModal(); document.getElementById('investmentsModal').classList.add('active'); document.getElementById('infoMenu').classList.remove('active'); };
     window.closeInvestmentsModal = function() { document.getElementById('investmentsModal').classList.remove('active'); };
-window.openNewInvestmentModal = function() { 
-    document.getElementById('investmentEditId').value = ''; 
-    document.getElementById('investmentForm').reset(); 
-    document.getElementById('investmentDate').value = new Date().toISOString().split('T')[0]; 
-    document.getElementById('newInvestmentTitle').textContent = 'Nova Aplicação';
-    
-    // 🆕 Popular select de contas investment
-    const accountSelect = document.getElementById('investmentAccount');
-    accountSelect.innerHTML = '<option value="">-- Sem vínculo (criar nova automaticamente) --</option>';
-    smartwallet.accounts.filter(a => a.type === 'investment').forEach(acc => {
-        const opt = document.createElement('option');
-        opt.value = acc.id;
-        opt.textContent = acc.name + ' - ' + smartwallet.formatCurrency(acc.balance);
-        accountSelect.appendChild(opt);
-    });
-    
-    document.getElementById('newInvestmentModal').classList.add('active'); 
-};
+    window.openNewInvestmentModal = function() { document.getElementById('investmentEditId').value = ''; document.getElementById('investmentForm').reset(); document.getElementById('investmentDate').value = new Date().toISOString().split('T')[0]; document.getElementById('newInvestmentTitle').textContent = 'Nova Aplicação'; const accountSelect = document.getElementById('investmentAccount'); accountSelect.innerHTML = '<option value="">-- Sem vínculo (criar nova automaticamente) --</option>'; smartwallet.accounts.filter(a => a.type === 'investment').forEach(acc => { const opt = document.createElement('option'); opt.value = acc.id; opt.textContent = acc.name + ' - ' + smartwallet.formatCurrency(acc.balance); accountSelect.appendChild(opt); }); document.getElementById('newInvestmentModal').classList.add('active'); };
     window.closeNewInvestmentModal = function() { document.getElementById('newInvestmentModal').classList.remove('active'); };
     window.closeUpdateInvestmentModal = function() { document.getElementById('updateInvestmentModal').classList.remove('active'); };
     window.openManualModal = function() { document.getElementById('manualContent').innerHTML = manualHTML; document.getElementById('manualModal').classList.add('active'); document.getElementById('mainMenu').classList.remove('active'); };
@@ -1349,22 +1148,18 @@ window.openNewInvestmentModal = function() {
     window.openThanksModal = function() { document.getElementById('thanksModal').classList.add('active'); document.getElementById('mainMenu').classList.remove('active'); };
     window.closeThanksModal = function() { document.getElementById('thanksModal').classList.remove('active'); };
 
-    // ===== TOGGLES =====
     window.togglePrivacy = function() { smartwallet.privacyOn = !smartwallet.privacyOn; localStorage.setItem('smartwallet_privacy', smartwallet.privacyOn); smartwallet.applyPrivacy(); };
     window.toggleTheme = function() { smartwallet.darkMode = !smartwallet.darkMode; localStorage.setItem('smartwallet_dark', smartwallet.darkMode); smartwallet.applyTheme(); };
     window.toggleMenu = function(e) { if (e) e.stopPropagation(); document.getElementById('mainMenu').classList.toggle('active'); document.getElementById('infoMenu').classList.remove('active'); };
     window.toggleInfoMenu = function(e) { if (e) e.stopPropagation(); document.getElementById('infoMenu').classList.toggle('active'); };
 
-    // ===== FILE HANDLERS =====
     window.handleCsvFileSelect = function(event) { const file = event.target.files[0]; if (!file) return; if (!file.name.toLowerCase().endsWith('.csv')) { alert('⚠️ Selecione um arquivo .csv'); event.target.value = ''; return; } if (file.size > 10 * 1024 * 1024) { alert('⚠️ Arquivo muito grande (máx 10MB)'); event.target.value = ''; return; } document.getElementById('csvFileName').textContent = '📄 ' + file.name + ' (' + (file.size/1024).toFixed(1) + ' KB)'; const reader = new FileReader(); reader.onload = (e) => { window._pendingCsvData = e.target.result; }; reader.onerror = () => { alert('❌ Erro ao ler arquivo'); event.target.value = ''; }; reader.readAsText(file, 'UTF-8'); };
     window.handleBackupFileSelect = function(event) { const file = event.target.files[0]; if (!file) return; if (!file.name.toLowerCase().endsWith('.json')) { alert('️ Selecione um arquivo .json'); event.target.value = ''; return; } if (file.size > 10 * 1024 * 1024) { alert('⚠️ Arquivo muito grande (máx 10MB)'); event.target.value = ''; return; } document.getElementById('backupFileName').textContent = '💾 ' + file.name + ' (' + (file.size/1024).toFixed(1) + ' KB)'; const reader = new FileReader(); reader.onload = (e) => { try { JSON.parse(e.target.result); window._pendingBackupData = e.target.result; smartwallet.showToast('✅ Arquivo carregado!'); } catch (error) { alert('❌ JSON inválido: ' + error.message); event.target.value = ''; window._pendingBackupData = null; } }; reader.onerror = () => { alert(' Erro ao ler arquivo'); event.target.value = ''; }; reader.readAsText(file, 'UTF-8'); };
 
-    // ===== CLEAR DATA HELPERS =====
     window.showClearStep2 = function() { document.getElementById('clearStep1').style.display = 'none'; document.getElementById('clearStep2').style.display = 'block'; setTimeout(() => document.getElementById('clearConfirmInput').focus(), 100); };
     window.checkClearConfirm = function() { const input = document.getElementById('clearConfirmInput'); const btn = document.getElementById('finalClearBtn'); if (input.value.trim().toUpperCase() === 'LIMPAR') { input.classList.add('match'); btn.disabled = false; btn.style.opacity = '1'; } else { input.classList.remove('match'); btn.disabled = true; btn.style.opacity = '0.5'; } };
     window.copyPixKey = function() { const key = document.getElementById('pixKey').textContent; navigator.clipboard.writeText(key).then(() => smartwallet.showToast('✅ Chave PIX copiada!')).catch(() => smartwallet.showToast('❌ Copie manualmente: ' + key)); };
 
-    // ===== FLUXO INICIAL =====
     function initDisclaimer() { let countdown = 12; const timerEl = document.getElementById('disclaimerTimer'); const btnEl = document.getElementById('acceptDisclaimerBtn'); if (!timerEl || !btnEl) return; btnEl.classList.remove('enabled'); btnEl.disabled = true; timerEl.innerHTML = '⏱️ Aguarde <span id="countdown">' + countdown + '</span> segundos'; const interval = setInterval(() => { countdown--; const span = document.getElementById('countdown'); if (span) span.textContent = countdown; if (countdown <= 0) { clearInterval(interval); btnEl.classList.add('enabled'); btnEl.disabled = false; timerEl.innerHTML = '✅ Pode aceitar os termos'; } }, 1000); }
     function showQuoteModal() { const quote = FINANCIAL_QUOTES[Math.floor(Math.random() * FINANCIAL_QUOTES.length)]; const quoteText = document.getElementById('quoteText'); const quoteAuthor = document.getElementById('quoteAuthor'); const quoteModal = document.getElementById('quoteModal'); if (quoteText) quoteText.textContent = '"' + quote.text + '"'; if (quoteAuthor) quoteAuthor.textContent = '— ' + quote.author; if (quoteModal) { quoteModal.style.display = 'flex'; quoteModal.classList.add('active'); } }
     window.acceptDisclaimer = function() { const btn = document.getElementById('acceptDisclaimerBtn'); if (!btn || !btn.classList.contains('enabled')) return; localStorage.setItem('smartwallet_disclaimer_accepted', 'true'); const disclaimer = document.getElementById('disclaimerModal'); const splash = document.getElementById('splashScreen'); if (disclaimer) { disclaimer.classList.add('disintegrating'); setTimeout(() => { disclaimer.classList.remove('active', 'disintegrating'); disclaimer.style.display = 'none'; if (splash) { splash.classList.add('fade-out'); setTimeout(() => { splash.style.display = 'none'; setTimeout(showQuoteModal, 300); }, 800); } else { setTimeout(showQuoteModal, 300); } }, 600); } };
@@ -1372,10 +1167,9 @@ window.openNewInvestmentModal = function() {
     function updatePrintDate() { const dateEl = document.getElementById('printDate'); if (dateEl) dateEl.textContent = 'Gerado em: ' + new Date().toLocaleString('pt-BR'); }
     window.addEventListener('load', () => { updatePrintDate(); const accepted = localStorage.getItem('smartwallet_disclaimer_accepted') === 'true'; const splash = document.getElementById('splashScreen'); const disclaimer = document.getElementById('disclaimerModal'); if (splash) { splash.style.display = 'flex'; splash.classList.remove('fade-out'); } setTimeout(() => { if (!accepted && disclaimer) { disclaimer.classList.add('active'); disclaimer.style.display = 'flex'; initDisclaimer(); } else { setTimeout(() => { if (splash) { splash.classList.add('fade-out'); setTimeout(() => { splash.style.display = 'none'; showQuoteModal(); }, 800); } }, 3000); } }, 3500); });
 
-    // ===== EVENT LISTGLOBAIS =====
     document.addEventListener('click', (e) => { const menu = document.getElementById('mainMenu'); const info = document.getElementById('infoMenu'); if (!e.target.closest('.menu-btn') && menu && menu.classList.contains('active')) menu.classList.remove('active'); if (!e.target.closest('.info-btn') && info && info.classList.contains('active')) info.classList.remove('active'); });
     document.addEventListener('keydown', (e) => { if (e.target.classList.contains('clickable') && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); e.target.click(); } });
     if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').then(reg => console.log('[SmartWallet] SW registrado:', reg.scope)).catch(err => console.log('[SmartWallet] SW falhou:', err)); }); }
 
-    console.log('🎉 Smart Wallet v4.0.1 carregado com sucesso!');
+    console.log('🎉 Smart Wallet v4.0.3 carregado com sucesso!');
 })();
