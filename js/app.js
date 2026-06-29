@@ -1094,7 +1094,75 @@ renderAccountsList() {
         '</div>'; 
     }).join('') + '</div>'; 
 }        
-        renderBillsModal() { const container = document.getElementById('billsList'); if (!container) return; const today = new Date(); today.setHours(0, 0, 0, 0); const in3Days = new Date(today); in3Days.setDate(in3Days.getDate() + 3); const self = this; const bills = this.transactions.filter(t => { if (t.statusOk || t.amount >= 0) return false; const tDate = new Date(t.date + 'T12:00:00'); return tDate <= in3Days; }).sort((a, b) => new Date(a.date) - new Date(b.date)); if (bills.length === 0) { container.innerHTML = '<div style="text-align:center; padding:40px 20px; color:var(--text-secondary);"><div style="font-size:3rem; margin-bottom:12px;">✅</div><h3>Nenhuma conta pendente!</h3></div>'; return; } let total = 0; bills.forEach(b => total += Math.abs(b.amount)); let html = '<div style="background:var(--input-bg); border-radius:14px; padding:16px; margin-bottom:16px;">'; html += '<div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border-color);"><span style="color:var(--text-secondary);">Total de contas</span><span style="font-weight:600;">' + bills.length + '</span></div>'; html += '<div style="display:flex; justify-content:space-between; padding:12px 0 0 0; margin-top:4px; border-top:2px solid var(--border-color); font-weight:700; font-size:1.1rem;"><span>Total a pagar</span><span style="color:var(--danger-color);">' + self.formatCurrency(total) + '</span></div></div>'; bills.forEach(bill => { const cat = self.getCategoryById(bill.category); const billDate = new Date(bill.date + 'T12:00:00'); const diffDays = Math.round((billDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)); let daysClass = 'warning', daysText = '', itemClass = ''; if (diffDays < 0) { daysClass = 'overdue'; daysText = Math.abs(diffDays) + 'd atrasada'; itemClass = 'overdue'; } else if (diffDays === 0) { daysClass = 'urgent'; daysText = 'Vence hoje'; itemClass = 'urgent'; } else if (diffDays === 1) { daysClass = 'urgent'; daysText = 'Vence amanhã'; itemClass = 'urgent'; } else { daysText = 'Em ' + diffDays + ' dias'; } html += '<div class="bill-item ' + itemClass + '"><div class="bill-info"><div class="bill-desc">' + self.escapeHtml(bill.description) + '<span class="bill-days ' + daysClass + '">' + daysText + '</span></div><div class="bill-meta"><span>📅 ' + self.formatDate(bill.date) + '</span><span style="color:' + cat.color + ';">● ' + self.escapeHtml(cat.name) + '</span></div></div><div class="bill-amount">' + self.formatCurrency(Math.abs(bill.amount)) + '</div><div style="display:flex; gap:4px;"><button class="btn btn-success btn-small" onclick="smartwallet.markBillAsPaid(' + bill.id + ')">✓</button><button class="btn btn-secondary btn-small" onclick="smartwallet.editTransaction(' + bill.id + '); closeBillsModal();">✏️</button></div></div>'; }); container.innerHTML = html; }
+renderInvestmentsModal() { 
+    const container = document.getElementById('investmentsContent'); 
+    if (!container) return; 
+    const self = this; 
+    const typeLabels = { cdb: 'CDB', tesouro: 'Tesouro Direto', lci: 'LCI/LCA', fundo: 'Fundo', acao: 'Ações', fiis: 'FIIs', poupanca: 'Poupança', outro: 'Outro' }; 
+    
+    if (!this.investments.length) { 
+        container.innerHTML = '<div style="text-align:center; padding:40px 20px; color:var(--text-secondary);"><div style="font-size:3rem; margin-bottom:12px; opacity:0.5;">📈</div><h3>Nenhuma aplicação cadastrada</h3></div>'; 
+        return; 
+    } 
+    
+    let totalInitial = 0, totalCurrent = 0; 
+    let html = '<div>'; 
+    
+    this.investments.forEach(inv => { 
+        const profit = inv.current - inv.initial; 
+        const profitPct = inv.initial > 0 ? (profit / inv.initial * 100) : 0; 
+        totalInitial += inv.initial; 
+        totalCurrent += inv.current; 
+        
+        // 🆕 Mostrar conta vinculada
+        let accountInfo = '';
+        if (inv.accountId) {
+            const linkedAccount = self.accounts.find(a => a.id === inv.accountId);
+            if (linkedAccount) {
+                accountInfo = ' • 🏦 ' + self.escapeHtml(linkedAccount.name);
+            }
+        }
+        
+        html += '<div class="investment-card">';
+        html += '<div class="investment-card-header">';
+        html += '<div>';
+        html += '<div class="investment-card-title">' + self.escapeHtml(inv.name) + '</div>';
+        html += '<div class="investment-card-type">' + (typeLabels[inv.type] || inv.type) + ' • Aplicado em ' + self.formatDate(inv.date) + accountInfo + '</div>';
+        html += '</div>';
+        html += '<div class="investment-card-actions">';
+        html += '<button class="btn btn-secondary btn-small" onclick="smartwallet.openUpdateInvestment(\'' + inv.id + '\')">💰 Atualizar</button>';
+        html += '<button class="btn btn-secondary btn-small" onclick="smartwallet.editInvestment(\'' + inv.id + '\')">✏️</button>';
+        html += '<button class="btn btn-danger btn-small" onclick="smartwallet.deleteInvestment(\'' + inv.id + '\')">🗑️</button>';
+        html += '</div></div>';
+        
+        html += '<div class="investment-card-values">';
+        html += '<div class="investment-value-item"><div class="investment-value-label">Valor Inicial</div><div class="investment-value-amount privacy-value">' + self.formatCurrency(inv.initial) + '</div></div>';
+        html += '<div class="investment-value-item"><div class="investment-value-label">Valor Atual</div><div class="investment-value-amount privacy-value">' + self.formatCurrency(inv.current) + '</div></div>';
+        html += '<div class="investment-value-item"><div class="investment-value-label">Rendimento</div><div class="investment-value-amount privacy-value ' + (profit >= 0 ? 'positive' : 'negative') + '">' + profitPct.toFixed(2) + '% (' + self.formatCurrency(profit) + ')</div></div>';
+        html += '</div>';
+        
+        if (inv.rate > 0) {
+            html += '<div style="font-size:0.85rem; color:var(--text-secondary);" class="privacy-value">Taxa: ' + inv.rate + '% ao ano</div>';
+        }
+        
+        html += '</div>'; 
+    }); 
+    
+    html += '</div>'; 
+    
+    const totalProfit = totalCurrent - totalInitial; 
+    const totalProfitPct = totalInitial > 0 ? (totalProfit / totalInitial * 100) : 0; 
+    
+    html += '<div class="investment-summary">';
+    html += '<h3> Resumo Geral</h3>';
+    html += '<div class="investment-summary-grid">';
+    html += '<div class="investment-summary-item"><div class="investment-summary-label">Total Investido</div><div class="investment-summary-value privacy-value">' + this.formatCurrency(totalInitial) + '</div></div>';
+    html += '<div class="investment-summary-item"><div class="investment-summary-label">Valor Atual</div><div class="investment-summary-value privacy-value">' + this.formatCurrency(totalCurrent) + '</div></div>';
+    html += '<div class="investment-summary-item"><div class="investment-summary-label">Rendimento Total</div><div class="investment-summary-value privacy-value" style="color:' + (totalProfit >= 0 ? 'var(--success-color)' : 'var(--danger-color)') + ';">' + totalProfitPct.toFixed(2) + '% (' + this.formatCurrency(totalProfit) + ')</div></div>';
+    html += '</div></div>'; 
+    
+    container.innerHTML = html; 
+}
         markBillAsPaid(id) { for (let i = 0; i < this.transactions.length; i++) { if (this.transactions[i].id === id) { this.transactions[i].statusOk = true; break; } } this.clearCache(); this.saveTransactions(); this.render(); this.updateAlertBadge(); this.renderBillsModal(); this.showToast('✓ Conta paga!'); }
 
         updateInvestmentChart() { const section = document.getElementById('investmentsChartSection'); if (!section) return; if (!this.investments.length) { section.style.display = 'none'; return; } section.style.display = 'block'; const colors = this.getChartColors(); const now = new Date(); const monthlyData = {}; for (let i = 5; i >= 0; i--) { const d = new Date(now.getFullYear(), now.getMonth() - i, 1); const key = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0'); monthlyData[key] = { invested: 0, current: 0 }; } const self = this; this.investments.forEach(inv => { const invDate = new Date(inv.date + 'T12:00:00'); const invKey = invDate.getFullYear() + '-' + String(invDate.getMonth() + 1).padStart(2, '0'); Object.keys(monthlyData).forEach(key => { if (key >= invKey) monthlyData[key].invested += inv.initial; }); const currentKey = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0'); if (monthlyData[currentKey]) monthlyData[currentKey].current += inv.current; }); const labels = [], investedData = [], currentData = [], profitPctData = []; Object.keys(monthlyData).forEach(key => { const d = new Date(key + '-01'); const monthNames = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez']; labels.push(monthNames[d.getMonth()] + '/' + d.getFullYear()); const invested = monthlyData[key].invested; const current = monthlyData[key].current || invested; investedData.push(invested); currentData.push(current); profitPctData.push(invested > 0 ? ((current - invested) / invested * 100) : 0); }); if (!this.charts.invest) { const canvas = document.getElementById('investChart'); if (!canvas) return; this.charts.invest = new Chart(canvas.getContext('2d'), { type: 'line', data: { labels, datasets: [ { label: 'Valor Investido (R$)', data: investedData, borderColor: '#94a3b8', backgroundColor: 'rgba(148,163,184,0.1)', tension: 0.4, fill: false, yAxisID: 'y' }, { label: 'Valor Atual (R$)', data: currentData, borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.1)', tension: 0.4, fill: true, yAxisID: 'y' }, { label: 'Rendimento (%)', data: profitPctData, borderColor: '#06b6d4', backgroundColor: 'rgba(6,182,212,0.1)', tension: 0.4, fill: false, yAxisID: 'y1' } ]}, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top', labels: { color: colors.text } } }, scales: { y: { beginAtZero: true, ticks: { color: colors.textSecondary, callback: v => 'R$ ' + v.toLocaleString('pt-BR') }, grid: { color: colors.grid } }, y1: { position: 'right', ticks: { color: colors.textSecondary, callback: v => v + '%' }, grid: { display: false } }, x: { ticks: { color: colors.textSecondary }, grid: { color: colors.grid } } } } }); } else { this.charts.invest.data.labels = labels; this.charts.invest.data.datasets[0].data = investedData; this.charts.invest.data.datasets[1].data = currentData; this.charts.invest.data.datasets[2].data = profitPctData; this.charts.invest.update(); } const summaryEl = document.getElementById('investSummary'); if (summaryEl) { let totalInitial = 0, totalCurrent = 0; this.investments.forEach(inv => { totalInitial += inv.initial; totalCurrent += inv.current; }); const totalProfit = totalCurrent - totalInitial; const totalProfitPct = totalInitial > 0 ? (totalProfit / totalInitial * 100) : 0; summaryEl.innerHTML = '<div class="investment-summary"><h3>📊 Resumo</h3><div class="investment-summary-grid"><div class="investment-summary-item"><div class="investment-summary-label">Total Investido</div><div class="investment-summary-value privacy-value">' + this.formatCurrency(totalInitial) + '</div></div><div class="investment-summary-item"><div class="investment-summary-label">Valor Atual</div><div class="investment-summary-value privacy-value">' + this.formatCurrency(totalCurrent) + '</div></div><div class="investment-summary-item"><div class="investment-summary-label">Rendimento</div><div class="investment-summary-value privacy-value" style="color:' + (totalProfit >= 0 ? 'var(--success-color)' : 'var(--danger-color)') + ';">' + totalProfitPct.toFixed(2) + '% (' + this.formatCurrency(totalProfit) + ')</div></div></div></div>'; } }
