@@ -1228,43 +1228,44 @@ saveInvestment() {
     this.updateDashboard();
     closeNewInvestmentModal(); 
     this.showToast(id ? 'Aplicação atualizada!' : 'Aplicação cadastrada!'); 
-            printManual() { 
-            try {
-                const printWindow = window.open('', '_blank', 'width=900,height=700,scrollbars=yes,resizable=yes');
-                
-                if (!printWindow || printWindow.closed || typeof printWindow.closed === 'undefined') { 
-                    alert('⚠️ O navegador bloqueou a janela de impressão.\n\nPor favor, permita popups para este site e tente novamente.'); 
-                    return; 
-                }
-                
-                const content = '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Manual - Smart Wallet</title><style>@page { size: A4; margin: 2cm; }body { font-family: Georgia, serif; color: #1e293b; line-height: 1.6; font-size: 11pt; padding: 20px; max-width: 800px; margin: 0 auto; }h1 { color: #6366f1; font-size: 28pt; text-align: center; margin-bottom: 8px; }h2 { color: #6366f1; font-size: 16pt; margin-top: 30px; border-bottom: 2px solid #6366f1; padding-bottom: 8px; }h3 { color: #06b6d4; font-size: 13pt; margin-top: 20px; }p { margin-bottom: 12px; }ul, ol { margin-left: 24px; margin-bottom: 16px; }li { margin-bottom: 8px; }.manual-cover { text-align: center; padding: 40px 20px; border: 3px solid #6366f1; border-radius: 16px; margin-bottom: 30px; background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(6, 182, 212, 0.05) 100%); }.manual-cover h1 { margin-bottom: 12px; }.manual-cover p { color: #64748b; font-size: 10pt; }.manual-quote { margin: 24px 0; padding: 20px 30px; border-left: 4px solid #6366f1; background: #f8fafc; border-radius: 8px; font-style: italic; }.manual-quote .quote-author { font-size: 9pt; font-weight: 600; color: #6366f1; text-align: right; margin-top: 12px; font-style: normal; }.manual-blessing { text-align: center; margin-top: 40px; padding: 30px; background: #f8fafc; border-radius: 16px; }.version { color: #64748b; font-size: 9pt; margin-top: 20px; }.author { color: #6366f1; font-weight: 600; font-size: 10pt; }@media print { body { padding: 0; } .manual-cover { page-break-after: always; } h2 { page-break-after: avoid; } }</style></head><body>' + manualHTML + '</body></html>';
-                
-                printWindow.document.write(content);
-                printWindow.document.close();
-                
-                printWindow.onload = function() {
-                    setTimeout(() => {
-                        printWindow.focus();
-                        printWindow.print();
-                    }, 500);
-                };
-                
-                setTimeout(() => {
-                    try {
-                        if (!printWindow.closed) {
-                            printWindow.focus();
-                            printWindow.print();
-                        }
-                    } catch (e) {
-                        console.warn('[SmartWallet] Erro ao imprimir:', e);
-                    }
-                }, 1000);
-                
-            } catch (e) {
-                console.error('[SmartWallet] Erro em printManual:', e);
-                alert('❌ Erro ao abrir janela de impressão: ' + e.message);
-            }
+   // ===== FUNÇÃO DE IMPRESSÃO DO MANUAL =====
+function printManual() {
+    try {
+        const printWindow = window.open('', '_blank', 'width=900,height=700,scrollbars=yes,resizable=yes');
+        
+        if (!printWindow || printWindow.closed || typeof printWindow.closed === 'undefined') { 
+            alert('⚠️ O navegador bloqueou a janela de impressão.\n\nPor favor, permita popups para este site e tente novamente.'); 
+            return; 
         }
+        
+        const content = '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Manual - Smart Wallet</title><style>@page { size: A4; margin: 2cm; }body { font-family: Georgia, serif; color: #1e293b; line-height: 1.6; font-size: 11pt; padding: 20px; max-width: 800px; margin: 0 auto; }h1 { color: #6366f1; font-size: 28pt; text-align: center; margin-bottom: 8px; }h2 { color: #6366f1; font-size: 16pt; margin-top: 30px; border-bottom: 2px solid #6366f1; padding-bottom: 8px; }h3 { color: #06b6d4; font-size: 13pt; margin-top: 20px; }p { margin-bottom: 12px; }ul, ol { margin-left: 24px; margin-bottom: 16px; }li { margin-bottom: 8px; }.manual-cover { text-align: center; padding: 40px 20px; border: 3px solid #6366f1; border-radius: 16px; margin-bottom: 30px; background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(6, 182, 212, 0.05) 100%); }.manual-cover h1 { margin-bottom: 12px; }.manual-cover p { color: #64748b; font-size: 10pt; }.manual-quote { margin: 24px 0; padding: 20px 30px; border-left: 4px solid #6366f1; background: #f8fafc; border-radius: 8px; font-style: italic; }.manual-quote .quote-author { font-size: 9pt; font-weight: 600; color: #6366f1; text-align: right; margin-top: 12px; font-style: normal; }.manual-blessing { text-align: center; margin-top: 40px; padding: 30px; background: #f8fafc; border-radius: 16px; }.version { color: #64748b; font-size: 9pt; margin-top: 20px; }.author { color: #6366f1; font-weight: 600; font-size: 10pt; }@media print { body { padding: 0; } .manual-cover { page-break-after: always; } h2 { page-break-after: avoid; } }</style></head><body>' + manualHTML + '</body></html>';
+        
+        printWindow.document.write(content);
+        printWindow.document.close();
+        
+        printWindow.onload = function() {
+            setTimeout(() => {
+                printWindow.focus();
+                printWindow.print();
+            }, 500);
+        };
+        
+        setTimeout(() => {
+            try {
+                if (!printWindow.closed) {
+                    printWindow.focus();
+                    printWindow.print();
+                }
+            } catch (e) {
+                console.warn('[SmartWallet] Erro ao imprimir:', e);
+            }
+        }, 1000);
+        
+    } catch (e) {
+        console.error('[SmartWallet] Erro em printManual:', e);
+        alert('❌ Erro ao abrir janela de impressão: ' + e.message);
+    }
+}
 }
     // FIM DA CLASSE
 
