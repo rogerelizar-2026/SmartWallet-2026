@@ -275,30 +275,35 @@ e// Smart Wallet v4.0.1
     // ===== CLASSE PRINCIPAL =====
     class SmartWallet {
         constructor() {
-            this.transactions = [];
-            this.categories = [];
-            this.accounts = [];
-            this.cards = [];
-            this.investments = [];
-            this.currentMonth = new Date();
-            this.currentMonth.setDate(1);
-            this.currentMonth.setHours(0, 0, 0, 0);
-            this.cardModalMonth = new Date();
-            this.cardModalMonth.setDate(1);
-            this.currentTransactionType = 'expense';
-            this.currentEditType = 'expense';
-            this.currentEditId = null;
-            this.newCategoryType = 'expense'; // ✅ CORREÇÃO: Inicializada
-            this.darkMode = true;
-            this.privacyOn = false;
-            this.charts = {};
-            this.searchTimeout = null;
-            this.toastT = null;
-            this._cache = {}; // ✅ CORREÇÃO: Cache para performance
-            this.loadData();
-            this.init();
-        }
-
+constructor() {
+    // ✅ CORREÇÃO: Inicializar currentMonth PRIMEIRO, antes de tudo
+    this.currentMonth = new Date();
+    this.currentMonth.setDate(1);
+    this.currentMonth.setHours(0, 0, 0, 0);
+    
+    // Agora inicializa o resto
+    this.transactions = [];
+    this.categories = [];
+    this.accounts = [];
+    this.cards = [];
+    this.investments = [];
+    this.cardModalMonth = new Date();
+    this.cardModalMonth.setDate(1);
+    this.currentTransactionType = 'expense';
+    this.currentEditType = 'expense';
+    this.currentEditId = null;
+    this.newCategoryType = 'expense';
+    this.darkMode = true;
+    this.privacyOn = false;
+    this.charts = {};
+    this.searchTimeout = null;
+    this.toastT = null;
+    this._cache = {};
+    
+    // Carrega dados e inicializa
+    this.loadData();
+    this.init();
+}
         loadData() {
             try {
                 const t = localStorage.getItem('smartwallet_transactions');
@@ -464,19 +469,24 @@ generateTimestamp() {
 }
         // ✅ CORREÇÃO: Padronizado para T12:00:00 e com cache
 getMonthTransactions(date) {
-        // Se date não foi passado ou é inválido, usa currentMonth
+    // ✅ CORREÇÃO DEFENSIVA: Múltiplas camadas de proteção
+    
+    // Camada 1: Se não passou date, usa currentMonth
     if (!date) {
         date = this.currentMonth;
     }
-    // ✅ CORREÇÃO: Validar se é um objeto Date válido
-    // Se ainda é inválido, cria um novo Date
-    if (!(date instanceof Date) || isNaN(date.getTime())) {
+    
+    // Camada 2: Se currentMonth também é inválido, cria novo Date
+    if (!date || !(date instanceof Date) || isNaN(date.getTime())) {
         date = new Date();
         date.setDate(1);
         date.setHours(0, 0, 0, 0);
+        
+        // Atualiza currentMonth para evitar erros futuros
+        this.currentMonth = date;
     }
     
-    // Agora sim, com certeza temos um Date válido
+    // Agora temos certeza que date é válido
     const key = date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0');
     
     if (!this._cache.monthTransactions) this._cache.monthTransactions = {};
@@ -656,14 +666,17 @@ getMonthTransactions(date) {
         }
 
         updateDashboard() {
-                // ✅ CORREÇÃO: Garantir que currentMonth existe
-            if (!this.currentMonth || !(this.currentMonth instanceof Date)) {
-            this.currentMonth = new Date();
-            this.currentMonth.setDate(1);
-            }
-            const mt = this.getMonthTransactions();
-            let inc = 0, exp = 0;
-            mt.forEach(t => { if (t.amount > 0) inc += t.amount; else exp += t.amount; });
+updateDashboard() {
+    // ✅ CORREÇÃO: Garantir que currentMonth existe antes de usar
+    if (!this.currentMonth || !(this.currentMonth instanceof Date) || isNaN(this.currentMonth.getTime())) {
+        this.currentMonth = new Date();
+        this.currentMonth.setDate(1);
+        this.currentMonth.setHours(0, 0, 0, 0);
+    }
+    
+    const mt = this.getMonthTransactions();
+    let inc = 0, exp = 0;
+    mt.forEach(t => { if (t.amount > 0) inc += t.amount; else exp += t.amount; });
             let unifiedBalance = 0;
             this.accounts.forEach(a => { if (a.type === 'checking') unifiedBalance += (parseFloat(a.balance) || 0); });
             let creditCardTotal = 0;
