@@ -1,8 +1,8 @@
-// Smart Wallet v4.2.1 - Versão Corrigida (Parte 1/2)
+// Smart Wallet v4.0.1
 (function() {
     'use strict';
     
-    console.log('🚀 Smart Wallet v4.2.1 iniciando...');
+    console.log('🚀 Smart Wallet v4.0.1 iniciando...');
     
     // ===== CONSTANTES =====
     const PAYMENT_METHODS = [
@@ -1156,5 +1156,5 @@
         });
     }
 
-    console.log('🎉 Smart Wallet v4.2.1 carregado com sucesso!');
+    console.log('🎉 Smart Wallet v4.0.1 carregado com sucesso!');
 })();
