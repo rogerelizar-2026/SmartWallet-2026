@@ -1,4 +1,4 @@
-e// Smart Wallet v4.0.1
+// Smart Wallet v4.0.1
 (function() {
     'use strict';
     
@@ -272,6 +272,8 @@ e// Smart Wallet v4.0.1
         '<div class="quote-author">Com amor e orações,<br>Rogerelizar©</div>' +
         '</div>' +
         '</div>';
+}
+ 
     // ===== CLASSE PRINCIPAL =====
     class SmartWallet {
 constructor() {
