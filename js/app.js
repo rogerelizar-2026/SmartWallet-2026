@@ -274,7 +274,6 @@ e// Smart Wallet v4.0.1
         '</div>';
     // ===== CLASSE PRINCIPAL =====
     class SmartWallet {
-        constructor() {
 constructor() {
     // ✅ CORREÇÃO: Inicializar currentMonth PRIMEIRO, antes de tudo
     this.currentMonth = new Date();
