@@ -1219,7 +1219,7 @@ saveInvestment() {
         }
         this.saveAccounts();
     }
-    
+ 
     this.clearCache(); 
     this.saveInvestments(); 
     this.renderInvestmentsModal(); 
@@ -1228,6 +1228,7 @@ saveInvestment() {
     this.updateDashboard();
     closeNewInvestmentModal(); 
     this.showToast(id ? 'Aplicação atualizada!' : 'Aplicação cadastrada!'); 
+}
 // ===== FUNÇÃO DE IMPRESSÃO DO MANUAL =====
         printManual() {
             try {
@@ -1266,7 +1267,7 @@ saveInvestment() {
                 alert('❌ Erro ao abrir janela de impressão: ' + e.message);
             }
         }
-}
+
     // FIM DA CLASSE
 
     // ===== INSTANCIAÇÃO GLOBAL =====
