@@ -1228,7 +1228,6 @@ saveInvestment() {
     this.updateDashboard();
     closeNewInvestmentModal(); 
     this.showToast(id ? 'Aplicação atualizada!' : 'Aplicação cadastrada!'); 
-}
 // ===== FUNÇÃO DE IMPRESSÃO DO MANUAL =====
         printManual() {
             try {
