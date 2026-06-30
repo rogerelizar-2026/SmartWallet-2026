@@ -1031,60 +1031,68 @@
 
         updateInvestmentChart() { const section = document.getElementById('investmentsChartSection'); if (!section) return; if (!this.investments.length) { section.style.display = 'none'; return; } section.style.display = 'block'; const colors = this.getChartColors(); const now = new Date(); const monthlyData = {}; for (let i = 5; i >= 0; i--) { const d = new Date(now.getFullYear(), now.getMonth() - i, 1); const key = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0'); monthlyData[key] = { invested: 0, current: 0 }; } const self = this; this.investments.forEach(inv => { const invDate = new Date(inv.date + 'T12:00:00'); const invKey = invDate.getFullYear() + '-' + String(invDate.getMonth() + 1).padStart(2, '0'); Object.keys(monthlyData).forEach(key => { if (key >= invKey) monthlyData[key].invested += inv.initial; }); const currentKey = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0'); if (monthlyData[currentKey]) monthlyData[currentKey].current += inv.current; }); const labels = [], investedData = [], currentData = [], profitPctData = []; Object.keys(monthlyData).forEach(key => { const d = new Date(key + '-01'); const monthNames = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez']; labels.push(monthNames[d.getMonth()] + '/' + d.getFullYear()); const invested = monthlyData[key].invested; const current = monthlyData[key].current || invested; investedData.push(invested); currentData.push(current); profitPctData.push(invested > 0 ? ((current - invested) / invested * 100) : 0); }); if (!this.charts.invest) { const canvas = document.getElementById('investChart'); if (!canvas) return; this.charts.invest = new Chart(canvas.getContext('2d'), { type: 'line', data: { labels, datasets: [ { label: 'Valor Investido (R$)', data: investedData, borderColor: '#94a3b8', backgroundColor: 'rgba(148,163,184,0.1)', tension: 0.4, fill: false, yAxisID: 'y' }, { label: 'Valor Atual (R$)', data: currentData, borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.1)', tension: 0.4, fill: true, yAxisID: 'y' }, { label: 'Rendimento (%)', data: profitPctData, borderColor: '#06b6d4', backgroundColor: 'rgba(6,182,212,0.1)', tension: 0.4, fill: false, yAxisID: 'y1' } ]}, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top', labels: { color: colors.text } } }, scales: { y: { beginAtZero: true, ticks: { color: colors.textSecondary, callback: v => 'R$ ' + v.toLocaleString('pt-BR') }, grid: { color: colors.grid } }, y1: { position: 'right', ticks: { color: colors.textSecondary, callback: v => v + '%' }, grid: { display: false } }, x: { ticks: { color: colors.textSecondary }, grid: { color: colors.grid } } } } }); } else { this.charts.invest.data.labels = labels; this.charts.invest.data.datasets[0].data = investedData; this.charts.invest.data.datasets[1].data = currentData; this.charts.invest.data.datasets[2].data = profitPctData; this.charts.invest.update(); } const summaryEl = document.getElementById('investSummary'); if (summaryEl) { let totalInitial = 0, totalCurrent = 0; this.investments.forEach(inv => { totalInitial += inv.initial; totalCurrent += inv.current; }); const totalProfit = totalCurrent - totalInitial; const totalProfitPct = totalInitial > 0 ? (totalProfit / totalInitial * 100) : 0; summaryEl.innerHTML = '<div class="investment-summary"><h3>📊 Resumo</h3><div class="investment-summary-grid"><div class="investment-summary-item"><div class="investment-summary-label">Total Investido</div><div class="investment-summary-value privacy-value">' + this.formatCurrency(totalInitial) + '</div></div><div class="investment-summary-item"><div class="investment-summary-label">Valor Atual</div><div class="investment-summary-value privacy-value">' + this.formatCurrency(totalCurrent) + '</div></div><div class="investment-summary-item"><div class="investment-summary-label">Rendimento</div><div class="investment-summary-value privacy-value" style="color:' + (totalProfit >= 0 ? 'var(--success-color)' : 'var(--danger-color)') + ';">' + totalProfitPct.toFixed(2) + '% (' + this.formatCurrency(totalProfit) + ')</div></div></div></div>'; } }
 
-        saveInvestment() {
-            const id = document.getElementById('investmentEditId').value;
-            const name = document.getElementById('investmentName').value.trim();
-            const type = document.getElementById('investmentType').value;
-            const initial = parseFloat(document.getElementById('investmentInitial').value) || 0;
-            const current = parseFloat(document.getElementById('investmentCurrent').value) || 0;
-            const date = document.getElementById('investmentDate').value;
-            const rate = parseFloat(document.getElementById('investmentRate').value) || 0;
-            const selectedAccountId = document.getElementById('investmentAccount').value;
-            const createLinked = document.getElementById('createLinkedAccount').checked;
-            if (!name) { this.showToast('Informe o nome'); return; }
-            let accountId = selectedAccountId;
-            if (!accountId && createLinked) {
-                const newAccountId = this.generateUniqueId();
-                this.accounts.push({ id: newAccountId, name: name, type: 'investment', balance: current, color: '#10b981' });
-                accountId = newAccountId;
-                this.saveAccounts();
-                this.populateAccountSelects();
-                this.showToast('🏦 Conta de investimento criada automaticamente!');
-            }
-            if (id) {
-                for (let i = 0; i < this.investments.length; i++) {
-                    if (this.investments[i].id === id) { this.investments[i] = { id, name, type, initial, current, date, rate, accountId }; break;
-                }
-            }
-            } else { this.investments.push({ id: this.generateUniqueId(), name, type, initial, current, date, rate, accountId }); }
-            if (accountId) {
-                for (let i = 0; i < this.accounts.length; i++) {
-                    if (this.accounts[i].id === accountId) { this.accounts[i].balance = current; break; }
-                }
-                this.saveAccounts();
-            }
-            this.clearCache(); this.saveInvestments(); this.renderInvestmentsModal(); this.updateInvestmentChart(); this.renderAccountsList(); this.updateDashboard();
-            closeNewInvestmentModal(); this.showToast(id ? 'Aplicação atualizada!' : 'Aplicação cadastrada!');
-        }
-
-        deleteInvestment(id) { if (!confirm('Excluir esta aplicação?')) return; this.investments = this.investments.filter(i => i.id !== id); this.clearCache(); this.saveInvestments(); this.renderInvestmentsModal(); this.updateInvestmentChart(); this.showToast('Aplicação excluída!'); }
-        editInvestment(id) { let inv = null; for (let i = 0; i < this.investments.length; i++) { if (this.investments[i].id === id) { inv = this.investments[i]; break; } } if (!inv) return; document.getElementById('investmentEditId').value = inv.id; document.getElementById('investmentName').value = inv.name; document.getElementById('investmentType').value = inv.type; document.getElementById('investmentInitial').value = inv.initial; document.getElementById('investmentCurrent').value = inv.current; document.getElementById('investmentDate').value = inv.date; document.getElementById('investmentRate').value = inv.rate; document.getElementById('newInvestmentTitle').textContent = 'Editar Aplicação'; document.getElementById('newInvestmentModal').classList.add('active'); }
-        openUpdateInvestment(id) { let inv = null; for (let i = 0; i < this.investments.length; i++) { if (this.investments[i].id === id) { inv = this.investments[i]; break; } } if (!inv) return; document.getElementById('updateInvestmentId').value = inv.id; document.getElementById('updateInvestmentName').textContent = inv.name; document.getElementById('updateInvestmentValue').value = inv.current; document.getElementById('updateInvestmentDate').value = new Date().toISOString().split('T')[0]; document.getElementById('updateInvestmentModal').classList.add('active'); }
-        updateInvestmentValue() { const id = document.getElementById('updateInvestmentId').value; const newValue = parseFloat(document.getElementById('updateInvestmentValue').value) || 0; for (let i = 0; i < this.investments.length; i++) { if (this.investments[i].id === id) { this.investments[i].current = newValue; if (this.investments[i].accountId) { for (let j = 0; j < this.accounts.length; j++) { if (this.accounts[j].id === this.investments[i].accountId) { this.accounts[j].balance = newValue; break; } } this.saveAccounts(); this.renderAccountsList(); } break; } } this.clearCache(); this.saveInvestments(); this.renderInvestmentsModal(); this.updateInvestmentChart(); this.updateDashboard(); closeUpdateInvestmentModal(); this.showToast('Valor atualizado!'); }
-        renderInvestmentsModal() { const container = document.getElementById('investmentsContent'); if (!container) return; const self = this; const typeLabels = { cdb: 'CDB', tesouro: 'Tesouro Direto', lci: 'LCI/LCA', fundo: 'Fundo', acao: 'Ações', fiis: 'FIIs', poupanca: 'Poupança', outro: 'Outro' }; if (!this.investments.length) { container.innerHTML = '<div style="text-align:center; padding:40px 20px; color:var(--text-secondary);"><div style="font-size:3rem; margin-bottom:12px; opacity:0.5;">📈</div><h3>Nenhuma aplicação cadastrada</h3></div>'; return; } let totalInitial = 0, totalCurrent = 0; let html = '<div>'; this.investments.forEach(inv => { const profit = inv.current - inv.initial; const profitPct = inv.initial > 0 ? (profit / inv.initial * 100) : 0; totalInitial += inv.initial; totalCurrent += inv.current; let accountInfo = ''; if (inv.accountId) { const linkedAccount = self.accounts.find(a => a.id === inv.accountId); if (linkedAccount) { accountInfo = ' • 🏦 ' + self.escapeHtml(linkedAccount.name); } } html += '<div class="investment-card"><div class="investment-card-header"><div><div class="investment-card-title">' + self.escapeHtml(inv.name) + '</div><div class="investment-card-type">' + (typeLabels[inv.type] || inv.type) + ' • Aplicado em ' + self.formatDate(inv.date) + accountInfo + '</div></div><div class="investment-card-actions"><button class="btn btn-secondary btn-small" onclick="smartwallet.openUpdateInvestment(\'' + inv.id + '\')">💰 Atualizar</button><button class="btn btn-secondary btn-small" onclick="smartwallet.editInvestment(\'' + inv.id + '\')">️</button><button class="btn btn-danger btn-small" onclick="smartwallet.deleteInvestment(\'' + inv.id + '\')">🗑️</button></div></div><div class="investment-card-values"><div class="investment-value-item"><div class="investment-value-label">Valor Inicial</div><div class="investment-value-amount privacy-value">' + self.formatCurrency(inv.initial) + '</div></div><div class="investment-value-item"><div class="investment-value-label">Valor Atual</div><div class="investment-value-amount privacy-value">' + self.formatCurrency(inv.current) + '</div></div><div class="investment-value-item"><div class="investment-value-label">Rendimento</div><div class="investment-value-amount privacy-value ' + (profit >= 0 ? 'positive' : 'negative') + '">' + profitPct.toFixed(2) + '% (' + self.formatCurrency(profit) + ')</div></div></div>'; if (inv.rate > 0) html += '<div style="font-size:0.85rem; color:var(--text-secondary);" class="privacy-value">Taxa: ' + inv.rate + '% ao ano</div>'; html += '</div>'; }); html += '</div>'; const totalProfit = totalCurrent - totalInitial; const totalProfitPct = totalInitial > 0 ? (totalProfit / totalInitial * 100) : 0; html += '<div class="investment-summary"><h3>📊 Resumo Geral</h3><div class="investment-summary-grid"><div class="investment-summary-item"><div class="investment-summary-label">Total Investido</div><div class="investment-summary-value privacy-value">' + this.formatCurrency(totalInitial) + '</div></div><div class="investment-summary-item"><div class="investment-summary-label">Valor Atual</div><div class="investment-summary-value privacy-value">' + this.formatCurrency(totalCurrent) + '</div></div><div class="investment-summary-item"><div class="investment-summary-label">Rendimento Total</div><div class="investment-summary-value privacy-value" style="color:' + (totalProfit >= 0 ? 'var(--success-color)' : 'var(--danger-color)') + ';">' + totalProfitPct.toFixed(2) + '% (' + this.formatCurrency(totalProfit) + ')</div></div></div></div>'; container.innerHTML = html; }
-        
-        printManual() {
-            try {
-                const printWindow = window.open('', '_blank', 'width=900,height=700,scrollbars=yes,resizable=yes');
-                if (!printWindow || printWindow.closed || typeof printWindow.closed === 'undefined') { alert('⚠️ O navegador bloqueou a janela de impressão.\n\nPor favor, permita popups para este site e tente novamente.'); return; }
-                const content = '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Manual - Smart Wallet</title><style>@page { size: A4; margin: 2cm; }body { font-family: Georgia, serif; color: #1e293b; line-height: 1.6; font-size: 11pt; padding: 20px; max-width: 800px; margin: 0 auto; }h1 { color: #6366f1; font-size: 28pt; text-align: center; margin-bottom: 8px; }h2 { color: #6366f1; font-size: 16pt; margin-top: 30px; border-bottom: 2px solid #6366f1; padding-bottom: 8px; }h3 { color: #06b6d4; font-size: 13pt; margin-top: 20px; }p { margin-bottom: 12px; }ul, ol { margin-left: 24px; margin-bottom: 16px; }li { margin-bottom: 8px; }.manual-cover { text-align: center; padding: 40px 20px; border: 3px solid #6366f1; border-radius: 16px; margin-bottom: 30px; background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(6, 182, 212, 0.05) 100%); }.manual-cover h1 { margin-bottom: 12px; }.manual-cover p { color: #64748b; font-size: 10pt; }.manual-quote { margin: 24px 0; padding: 20px 30px; border-left: 4px solid #6366f1; background: #f8fafc; border-radius: 8px; font-style: italic; }.manual-quote .quote-author { font-size: 9pt; font-weight: 600; color: #6366f1; text-align: right; margin-top: 12px; font-style: normal; }.manual-blessing { text-align: center; margin-top: 40px; padding: 30px; background: #f8fafc; border-radius: 16px; }.version { color: #64748b; font-size: 9pt; margin-top: 20px; }.author { color: #6366f1; font-weight: 600; font-size: 10pt; }@media print { body { padding: 0; } .manual-cover { page-break-after: always; } h2 { page-break-after: avoid; } }</style></head><body>' + manualHTML + '</body></html>';
-                printWindow.document.write(content);
-                printWindow.document.close();
-                printWindow.onload = function() { setTimeout(() => { printWindow.focus(); printWindow.print(); }, 500); };
-                setTimeout(() => { try { if (!printWindow.closed) { printWindow.focus(); printWindow.print(); } } catch (e) { console.warn('[SmartWallet] Erro ao imprimir:', e); } }, 1000);
-            } catch (e) { console.error('[SmartWallet] Erro em printManual:', e); alert('❌ Erro ao abrir janela de impressão: ' + e.message); }
-        }
+        saveInvestment() { 
+    const id = document.getElementById('investmentEditId').value; 
+    const name = document.getElementById('investmentName').value.trim(); 
+    const type = document.getElementById('investmentType').value; 
+    const initial = parseFloat(document.getElementById('investmentInitial').value) || 0; 
+    const current = parseFloat(document.getElementById('investmentCurrent').value) || 0; 
+    const date = document.getElementById('investmentDate').value; 
+    const rate = parseFloat(document.getElementById('investmentRate').value) || 0;
+    const selectedAccountId = document.getElementById('investmentAccount').value;
+    const createLinked = document.getElementById('createLinkedAccount').checked;
+    
+    if (!name) { this.showToast('Informe o nome'); return; } 
+    
+    let accountId = selectedAccountId;
+    
+    // 🆕 Se não há conta vinculada e o checkbox está marcado, criar automaticamente
+    if (!accountId && createLinked) {
+        const newAccountId = this.generateUniqueId();
+        this.accounts.push({
+            id: newAccountId,
+            name: name,
+            type: 'investment',
+            balance: current,
+            color: '#10b981'
+        });
+        accountId = newAccountId;
+        this.saveAccounts();
+        this.populateAccountSelects();
+        this.showToast('🏦 Conta de investimento criada automaticamente!');
     }
+    
+    if (id) { 
+        for (let i = 0; i < this.investments.length; i++) { 
+            if (this.investments[i].id === id) { 
+                this.investments[i] = { id, name, type, initial, current, date, rate, accountId }; 
+                break; 
+            } 
+        } 
+    } else { 
+        this.investments.push({ id: this.generateUniqueId(), name, type, initial, current, date, rate, accountId }); 
+    } 
+    
+    // 🆕 Sincronizar saldo da conta vinculada
+    if (accountId) {
+        for (let i = 0; i < this.accounts.length; i++) {
+            if (this.accounts[i].id === accountId) {
+                this.accounts[i].balance = current;
+                break;
+            }
+        }
+        this.saveAccounts();
+    }
+    
+    this.clearCache(); 
+    this.saveInvestments(); 
+    this.renderInvestmentsModal(); 
+    this.updateInvestmentChart(); 
+    this.renderAccountsList();
+    this.updateDashboard();
+    closeNewInvestmentModal(); 
+    this.showToast(id ? 'Aplicação atualizada!' : 'Aplicação cadastrada!'); 
+}
 
     window.smartwallet = new SmartWallet();
 
