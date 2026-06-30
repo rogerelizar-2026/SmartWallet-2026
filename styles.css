@@ -113,37 +113,50 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .splash-loader-bar { height: 100%; width: 0%; background: var(--gradient-primary); border-radius: 3px; animation: splashLoad 3.5s ease-in-out forwards; }
 @keyframes splashLoad { 0% { width: 0%; } 100% { width: 100%; } }
 
-.disclaimer-modal, .quote-modal {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px);
-    display: none; align-items: center; justify-content: center;
-    z-index: 10001 !important; padding: 20px;
-}
-.disclaimer-modal.active, .quote-modal.active { display: flex; animation: fadeIn 0.5s ease; }
-.disclaimer-modal.disintegrating { animation: disclaimerDisintegrate 0.6s ease-in forwards; }
-@keyframes disclaimerDisintegrate { 0% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(1.1); filter: blur(10px); } }
-.disclaimer-content, .quote-content {
-    background: var(--glass-bg); backdrop-filter: blur(30px);
-    border: 1px solid var(--glass-border); border-radius: 24px;
-    padding: 40px; max-width: 600px; width: 100%; text-align: center;
-    box-shadow: var(--shadow-lg);
-}
-.disclaimer-content { border-color: var(--warning-color); text-align: left; }
-.disclaimer-title { color: var(--warning-color); font-size: 1.8rem; margin-bottom: 20px; }
-.disclaimer-body { color: var(--text-primary); line-height: 1.8; font-size: 0.95rem; }
-.disclaimer-body h3 { color: var(--primary-color); margin: 20px 0 10px 0; font-size: 1.1rem; }
-.disclaimer-body ul { margin-left: 20px; margin-bottom: 16px; }
-.disclaimer-footer { margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border-color); text-align: center; }
-.disclaimer-timer { background: var(--input-bg); border: 2px solid var(--warning-color); border-radius: 12px; padding: 16px; margin-bottom: 20px; font-weight: 600; color: var(--warning-color); }
-.disclaimer-accept-btn { background: var(--gradient-primary); color: white; border: none; padding: 14px 32px; border-radius: 14px; font-size: 1rem; font-weight: 600; cursor: pointer; opacity: 0.5; pointer-events: none; transition: all 0.3s ease; }
-.disclaimer-accept-btn.enabled { opacity: 1; pointer-events: auto; }
-.disclaimer-accept-btn.enabled:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(99, 102, 241, 0.6); }
-
-.quote-icon { width: 48px; height: 48px; stroke: var(--warning-color); stroke-width: 1.5; fill: none; margin: 0 auto 20px; }
-.quote-text { font-size: 1.3rem; font-weight: 500; line-height: 1.6; margin-bottom: 24px; font-style: italic; }
-.quote-author { font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 32px; font-weight: 600; }
-.quote-btn { background: var(--gradient-primary); color: white; border: none; padding: 16px 32px; border-radius: 16px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4); font-family: inherit; }
-.quote-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(99, 102, 241, 0.6); }
+<div class="disclaimer-modal" id="disclaimerModal" role="dialog" aria-modal="true" aria-labelledby="disclaimerTitle">
+    <div class="disclaimer-content">
+        <div class="disclaimer-header">
+            <div class="disclaimer-icon" aria-hidden="true">⚠️</div>
+            <h2 class="disclaimer-title" id="disclaimerTitle">Termos de Uso e Aviso Legal</h2>
+            <p class="text-secondary">Por favor, leia atentamente antes de continuar</p>
+        </div>
+        <div class="disclaimer-body">
+            <h3>📋 Sobre o Smart Wallet</h3>
+            <p>O Smart Wallet é uma ferramenta de <strong>controle financeiro pessoal</strong> desenvolvida para ajudar você a organizar suas finanças de forma simples, segura e inteligente.</p>
+            <h3>🔒 Privacidade e Segurança</h3>
+            <ul>
+                <li><strong>100% Offline:</strong> Todos os seus dados são armazenados localmente no seu dispositivo. Nenhum dado é enviado para servidores externos.</li>
+                <li><strong>Sem Cadastro:</strong> Não é necessário criar conta, fornecer e-mail ou qualquer informação pessoal.</li>
+                <li><strong>Sem Rastreamento:</strong> Não utilizamos cookies de analytics, pixels de rastreamento ou qualquer forma de coleta de dados.</li>
+                <li><strong>Controle Total:</strong> Você pode exportar e apagar todos os seus dados a qualquer momento, sem restrições.</li>
+            </ul>
+            <h3>⚠️ Limitações e Isenção de Responsabilidade</h3>
+            <ul>
+                <li><strong>Ferramenta de Apoio:</strong> O Smart Wallet é uma ferramenta de organização pessoal e não substitui consultoria financeira profissional.</li>
+                <li><strong>Responsabilidade:</strong> Todas as decisões financeiras são de inteira responsabilidade do usuário.</li>
+                <li><strong>Precisão:</strong> Os dados exibidos dependem exclusivamente das informações inseridas pelo usuário. O sistema não verifica a veracidade dos lançamentos.</li>
+                <li><strong>Backup:</strong> É responsabilidade do usuário manter backups regulares de seus dados. A perda de dados por falha do dispositivo não é de responsabilidade do desenvolvedor.</li>
+                <li><strong>Disponibilidade:</strong> O aplicativo funciona offline e depende do navegador do usuário. Atualizações do navegador podem eventualmente causar incompatibilidades.</li>
+            </ul>
+            <h3>📜 Propriedade Intelectual</h3>
+            <p>O Smart Wallet foi idealizado e desenvolvido por <strong>RogerElizar™</strong>. Todos os direitos sobre o design, código-fonte e conceito são reservados. O uso é gratuito para fins pessoais.</p>
+            <h3>🔄 Atualizações e Manutenção</h3>
+            <p>O desenvolvedor reserva-se o direito de atualizar, modificar ou descontinuar o aplicativo a qualquer momento, sem aviso prévio. Recomenda-se fazer backup antes de qualquer atualização.</p>
+            <h3>✅ Seu Compromisso</h3>
+            <p>Ao clicar em "Li e Concordo com os Termos", você declara que:</p>
+            <ul>
+                <li>Leu e compreendeu todos os termos acima;</li>
+                <li>Concorda em utilizar o aplicativo de forma responsável;</li>
+                <li>Entende que se trata de uma ferramenta de apoio e não de consultoria financeira;</li>
+                <li>Aceita os termos de isenção de responsabilidade.</li>
+            </ul>
+        </div>
+        <div class="disclaimer-footer">
+            <div class="disclaimer-timer" id="disclaimerTimer" aria-live="polite">⏱️ Aguarde <span id="countdown">12</span> segundos para continuar</div>
+            <button class="disclaimer-accept-btn" id="acceptDisclaimerBtn" onclick="acceptDisclaimer()" disabled aria-label="Aceitar termos de uso">✓ Li e Concordo com os Termos</button>
+        </div>
+    </div>
+</div>
 
 /* ===== HEADER & TOOLBAR ===== */
 header { background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); padding: 20px; border-radius: 20px; margin-bottom: 20px; box-shadow: var(--shadow); position: relative; overflow: visible; z-index: 1; }
