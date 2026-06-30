@@ -1,10 +1,10 @@
-# 💰 Smart Wallet
+# 💰 My Wallet
 
 > **Controle Financeiro Pessoal Inteligente**  
 > 100% offline · Privacidade total · PWA instalável
 
-[![CI/CD](https://github.com/rogerelizar-2026/SmartWallet/actions/workflows/ci.yml/badge.svg)](https://github.com/rogerelizar-2026/SmartWallet/actions)
-[![Versão](https://img.shields.io/badge/versão-4.0.0-blue)](https://github.com/rogerelizar-2026/SmartWallet/releases)
+[![CI/CD](https://github.com/rogerelizar-2026/MyWallet/actions/workflows/ci.yml/badge.svg)](https://github.com/rogerelizar-2026/MyWallet/actions)
+[![Versão](https://img.shields.io/badge/versão-4.0.0-blue)](https://github.com/rogerelizar-2026/MyWallet/releases)
 [![Licença](https://img.shields.io/badge/licença-MIT-green)](LICENSE)
 [![Lighthouse](https://img.shields.io/badge/lighthouse-95%2B-brightgreen)](https://pagespeed.web.dev/)
 
@@ -49,8 +49,8 @@
 
 ### Como WebApp (Recomendado)
 
-1. Acesse: **https://rogerelizar-2026.github.io/SmartWallet/**
-2. **No computador**: Menu do navegador → "Instalar Smart Wallet"
+1. Acesse: **https://rogerelizar-2026.github.io/MyWallet/**
+2. **No computador**: Menu do navegador → "Instalar My Wallet"
 3. **No Android**: Chrome → ⋮ → "Instalar aplicativo"
 4. **No iPhone**: Safari → Compartilhar → "Adicionar à Tela de Início"
 
@@ -58,8 +58,8 @@
 
 ```bash
 # Clone o repositório
-git clone https://github.com/rogerelizar-2026/SmartWallet.git
-cd SmartWallet
+git clone https://github.com/rogerelizar-2026/MyWallet.git
+cd MyWallet
 
 # Sirva com qualquer servidor estático
 # Opção 1: Python
@@ -72,7 +72,7 @@ npx http-server -p 8000
 Acesse http://localhost:8000
 
 📁 Estrutura do Projeto
-SmartWallet/
+MyWallet/
 ├── index.h©l              # Interface principal
 ├── styles.css              # Estilos (glass morphism)
 ├── manifest.json           # Configuração PWA
@@ -81,7 +81,7 @@ SmartWallet/
 ├── CHANGELOG.md            # Histórico de versões
 ├── README.md               # Esta documentação
 └── js/
-    ├── app.js              # Entry point + classe SmartWallet
+    ├── app.js              # Entry point + classe MyWallet
     ├── handlers.js         # Handlers de eventos (Fase 2)
     ├── delegation.js       # Event delegation global
     ├── lazy-loader.js      # Carregamento sob demanda
@@ -124,7 +124,7 @@ Agradecimentos
 "Toda boa dádiva e todo dom perfeito vêm do alto, descendo do Pai das luzes."
 — Tiago 1:17
 Dedicado aos meus filhos, com amor. 💝
-Smart Wallet - Idealizado por RogerElizar© · 2026
+My Wallet - Idealizado por RogerElizar© · 2026
 
 
 ---
@@ -136,7 +136,7 @@ Guia para migrar dados entre versões do schema.
 ```markdown
 # 🔄 Guia de Migração de Dados
 
-Este documento descreve como migrar dados entre versões do Smart Wallet.
+Este documento descreve como migrar dados entre versões do My Wallet.
 
 ---
 
@@ -161,7 +161,7 @@ Este documento descreve como migrar dados entre versões do Smart Wallet.
 ```javascript
 // Execute APENAS UMA VEZ no Console (F12)
 (function migrateV1toV2() {
-    const data = JSON.parse(localStorage.getItem('smartwallet_data'));
+    const data = JSON.parse(localStorage.getItem('mywallet_data'));
     if (!data) {
         console.log('Nenhum dado v1 encontrado');
         return;
@@ -185,8 +185,8 @@ Este documento descreve como migrar dados entre versões do Smart Wallet.
     });
 
     // Salva no novo formato
-    localStorage.setItem('smartwallet_transactions', JSON.stringify(transactions));
-    localStorage.removeItem('smartwallet_data');
+    localStorage.setItem('mywallet_transactions', JSON.stringify(transactions));
+    localStorage.removeItem('mywallet_data');
     
     console.log(`✅ Migradas ${cardPurchases.length} compras de cartão`);
     location.reload();
@@ -199,7 +199,7 @@ Categorias com type: "receita" viram type: "income"
 Script de migração
 
 (function migrateV2toV3() {
-    const categories = JSON.parse(localStorage.getItem('smartwallet_categories') || '[]');
+    const categories = JSON.parse(localStorage.getItem('mywallet_categories') || '[]');
     
     const migrated = categories.map(c => ({
         ...c,
@@ -207,14 +207,14 @@ Script de migração
               c.type === 'receita' ? 'income' : c.type
     }));
 
-    localStorage.setItem('smartwallet_categories', JSON.stringify(migrated));
+    localStorage.setItem('mywallet_categories', JSON.stringify(migrated));
     console.log(`✅ ${migrated.length} categorias migradas`);
     location.reload();
 })();
 
 🔍 Verificando a versão atual
 // No Console (F12)
-const backup = JSON.parse(localStorage.getItem('smartwallet_backup_version') || '1');
+const backup = JSON.parse(localStorage.getItem('mywallet_backup_version') || '1');
 console.log('Versão do schema:', backup);
 
 ⚠️ Antes de migrar
@@ -235,7 +235,7 @@ Centraliza o versionamento do app.
 
 ```javascript
 // js/version.js
-// Versionamento semântico do Smart Wallet
+// Versionamento semântico do My Wallet
 
 export const APP_VERSION = {
     major: 4,
@@ -267,7 +267,7 @@ export const APP_VERSION = {
 };
 
 // Exibe no console ao carregar
-console.log(`%c Smart Wallet v${APP_VERSION.toString()} "${APP_VERSION.codename}"`, 
+console.log(`%c My Wallet v${APP_VERSION.toString()} "${APP_VERSION.codename}"`, 
     'color: #6366f1; font-weight: bold; font-size: 14px;');
 console.log(`%c Build: ${APP_VERSION.buildDate}`, 'color: #94a3b8;');
 
@@ -279,10 +279,10 @@ import { lazyLoader } from './lazy-loader.js';
 import { a11yManager } from './a11y.js';
 import { APP_VERSION } from './version.js';  // ← NOVO
 
-console.log(`🚀 Smart Wallet v${APP_VERSION.toString()} iniciando...`);
+console.log(`🚀 My Wallet v${APP_VERSION.toString()} iniciando...`);
 
 E no final do arquivo, substitua o console.log por:
-console.log(`🎉 Smart Wallet v${APP_VERSION.toString()} "${APP_VERSION.codename}" carregado!`);
+console.log(`🎉 My Wallet v${APP_VERSION.toString()} "${APP_VERSION.codename}" carregado!`);
 console.log(`📅 Build: ${APP_VERSION.buildDate}`);
 console.log(`🔧 Storage: ${storageManager.getUsage().kb}KB usados`);
 
@@ -320,7 +320,7 @@ README: Renderizado na página inicial do repo
 Badge de CI: Mostra status em tempo real
 Changelog: Histórico completo de versões
 Projeto Concluído!
-O Smart Wallet v4.1.0 agora é um projeto com:
+O My Wallet v4.1.0 agora é um projeto com:
 Pilar
 Status
 ️ Arquitetura
