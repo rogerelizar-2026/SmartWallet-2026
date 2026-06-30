@@ -97,11 +97,11 @@
     ];
 
     const manualHTML = 
-        '<div class="manual-cover">
+        '<div class="manual-cover">' +
         '<h1>Manual do Usuário</h1>' +
         '<h2>Smart Wallet</h2>' +
         '<p>Controle Financeiro Pessoal Inteligente</p>' +
-        '<p class="version">Versão 2.0.2 - 2026</p>' +
+        '<p class="version">Versão 4.0.1 - 2026</p>' +
         '<p class="author">Idealizado por RogerElizar™</p>' +
         '</div>' +
         '<div class="manual-quote">' +
@@ -1167,5 +1167,5 @@
     document.addEventListener('keydown', (e) => { if (e.target.classList.contains('clickable') && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); e.target.click(); } });
     if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').then(reg => console.log('[SmartWallet] SW registrado:', reg.scope)).catch(err => console.log('[SmartWallet] SW falhou:', err)); }); }
 
-    console.log('🎉 Smart Wallet v4.0.3 carregado com sucesso!');
+    console.log('🎉 Smart Wallet v4.0.1 carregado com sucesso!');
 })();
