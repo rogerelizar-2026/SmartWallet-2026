@@ -34,7 +34,7 @@
     ];
 
     const FINANCIAL_QUOTES = [
-      { text: "Não se trata de quanto dinheiro você ganha, mas de quanto dinheiro você guarda.", author: "Robert Kiyosaki" },
+            { text: "Não se trata de quanto dinheiro você ganha, mas de quanto dinheiro você guarda.", author: "Robert Kiyosaki" },
             { text: "O hábito de poupar é em si mesmo uma educação.", author: "T.T. Munger" },
             { text: "O dinheiro não é bom nem mau; é como uma faca. Pode cortar o pão da família ou ferir alguém. Tudo depende da mão que o segura.", author: "Sabedoria Financeira" },
             { text: "Dinheiro é energia. Se você o retém com medo, ele estagna. Se o movimenta com propósito, ele se multiplica.", author: "Sabedoria Financeira" },
@@ -96,8 +96,15 @@
             { text: "Antes de gastar, aprenda a ganhar. Antes de ganhar, aprenda a poupar.", author: "Provérbio" }
     ];
 
-    const manualHTML = '<div class="manual-cover"><h1>📘 Manual do Usuário</h1><h2>Smart Wallet</h2><p>Versão 4.0.3 - 2026</p><p class="author">Idealizado por RogerElizar™</p></div><div class="manual-content"><h2>🎯 Bem-vindo!</h2><p>Parabéns pelo primeiro passo rumo à liberdade financeira!</p><h2>📱 Instalação</h2><h3>💻 Computador</h3><ol><li>Menu (⋮) → "Instalar"</li></ol><h3>📱 Android</h3><ol><li>Chrome → "Instalar aplicativo"</li></ol><h3>🍎 iPhone</h3><ol><li>Safari → "Adicionar à Tela de Início"</li></ol><h2>💰 Funcionalidades</h2><h3>📊 Dashboard</h3><ul><li>Saldo Unificado</li><li>Receitas e Despesas</li><li>Acumulado C.Crédito</li></ul><h3>💳 Cartões</h3><p>Lance compras pelo modal "Nova Transação" selecionando o cartão.</p><h3>🔄 Recorrência</h3><p>Marque "Recorrente" para criar parcelas automáticas.</p><h2>🛡️ Ajuda</h2><ul><li>E-mail: rogerelizar@gmail.com</li></ul><div class="manual-blessing"><h3>🙏 Bênção</h3><div class="manual-quote"><p>Que Deus abençoe sua jornada.</p><div class="quote-author">RogerElizar®</div></div></div>';
-            '<div class="manual-quote">' +
+    const manualHTML = 
+        '<div class="manual-cover">
+        '<h1>📘 Manual do Usuário</h1>' +
+        '<h2>Smart Wallet</h2>' +
+        '<p>Controle Financeiro Pessoal Inteligente</p>' +
+        '<p class="version">Versão 2.0.2 - 2026</p>' +
+        '<p class="author">Idealizado por RogerElizar™</p>' +
+        '</div>' +
+        '<div class="manual-quote">' +
         '<p>"Toda boa dádiva e todo dom perfeito vêm do alto, descendo do Pai das luzes."</p>' +
         '<div class="quote-author">— Tiago 1:17</div>' +
         '</div>' +
@@ -270,7 +277,6 @@
         '<div class="quote-author">Com amor e orações,<br>RogerElizar®</div>' +
         '</div>' +
         '</div>';
-
     class SmartWallet {
         constructor() {
             this.currentMonth = new Date();
