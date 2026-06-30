@@ -98,7 +98,7 @@
 
     const manualHTML = 
         '<div class="manual-cover">
-        '<h1>📘 Manual do Usuário</h1>' +
+        '<h1>Manual do Usuário</h1>' +
         '<h2>Smart Wallet</h2>' +
         '<p>Controle Financeiro Pessoal Inteligente</p>' +
         '<p class="version">Versão 2.0.2 - 2026</p>' +
