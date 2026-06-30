@@ -34,14 +34,242 @@
     ];
 
     const FINANCIAL_QUOTES = [
-        { text: "Melhor é o pouco com o temor do Senhor.", author: "Provérbios 15:16" },
-        { text: "Quem deve fica escravo de quem empresta.", author: "Provérbios 22:7" },
-        { text: "A bênção do Senhor enriquece sem acrescentar dores.", author: "Provérbios 10:22" },
-        { text: "A alma dos diligentes engorda.", author: "Provérbios 13:4" },
-        { text: "Toda boa dádiva vem do alto.", author: "Tiago 1:17" }
+      { text: "Não se trata de quanto dinheiro você ganha, mas de quanto dinheiro você guarda.", author: "Robert Kiyosaki" },
+            { text: "O hábito de poupar é em si mesmo uma educação.", author: "T.T. Munger" },
+            { text: "O dinheiro não é bom nem mau; é como uma faca. Pode cortar o pão da família ou ferir alguém. Tudo depende da mão que o segura.", author: "Sabedoria Financeira" },
+            { text: "Dinheiro é energia. Se você o retém com medo, ele estagna. Se o movimenta com propósito, ele se multiplica.", author: "Sabedoria Financeira" },
+            { text: "Não pergunte quanto custa, pergunte quanto vale. Preço é o que você paga; valor é o que você recebe.", author: "Sabedoria Financeira" },
+            { text: "O dinheiro deve trabalhar para você, não você para o dinheiro. Liberdade financeira é ter opções, não ostentação.", author: "Sabedoria Financeira" },
+            { text: "Riqueza verdadeira não é ter muito, é depender de pouco. O dinheiro é ponte para seus valores, não o destino final.", author: "Sabedoria Financeira" },
+            { text: "Riqueza é a capacidade de viver completamente a vida.", author: "Henry David Thoreau" },
+            { text: "Um orçamento está dizendo a seu dinheiro para onde ir, em vez de se perguntar para onde ele foi.", author: "Dave Ramsey" },
+            { text: "Amar dinheiro é a raiz de todos os problemas. Muita gente se afastou da fé por causa disso e se encheu de angústia.", author: "1 Timóteo 6:10 (Linguagem Atual)" },
+            { text: "É melhor ter pouco e temer a Deus do que ter um tesouro enorme e viver preocupado.", author: "Provérbios 15:16 (Linguagem Atual)" },
+            { text: "Quem deve fica escravo de quem empresta. O rico manda no pobre.", author: "Provérbios 22:7 (Linguagem Atual)" },
+            { text: "O dinheiro não muda pessoas; apenas revela quem elas realmente são.", author: "Provérbio Financeiro Moderno" },
+            { text: "Quando Deus abençoa com prosperidade, isso não vem junto com dor de cabeça.", author: "Provérbios 10:22 (Linguagem Atual)" },
+            { text: "É melhor trabalhar com dedicação do que ser preguiçoso e só ficar sonhando.", author: "Provérbios 13:4 (Linguagem Atual)" },
+            { text: "Não economize o que resta depois de gastar; gaste o que resta depois de poupar.", author: "Warren Buffett" },
+            { text: "Se você não encontrar uma maneira de ganhar dinheiro enquanto dorme, você trabalhará até morrer.", author: "Warren Buffett" },
+            { text: "O melhor investimento que você pode fazer é em si mesmo.", author: "Warren Buffett" },
+            { text: "Dinheiro é um péssimo mestre, mas um excelente servo.", author: "P.T. Barnum" },
+            { text: "A riqueza não consiste em ter grandes posses, mas em ter poucas necessidades.", author: "Epicteto" },
+            { text: "Cuidado com pequenos gastos; um pequeno vazamento afundará um grande navio.", author: "Benjamin Franklin" },
+            { text: "Dê um décimo para que você se torne rico.", author: "Talmude - Deuteronômio 14:22" },
+            { text: "O dinheiro não é sagrado, não é um objeto santo inatingível. É como roupa: uma ferramenta para viver.", author: "Talmude" },
+            { text: "Uma pessoa deve sempre dividir seu dinheiro em três partes: um terço em terra, um terço em negócios e um terço em dinheiro vivo.", author: "Talmude - Diversificação de Investimentos" },
+            { text: "Com dinheiro você não pode fazer tudo; sem dinheiro você não pode fazer nada!", author: "Provérbio Judaico" },
+            { text: "Todos reclamam da falta de dinheiro, mas ninguém reclama da falta de inteligência.", author: "Provérbio Judaico" },
+            { text: "Quem compra o que não precisa, rouba a si mesmo.", author: "Provérbio Popular" },
+            { text: "A independência financeira não é sobre ficar rico, é sobre ter opções.", author: "Chris Reining" },
+            { text: "Não é o quanto você ganha, é o quanto você faz o dinheiro trabalhar para você.", author: "Robert Kiyosaki" },
+            { text: "Pague a si mesmo primeiro.", author: "George Samuel Clason" },
+            { text: "Riqueza é como um cigarro: se você não fumar, ela dura mais.", author: "Provérbio Popular" },
+            { text: "O mercado de ações é um mecanismo para transferir dinheiro do impaciente para o paciente.", author: "Warren Buffett" },
+            { text: "A melhor hora para plantar uma árvore foi há 20 anos. A segunda melhor hora é agora.", author: "Provérbio Chinês" },
+            { text: "Finanças não são sobre matemática, são sobre comportamento.", author: "Morgan Housel" },
+            { text: "Pessoas ricas acreditam que ganham dinheiro com ideias. Pessoas pobres acreditam que ganham dinheiro com tempo.", author: "Robert Kiyosaki" },
+            { text: "Gastar dinheiro para impressionar pessoas é a maneira mais rápida de ficar pobre.", author: "Morgan Housel" },
+            { text: "A verdadeira medida da riqueza é quanto você valeria se perdesse todo o seu dinheiro.", author: "Provérbio" },
+            { text: "Economizar é a melhor estratégia de investimento.", author: "Nathaniel Hale" },
+            { text: "A diferença entre ricos e pobres é o que eles fazem com o tempo livre.", author: "Robert Kiyosaki" },
+            { text: "Cada real que você economiza é um empregado que trabalha para você.", author: "T. Harv Eker" },
+            { text: "A maior riqueza é a que menos se corrompe, a da consciência.", author: "Sêneca" },
+            { text: "Se você vive para impressionar os outros, nunca será rico de verdade.", author: "Morgan Housel" },
+            { text: "A liberdade financeira é mais sobre controle do que sobre dinheiro.", author: "Ramit Sethi" },
+            { text: "Não coloque sua fé no dinheiro. Coloque seu dinheiro na sua fé.", author: "Provérbio" },
+            { text: "O maior inimigo da riqueza é a expectativa de ficar rico rápido.", author: "Morgan Housel" },
+            { text: "Planeje suas finanças como planeja suas férias: com destino, roteiro e orçamento.", author: "Anônimo" },
+            { text: "Se você quer saber quanto vale uma pessoa, observe como ela trata quem não pode lhe dar nada em troca.", author: "Provérbio Judaico" },
+            { text: "O rico não é quem tem mais, é quem precisa de menos.", author: "Provérbio Judaico" },
+            { text: "Dinheiro emprestado sem confiança é como semente plantada em pedra: não nasce.", author: "Provérbio Judaico" },
+            { text: "A pobreza não é falta de dinheiro, é falta de visão. Quem enxerga oportunidades, nunca fica sem recursos.", author: "Provérbio Judaico" },
+            { text: "Ricos adquirem ativos. Pobres e classe média adquirem passivos que acham serem ativos.", author: "Robert Kiyosaki" },
+            { text: "A paciência é a virtude dos investidores bem-sucedidos.", author: "Peter Lynch" },
+            { text: "Saber gastar é tão importante quanto saber ganhar.", author: "Provérbio Popular" },
+            { text: "Dinheiro é um ótimo servo, mas um péssimo mestre.", author: "Francis Bacon" },
+            { text: "A prosperidade depende mais da sua mentalidade do que da sua conta bancária.", author: "T. Harv Eker" },
+            { text: "Investir em conhecimento paga os melhores juros.", author: "Benjamin Franklin" },
+            { text: "Não espere; o tempo nunca será 'o certo'. Comece de onde você está.", author: "Napoleon Hill" },
+            { text: "A educação financeira é a base da liberdade financeira.", author: "Robert Kiyosaki" },
+            { text: "O futuro pertence àqueles que se preparam hoje.", author: "Malcolm X" },
+            { text: "Antes de gastar, aprenda a ganhar. Antes de ganhar, aprenda a poupar.", author: "Provérbio" }
     ];
 
     const manualHTML = '<div class="manual-cover"><h1>📘 Manual do Usuário</h1><h2>Smart Wallet</h2><p>Versão 4.0.3 - 2026</p><p class="author">Idealizado por RogerElizar™</p></div><div class="manual-content"><h2>🎯 Bem-vindo!</h2><p>Parabéns pelo primeiro passo rumo à liberdade financeira!</p><h2>📱 Instalação</h2><h3>💻 Computador</h3><ol><li>Menu (⋮) → "Instalar"</li></ol><h3>📱 Android</h3><ol><li>Chrome → "Instalar aplicativo"</li></ol><h3>🍎 iPhone</h3><ol><li>Safari → "Adicionar à Tela de Início"</li></ol><h2>💰 Funcionalidades</h2><h3>📊 Dashboard</h3><ul><li>Saldo Unificado</li><li>Receitas e Despesas</li><li>Acumulado C.Crédito</li></ul><h3>💳 Cartões</h3><p>Lance compras pelo modal "Nova Transação" selecionando o cartão.</p><h3>🔄 Recorrência</h3><p>Marque "Recorrente" para criar parcelas automáticas.</p><h2>🛡️ Ajuda</h2><ul><li>E-mail: rogerelizar@gmail.com</li></ul><div class="manual-blessing"><h3>🙏 Bênção</h3><div class="manual-quote"><p>Que Deus abençoe sua jornada.</p><div class="quote-author">RogerElizar®</div></div></div>';
+            '<div class="manual-quote">' +
+        '<p>"Toda boa dádiva e todo dom perfeito vêm do alto, descendo do Pai das luzes."</p>' +
+        '<div class="quote-author">— Tiago 1:17</div>' +
+        '</div>' +
+        '<p>Agradeço a Deus por toda sabedoria, saúde e recursos que me permitiram desenvolver este projeto.</p>' +
+        '<div class="dedication">' +
+        '<h3>💝 Aos meus filhos</h3>' +
+        '<div class="manual-quote">' +
+        '<p>Dedico este trabalho a vocês, meus amados filhos. Que este seja um legado de ensino, organização e sabedoria financeira.</p>' +
+        '<div class="quote-author">— Com todo amor: Rogério</div>' +
+        '</div>' +
+        '</div>' +
+        '<h2>🎯 Bem-vindo ao Smart Wallet Brasil!</h2>' +
+        '<p>Parabéns por dar o primeiro passo rumo à sua <strong>liberdade financeira</strong>! O Smart Wallet Brasil não é apenas mais um aplicativo de controle de gastos — é seu parceiro na jornada para transformar sua relação com o dinheiro.</p>' +
+        '<div class="manual-tip">' +
+        '<strong>💡 Você sabia?</strong> Estudos mostram que pessoas que acompanham suas finanças regularmente economizam em média <strong>20% a mais</strong> do que aquelas que não controlam seus gastos.' +
+        '</div>' +
+        '<h2>📱 Instalação como WebApp</h2>' +
+        '<p>O Smart Wallet funciona como um aplicativo instalado no seu dispositivo, mesmo sendo uma aplicação web.</p>' +
+        '<h3>💻 No Computador (Chrome, Edge, Brave)</h3>' +
+        '<ol>' +
+        '<li>Acesse o site pelo navegador</li>' +
+        '<li>Procure o ícone de instalação na barra de endereços (monitor com seta para baixo)</li>' +
+        '<li>Ou clique no menu do navegador (⋮) → "Instalar Smart Wallet..."</li>' +
+        '<li>Confirme a instalação</li>' +
+        '<li>Pronto! O app aparecerá na sua área de trabalho</li>' +
+        '</ol>' +
+        '<h3>📱 No Celular Android (Chrome)</h3>' +
+        '<ol>' +
+        '<li>Abra o site no Chrome</li>' +
+        '<li>Toque nos três pontos (⋮) no canto superior direito</li>' +
+        '<li>Selecione "Instalar aplicativo" ou "Adicionar à tela inicial"</li>' +
+        '<li>Confirme tocando em "Instalar"</li>' +
+        '<li>O ícone aparecerá na sua tela inicial</li>' +
+        '</ol>' +
+        '<h3>🍎 No iPhone (Safari)</h3>' +
+        '<ol>' +
+        '<li>Abra o site no Safari</li>' +
+        '<li>Toque no botão Compartilhar (quadrado com seta)</li>' +
+        '<li>Role para baixo e toque em "Adicionar à Tela de Início"</li>' +
+        '<li>Toque em "Adicionar"</li>' +
+        '<li>O app aparecerá na sua tela inicial</li>' +
+        '</ol>' +
+        '<div class="manual-tip">' +
+        '<strong>🔒 Privacidade Total:</strong> Após a instalação, o app funciona mesmo offline! Todos os dados ficam apenas no seu dispositivo.' +
+        '</div>' +
+        '<h2>💰 Funcionalidades Principais</h2>' +
+        '<h3>📊 Dashboard Financeiro</h3>' +
+        '<p>A tela inicial mostra um resumo completo da sua situação financeira:</p>' +
+        '<ul>' +
+        '<li><strong>Saldo do Mês:</strong> Quanto você ganhou menos quanto gastou</li>' +
+        '<li><strong>Receitas:</strong> Total de entradas (salário, freelas, etc)</li>' +
+        '<li><strong>Despesas:</strong> Total de saídas</li>' +
+        '<li><strong>Meta de Reserva:</strong> Progresso em direção à sua meta</li>' +
+        '</ul>' +
+        '<div class="manual-success">' +
+        '<strong>🎯 Dica de Coach:</strong> Uma boa regra é ter uma reserva de emergência equivalente a <strong>6 meses</strong> das suas despesas mensais. Isso te protege contra imprevistos sem precisar recorrer a empréstimos.' +
+        '</div>' +
+        '<h3>💳 Gestão de Cartões de Crédito</h3>' +
+        '<p>Controle todos os seus cartões em um só lugar:</p>' +
+        '<ul>' +
+        '<li>Cadastre cartões com limite, dia de fechamento e vencimento</li>' +
+        '<li>Acompanhe faturas e compras parceladas</li>' +
+        '<li>Veja quanto do limite já foi utilizado</li>' +
+        '<li>Exporte faturas em CSV ou PDF</li>' +
+        '</ul>' +
+        '<div class="manual-warning">' +
+        '<strong>⚠️ Atenção:</strong> Cartões de crédito podem ser grandes vilões financeiros se mal utilizados. A regra de ouro: <strong>só compre no crédito se puder pagar a fatura integralmente</strong>. Parcelar a fatura gera juros que podem multiplicar sua dívida em até 15x!' +
+        '</div>' +
+        '<h3>🔔 Alertas de Contas</h3>' +
+        '<p>Nunca mais esqueça uma conta! O sistema avisa automaticamente quando há contas vencendo nos próximos 3 dias.</p>' +
+        '<h3>📈 Gráficos e Análises</h3>' +
+        '<p>Visualize seus dados de forma clara:</p>' +
+        '<ul>' +
+        '<li><strong>Entradas e Saídas:</strong> Evolução mensal</li>' +
+        '<li><strong>Despesas por Categoria:</strong> Onde seu dinheiro está indo</li>' +
+        '<li><strong>Projeção:</strong> Estimativa para o próximo mês</li>' +
+        '</ul>' +
+        '<h2>🚀 Guia do Sucesso Financeiro</h2>' +
+        '<h3>💡 A Mentalidade da Prosperidade</h3>' +
+        '<p>Muitas pessoas acham que riqueza é apenas para "ricos". Mas a verdade é que <strong>prosperidade financeira</strong> é acessível a todos que seguem princípios básicos:</p>' +
+        '<div class="manual-success">' +
+        '<strong>Caso Real - João e Maria:</strong><br>' +
+        'João e Maria ganhavam R$ 5.000/mês. Sem controle, viviam no limite. Começaram a usar o Smart Wallet e aplicaram a regra 50-30-20:<br><br>' +
+        '• <strong>R$ 2.500</strong> (50%) - Necessidades (aluguel, comida, transporte)<br>' +
+        '• <strong>R$ 1.500</strong> (30%) - Desejos (lazer, restaurantes)<br>' +
+        '• <strong>R$ 1.000</strong> (20%) - Objetivos financeiros<br><br>' +
+        'Em 3 anos, construíram uma reserva de R$ 36.000 e começaram a investir. Hoje, 5 anos depois, têm R$ 120.000 investidos e uma vida financeira tranquila. Não são milionários, mas são <strong>financeiramente livres</strong>.' +
+        '</div>' +
+        '<h3>🎯 A Regra 50-30-20</h3>' +
+        '<p>Uma boa divisão do seu salário é:</p>' +
+        '<ul>' +
+        '<li><strong>50%</strong> para necessidades (aluguel, comida, transporte)</li>' +
+        '<li><strong>30%</strong> para desejos (lazer, restaurantes, hobbies)</li>' +
+        '<li><strong>20%</strong> para objetivos financeiros (reserva, investimentos, quitar dívidas)</li>' +
+        '</ul>' +
+        '<h3>💎 Poupar NÃO é Suficiente - Invista!</h3>' +
+        '<p>Muitas pessoas cometem o erro de apenas guardar dinheiro na poupança. Mas com a inflação, seu dinheiro <strong>perde valor</strong> com o tempo!</p>' +
+        '<div class="manual-warning">' +
+        '<strong>Caso Real - Carlos:</strong><br>' +
+        'Carlos guardava R$ 500/mês na poupança. Em 10 anos, tinha R$ 60.000. Mas com inflação média de 5% ao ano, esses R$ 60.000 compravam apenas o equivalente a R$ 37.000 de 10 anos atrás. Ele <strong>perdeu R$ 23.000 em poder de compra</strong>!' +
+        '</div>' +
+        '<div class="manual-success">' +
+        '<strong>Caso Real - Ana:</strong><br>' +
+        'Ana investia R$ 500/mês em um CDB que rendia 10% ao ano. Em 10 anos, tinha R$ 102.000. Mesmo com a mesma inflação, seu dinheiro <strong>rendeu acima da inflação</strong> e ela ganhou poder de compra real!' +
+        '</div>' +
+        '<h3>📊 Onde Investir (Básico)</h3>' +
+        '<p>Para iniciantes, algumas opções seguras:</p>' +
+        '<ul>' +
+        '<li><strong>Tesouro Direto:</strong> Emprestar dinheiro para o governo (muito seguro)</li>' +
+        '<li><strong>CDB:</strong> Emprestar dinheiro para bancos (rendimento melhor que poupança)</li>' +
+        '<li><strong>LCI/LCA:</strong> Isentos de imposto de renda</li>' +
+        '<li><strong>Fundos de Investimento:</strong> Pool de investimentos gerenciados por profissionais</li>' +
+        '</ul>' +
+        '<div class="manual-tip">' +
+        '<strong>💡 Dica de Ouro:</strong> Antes de investir, quite todas as dívidas com juros altos (cartão de crédito, cheque especial). Os juros que você paga são quase sempre maiores que qualquer investimento!' +
+        '</div>' +
+        '<h3>⚠️ Os Riscos da Estagnação Financeira</h3>' +
+        '<p>Não cuidar das finanças pode levar a situações graves:</p>' +
+        '<div class="manual-warning">' +
+        '<strong>Caso Hipotético - Pedro:</strong><br>' +
+        'Pedro ganhava bem, mas não controlava gastos. Acumulou R$ 30.000 em dívidas no cartão. Os juros de 12% ao mês fizeram a dívida crescer para R$ 100.000 em 2 anos. Perdeu o emprego, não conseguiu pagar, teve o nome negativado e não conseguia mais nem alugar um apartamento. Levou 5 anos para se recuperar.<br><br>' +
+        '<strong>Lição:</strong> Dívidas não resolvidas crescem exponencialmente e podem destruir sua vida financeira por anos.' +
+        '</div>' +
+        '<h3>🎓 Educação Financeira Contínua</h3>' +
+        '<p>O mundo financeiro está sempre mudando. Mantenha-se informado:</p>' +
+        '<ul>' +
+        '<li>Leia livros sobre finanças (sugestões: "Pai Rico, Pai Pobre", "O Homem Mais Rico da Babilônia")</li>' +
+        '<li>Acompanhe canais educativos no YouTube</li>' +
+        '<li>Faça cursos gratuitos online</li>' +
+        '<li>Converse com pessoas financeiramente organizadas</li>' +
+        '</ul>' +
+        '<h2>🎯 Seu Plano de Ação</h2>' +
+        '<h3>Semana 1: Diagnóstico</h3>' +
+        '<ol>' +
+        '<li>Cadastre todas as suas fontes de renda</li>' +
+        '<li>Registre todos os gastos do mês atual</li>' +
+        '<li>Identifique onde seu dinheiro está indo</li>' +
+        '</ol>' +
+        '<h3>Semana 2: Organização</h3>' +
+        '<ol>' +
+        '<li>Crie categorias personalizadas para seus gastos</li>' +
+        '<li>Defina sua meta de reserva de emergência</li>' +
+        '<li>Configure alertas para contas importantes</li>' +
+        '</ol>' +
+        '<h3>Semana 3: Planejamento</h3>' +
+        '<ol>' +
+        '<li>Aplique a regra 50-30-20 ao seu orçamento</li>' +
+        '<li>Identifique gastos que podem ser cortados</li>' +
+        '<li>Defina metas financeiras de curto, médio e longo prazo</li>' +
+        '</ol>' +
+        '<h3>Semana 4: Execução</h3>' +
+        '<ol>' +
+        '<li>Comece a registrar TODOS os gastos diariamente</li>' +
+        '<li>Revise seus gastos semanalmente</li>' +
+        '<li>Ajuste seu orçamento conforme necessário</li>' +
+        '</ol>' +
+        '<div class="manual-success">' +
+        '<strong>🌟 Lembre-se:</strong> A jornada de mil milhas começa com um único passo. Você já deu o primeiro passo ao baixar este aplicativo. Continue firme e consistente. Em 6 meses, você não vai se reconhecer!' +
+        '</div>' +
+        '<h2>🥷 Ajuda</h2>' +
+        '<p>Se tiver dúvidas ou sugestões, entre em contato:</p>' +
+        '<ul>' +
+        '<li><strong>E-mail:</strong> rogerelizar@gmail.com</li>' +
+        '<li><strong>Feedback:</strong> Use o botão "Apoie o Projeto" no menu</li>' +
+        '</ul>' +
+        '<div class="manual-blessing">' +
+        '<h3>🙏 É Isso! 💰</h3>' +
+        '<div class="manual-quote">' +
+        '<p>Que Deus abençoe sua jornada financeira. Que você tenha sabedoria para administrar, generosidade para compartilhar e disciplina para perseverar. Que cada decisão financeira seja um passo em direção à prosperidade que Deus preparou para você.</p>' +
+        '<div class="quote-author">Com amor e orações,<br>RogerElizar®</div>' +
+        '</div>' +
+        '</div>';
 
     class SmartWallet {
         constructor() {
