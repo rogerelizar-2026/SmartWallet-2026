@@ -15,31 +15,26 @@
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="styles.css">
-    
-    <!-- ✅ CHART.JS - ESSENCIAL -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" crossorigin="anonymous"></script>
-    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Timbre de Impressão -->
     <div class="print-header">
         <h1>Smart Wallet</h1>
         <div class="print-subtitle">Controle Financeiro Pessoal Inteligente</div>
         <div class="print-date" id="printDate"></div>
     </div>
     <div class="print-footer">
-        <div class="print-author">Idealizado por RogerElizar</div>
+        <div class="print-author">Idealizado por RogerElizar™</div>
         <div>Smart Wallet © 2026 - rogerelizar@gmail.com</div>
     </div>
 
-    <!-- SPLASH SCREEN -->
     <div class="splash-screen" id="splashScreen" role="banner" aria-label="Tela de carregamento">
         <div class="splash-content">
             <h1 class="splash-title">Smart Wallet</h1>
-            <p class="splash-subtitle">Idealizado por RogerElizar</p>
+            <p class="splash-subtitle">Idealizado por RogerElizar™</p>
             <p class="splash-email">rogerelizar@gmail.com</p>
             <div class="splash-icons" aria-hidden="true">
                 <svg class="splash-icon" viewBox="0 0 24 24"><path d="M12 2v20M2 12h20"/></svg>
@@ -54,16 +49,15 @@
         </div>
     </div>
 
-    <!-- DISCLAIMER MODAL -->
-    <div class="disclaimer-modal" id="disclaimerModal">
+    <div class="disclaimer-modal" id="disclaimerModal" role="dialog" aria-modal="true" aria-labelledby="disclaimerTitle">
         <div class="disclaimer-content">
             <div class="disclaimer-header">
-                <div class="disclaimer-icon">⚠️</div>
-                <h2 class="disclaimer-title">Termos de Uso e Aviso Legal</h2>
+                <div class="disclaimer-icon" aria-hidden="true">⚠️</div>
+                <h2 class="disclaimer-title" id="disclaimerTitle">Termos de Uso e Aviso Legal</h2>
                 <p class="text-secondary">Por favor, leia atentamente antes de continuar</p>
             </div>
             <div class="disclaimer-body">
-                <h3>📋 Sobre o Smart Wallet</h3>
+                <h3> Sobre o Smart Wallet</h3>
                 <p>O Smart Wallet é uma ferramenta de <strong>controle financeiro pessoal</strong> desenvolvida para ajudar você a organizar suas finanças.</p>
                 <h3>🔒 Privacidade e Segurança</h3>
                 <ul>
@@ -82,13 +76,12 @@
                 <p>Ao continuar, você declara que leu e concorda com estes termos.</p>
             </div>
             <div class="disclaimer-footer">
-                <div class="disclaimer-timer" id="disclaimerTimer">⏱️ Aguarde <span id="countdown">12</span> segundos para continuar</div>
-                <button class="disclaimer-accept-btn" id="acceptDisclaimerBtn" onclick="acceptDisclaimer()">✓ Li e Concordo com os Termos</button>
+                <div class="disclaimer-timer" id="disclaimerTimer" aria-live="polite">️ Aguarde <span id="countdown">12</span> segundos para continuar</div>
+                <button class="disclaimer-accept-btn" id="acceptDisclaimerBtn" onclick="acceptDisclaimer()" disabled aria-label="Aceitar termos de uso">✓ Li e Concordo com os Termos</button>
             </div>
         </div>
     </div>
 
-    <!-- QUOTE MODAL -->
     <div class="quote-modal" id="quoteModal" role="dialog" aria-modal="true" aria-labelledby="quoteText">
         <div class="quote-content">
             <svg class="quote-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3M3.343 18.657l.707-.707M12 21a9 9 0 1 1 0-18 9 9 0 0 1 0 18z"/></svg>
@@ -98,7 +91,6 @@
         </div>
     </div>
 
-    <!-- APP PRINCIPAL -->
     <div class="container" id="mainApp" role="main">
         <header>
             <div class="header-content">
@@ -111,9 +103,9 @@
                         <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
                     </button>
                     <div class="info-dropdown" id="infoMenu" role="menu" aria-label="Menu de informações">
-                        <button class="info-item" role="menuitem" onclick="openInvestmentsModal()">
-                            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/></svg>
-                            <span>Aplicações</span>
+                        <button class="info-item" role="menuitem" onclick="openManualModal()">
+                            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                            <span>Manual do Usuário</span>
                         </button>
                         <button class="info-item" role="menuitem" onclick="openTermsModal()">
                             <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
@@ -164,11 +156,6 @@
                             <span>Extrato do Mês</span>
                         </button>
                         <div class="dropdown-divider" role="separator"></div>
-                        <button class="dropdown-item" role="menuitem" onclick="openManualModal()">
-                            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-                            <span>Manual do Usuário</span>
-                        </button>
-                        <div class="dropdown-divider" role="separator"></div>
                         <button class="dropdown-item" role="menuitem" onclick="openAccountsModal()">
                             <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
                             <span>Minhas Contas</span>
@@ -176,6 +163,10 @@
                         <button class="dropdown-item" role="menuitem" onclick="openCreditCardsModal()">
                             <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
                             <span>Meus Cartões</span>
+                        </button>
+                        <button class="dropdown-item" role="menuitem" onclick="openInvestmentsModal()">
+                            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/></svg>
+                            <span>Aplicações</span>
                         </button>
                         <div class="dropdown-divider" role="separator"></div>
                         <button class="dropdown-item" role="menuitem" onclick="openImportCsvModal()">
@@ -283,7 +274,7 @@
 
         <div class="charts-section" id="investmentsChartSection" role="region" aria-label="Gráfico de investimentos">
             <div class="chart-card" style="grid-column: 1 / -1;">
-                <h3>📊Aplicações</h3>
+                <h3>📊 Aplicações</h3>
                 <div class="chart-container" style="height: 400px;"><canvas id="investChart" aria-label="Gráfico de evolução dos investimentos"></canvas></div>
                 <div id="investSummary" style="margin-top: 20px;" aria-live="polite"></div>
             </div>
@@ -294,7 +285,6 @@
         <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
     </button>
 
-    <!-- MODAL NOVA TRANSAÇÃO -->
     <div class="modal" id="newTransactionModal" role="dialog" aria-modal="true" aria-labelledby="newTransactionTitle" aria-hidden="true">
         <div class="modal-content">
             <div class="modal-header">
@@ -326,7 +316,7 @@
                     <select id="category" required><option value="">Selecione...</option></select>
                 </div>
                 <div class="form-group">
-                    <label for="paymentMethod"> Efetuado com</label>
+                    <label for="paymentMethod">💳 Efetuado com</label>
                     <select id="paymentMethod" required><option value="">Selecione...</option></select>
                 </div>
                 <div class="form-group">
@@ -373,7 +363,6 @@
         </div>
     </div>
 
-    <!-- MODAL EDIÇÃO -->
     <div class="modal" id="editModal" role="dialog" aria-modal="true" aria-labelledby="editTitle" aria-hidden="true">
         <div class="modal-content">
             <div class="modal-header">
@@ -454,7 +443,6 @@
         </div>
     </div>
 
-    <!-- MODAL EXPORTAR -->
     <div class="modal" id="exportModal" role="dialog" aria-modal="true" aria-labelledby="exportTitle" aria-hidden="true">
         <div class="modal-content">
             <div class="modal-header">
@@ -464,13 +452,12 @@
                 </button>
             </div>
             <div class="action-buttons" style="flex-direction:column;gap:12px;">
-                <button class="btn btn-primary" onclick="smartwallet.exportCSV()">📥 Baixar CSV</button>
-                <button class="btn btn-secondary" onclick="smartwallet.printExtratoPDF()">️ Imprimir / PDF</button>
+                <button class="btn btn-primary" onclick="smartwallet.exportCSV()"> Baixar CSV</button>
+                <button class="btn btn-secondary" onclick="smartwallet.printExtratoPDF()">🖨️ Imprimir / PDF</button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL META -->
     <div class="modal" id="goalModal" role="dialog" aria-modal="true" aria-labelledby="goalTitle" aria-hidden="true">
         <div class="modal-content">
             <div class="modal-header">
@@ -497,7 +484,6 @@
         </div>
     </div>
 
-    <!-- MODAL IMPORTAR CSV -->
     <div class="modal" id="importCsvModal" role="dialog" aria-modal="true" aria-labelledby="importCsvTitle" aria-hidden="true">
         <div class="modal-content">
             <div class="modal-header">
@@ -526,7 +512,6 @@
         </div>
     </div>
 
-    <!-- MODAL IMPORTAR BACKUP -->
     <div class="modal" id="importBackupModal" role="dialog" aria-modal="true" aria-labelledby="importBackupTitle" aria-hidden="true">
         <div class="modal-content">
             <div class="modal-header">
@@ -535,7 +520,7 @@
                     <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 </button>
             </div>
-            <div class="danger-warning">⚠️ Esta ação substituirá TODOS os dados atuais!</div>
+            <div class="danger-warning">️ Esta ação substituirá TODOS os dados atuais!</div>
             <div class="form-group">
                 <label>Selecione o arquivo JSON</label>
                 <label class="file-input-wrapper">
@@ -544,13 +529,12 @@
                 </label>
             </div>
             <div class="action-buttons">
-                <button class="btn btn-primary" onclick="smartwallet.importBackup()">📂 Restaurar</button>
+                <button class="btn btn-primary" onclick="smartwallet.importBackup()"> Restaurar</button>
                 <button class="btn btn-secondary" onclick="closeImportBackupModal()">Cancelar</button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL LIMPAR DADOS -->
     <div class="modal danger-modal" id="clearDataModal" role="dialog" aria-modal="true" aria-labelledby="clearDataTitle" aria-hidden="true">
         <div class="modal-content">
             <div class="modal-header">
@@ -574,14 +558,13 @@
                 <p class="font-semibold mb-16">Digite <strong style="color:var(--danger-color);">LIMPAR</strong> para confirmar</p>
                 <input type="text" class="confirm-input" id="clearConfirmInput" placeholder="LIMPAR" oninput="checkClearConfirm()" aria-label="Digite LIMPAR para confirmar">
                 <div class="action-buttons" style="margin-top:16px;">
-                    <button class="btn btn-danger-full" id="finalClearBtn" onclick="smartwallet.clearAllData()" disabled style="opacity:0.5;">🗑️ Apagar Tudo</button>
+                    <button class="btn btn-danger-full" id="finalClearBtn" onclick="smartwallet.clearAllData()" disabled style="opacity:0.5;">️ Apagar Tudo</button>
                     <button class="btn btn-secondary" onclick="closeClearDataModal()">Cancelar</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- MODAL CONTAS -->
     <div class="modal" id="accountsModal" role="dialog" aria-modal="true" aria-labelledby="accountsTitle" aria-hidden="true">
         <div class="modal-content wide">
             <div class="modal-header">
@@ -598,7 +581,6 @@
         </div>
     </div>
 
-    <!-- MODAL NOVA CONTA -->
     <div class="modal" id="newAccountModal" role="dialog" aria-modal="true" aria-labelledby="newAccountTitle" aria-hidden="true">
         <div class="modal-content">
             <div class="modal-header">
@@ -636,7 +618,6 @@
         </div>
     </div>
 
-    <!-- MODAL CARTÕES -->
     <div class="modal" id="creditCardsModal" role="dialog" aria-modal="true" aria-labelledby="creditCardsTitle" aria-hidden="true">
         <div class="modal-content wide">
             <div class="modal-header">
@@ -645,8 +626,6 @@
                     <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 </button>
             </div>
-            
-            <!-- SELETOR DE MÊS -->
             <div class="card-month-selector">
                 <button class="card-month-btn" onclick="changeCardMonth(-1)" aria-label="Mês anterior">
                     <svg class="icon" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
@@ -655,11 +634,8 @@
                 <button class="card-month-btn" onclick="changeCardMonth(1)" aria-label="Próximo mês">
                     <svg class="icon" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
                 </button>
-                <button class="card-month-today" onclick="changeCardMonthToToday()" title="Ir para mês atual">
-                    📅 Hoje
-                </button>
+                <button class="card-month-today" onclick="changeCardMonthToToday()" title="Ir para mês atual">📅 Hoje</button>
             </div>
-            
             <div class="flex-gap-10 mb-20" style="justify-content:space-between;align-items:center;flex-wrap:wrap;">
                 <p class="text-secondary">Gerencie seus cartões</p>
                 <button class="btn btn-primary btn-small" onclick="openNewCardModal()">➕ Novo Cartão</button>
@@ -668,7 +644,6 @@
         </div>
     </div>
 
-    <!-- MODAL NOVO CARTÃO -->
     <div class="modal" id="newCardModal" role="dialog" aria-modal="true" aria-labelledby="newCardTitle" aria-hidden="true">
         <div class="modal-content">
             <div class="modal-header">
@@ -725,7 +700,6 @@
         </div>
     </div>
 
-    <!-- MODAL FATURA -->
     <div class="modal" id="invoiceModal" role="dialog" aria-modal="true" aria-labelledby="invoiceTitle" aria-hidden="true">
         <div class="modal-content wide">
             <div class="modal-header">
@@ -738,7 +712,6 @@
         </div>
     </div>
 
-    <!-- MODAL CONTAS A VENCER -->
     <div class="modal" id="billsModal" role="dialog" aria-modal="true" aria-labelledby="billsTitle" aria-hidden="true">
         <div class="modal-content wide">
             <div class="modal-header">
@@ -752,11 +725,10 @@
         </div>
     </div>
 
-    <!-- MODAL INVESTIMENTOS -->
     <div class="modal" id="investmentsModal" role="dialog" aria-modal="true" aria-labelledby="investmentsTitle" aria-hidden="true">
         <div class="modal-content wide">
             <div class="modal-header">
-                <h2 id="investmentsTitle">Aplicações</h2>
+                <h2 id="investmentsTitle">📈 Aplicações</h2>
                 <div class="flex-gap-8">
                     <button class="btn btn-primary btn-small" onclick="openNewInvestmentModal()">➕ Nova Aplicação</button>
                     <button class="modal-close" onclick="closeInvestmentsModal()" aria-label="Fechar modal">
@@ -768,75 +740,69 @@
         </div>
     </div>
 
-<!-- MODAL NOVA APLICAÇÃO -->
-<div class="modal" id="newInvestmentModal" role="dialog" aria-modal="true" aria-labelledby="newInvestmentTitle" aria-hidden="true">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h2 id="newInvestmentTitle">Nova Aplicação</h2>
-            <button class="modal-close" onclick="closeNewInvestmentModal()" aria-label="Fechar modal">
-                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-            </button>
+    <div class="modal" id="newInvestmentModal" role="dialog" aria-modal="true" aria-labelledby="newInvestmentTitle" aria-hidden="true">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="newInvestmentTitle">Nova Aplicação</h2>
+                <button class="modal-close" onclick="closeNewInvestmentModal()" aria-label="Fechar modal">
+                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <form id="investmentForm" onsubmit="event.preventDefault(); smartwallet.saveInvestment();">
+                <input type="hidden" id="investmentEditId">
+                <div class="form-group">
+                    <label for="investmentName">Nome da Aplicação</label>
+                    <input type="text" id="investmentName" required placeholder="Ex: CDB Banco XYZ">
+                </div>
+                <div class="form-group">
+                    <label for="investmentType">Tipo</label>
+                    <select id="investmentType" required>
+                        <option value="cdb">CDB</option>
+                        <option value="tesouro">Tesouro Direto</option>
+                        <option value="lci">LCI/LCA</option>
+                        <option value="fundo">Fundo de Investimento</option>
+                        <option value="acao">Ações</option>
+                        <option value="fiis">FIIs</option>
+                        <option value="poupanca">Poupança</option>
+                        <option value="outro">Outro</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="investmentAccount"> Conta de Investimento Vinculada</label>
+                    <select id="investmentAccount">
+                        <option value="">-- Sem vínculo (criar nova automaticamente) --</option>
+                    </select>
+                    <div class="checkbox-group" style="margin-top:8px;">
+                        <input type="checkbox" id="createLinkedAccount" checked>
+                        <label for="createLinkedAccount">Criar conta investment automaticamente</label>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="investmentInitial">Valor Inicial (R$)</label>
+                        <input type="number" id="investmentInitial" step="0.01" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="investmentCurrent">Valor Atual (R$)</label>
+                        <input type="number" id="investmentCurrent" step="0.01" min="0" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="investmentDate">Data da Aplicação</label>
+                    <input type="date" id="investmentDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="investmentRate">Taxa de Rendimento (% ao ano)</label>
+                    <input type="number" id="investmentRate" step="0.01" min="0" placeholder="Ex: 10.5">
+                </div>
+                <div class="action-buttons">
+                    <button type="submit" class="btn btn-primary">💾 Salvar</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeNewInvestmentModal()">Cancelar</button>
+                </div>
+            </form>
         </div>
-        <form id="investmentForm" onsubmit="event.preventDefault(); smartwallet.saveInvestment();">
-            <input type="hidden" id="investmentEditId">
-            <div class="form-group">
-                <label for="investmentName">Nome da Aplicação</label>
-                <input type="text" id="investmentName" required placeholder="Ex: CDB Banco XYZ">
-            </div>
-            <div class="form-group">
-                <label for="investmentType">Tipo</label>
-                <select id="investmentType" required>
-                    <option value="cdb">CDB</option>
-                    <option value="tesouro">Tesouro Direto</option>
-                    <option value="lci">LCI/LCA</option>
-                    <option value="fundo">Fundo de Investimento</option>
-                    <option value="acao">Ações</option>
-                    <option value="fiis">FIIs</option>
-                    <option value="poupanca">Poupança</option>
-                    <option value="outro">Outro</option>
-                </select>
-            </div>
-            
-            <!--  NOVO CAMPO: Conta de Investimento Vinculada -->
-            <div class="form-group">
-                <label for="investmentAccount">🏦 Conta de Investimento Vinculada</label>
-                <select id="investmentAccount">
-                    <option value="">-- Sem vínculo (criar nova automaticamente) --</option>
-                </select>
-                <div class="checkbox-group" style="margin-top:8px;">
-                    <input type="checkbox" id="createLinkedAccount" checked>
-                    <label for="createLinkedAccount">Criar conta investment automaticamente</label>
-                </div>
-            </div>
-            <!-- FIM NOVO CAMPO -->
-            
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="investmentInitial">Valor Inicial (R$)</label>
-                    <input type="number" id="investmentInitial" step="0.01" min="0" required>
-                </div>
-                <div class="form-group">
-                    <label for="investmentCurrent">Valor Atual (R$)</label>
-                    <input type="number" id="investmentCurrent" step="0.01" min="0" required>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="investmentDate">Data da Aplicação</label>
-                <input type="date" id="investmentDate" required>
-            </div>
-            <div class="form-group">
-                <label for="investmentRate">Taxa de Rendimento (% ao ano)</label>
-                <input type="number" id="investmentRate" step="0.01" min="0" placeholder="Ex: 10.5">
-            </div>
-            <div class="action-buttons">
-                <button type="submit" class="btn btn-primary">💾 Salvar</button>
-                <button type="button" class="btn btn-secondary" onclick="closeNewInvestmentModal()">Cancelar</button>
-            </div>
-        </form>
     </div>
-</div>
 
-    <!-- MODAL ATUALIZAR VALOR -->
     <div class="modal" id="updateInvestmentModal" role="dialog" aria-modal="true" aria-labelledby="updateInvestmentTitle" aria-hidden="true">
         <div class="modal-content">
             <div class="modal-header">
@@ -867,13 +833,12 @@
         </div>
     </div>
 
-    <!-- MODAL MANUAL -->
     <div class="modal" id="manualModal" role="dialog" aria-modal="true" aria-labelledby="manualTitle" aria-hidden="true">
         <div class="modal-content wide">
             <div class="modal-header">
-                <h2 id="manualTitle">📘 Manual do Usuário</h2>
+                <h2 id="manualTitle">Manual do Usuário</h2>
                 <div class="flex-gap-8">
-                    <button class="btn btn-secondary btn-small" onclick="printManual()">️ Imprimir</button>
+                    <button class="btn btn-secondary btn-small" onclick="printManual()">🖨️ Imprimir</button>
                     <button class="modal-close" onclick="closeManualModal()" aria-label="Fechar modal">
                         <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                     </button>
@@ -883,7 +848,6 @@
         </div>
     </div>
 
-    <!-- MODAL AGRADECIMENTO -->
     <div class="modal" id="thanksModal" role="dialog" aria-modal="true" aria-labelledby="thanksTitle" aria-hidden="true">
         <div class="modal-content">
             <div class="modal-header">
@@ -902,16 +866,14 @@
                 <button class="btn btn-success" onclick="copyPixKey()">📋 Copiar Chave PIX</button>
             </div>
             <div style="margin-top:30px;padding-top:20px;border-top:1px solid var(--border-color);text-align:center;">
-                <h3 style="margin-bottom:12px;">💬 Feedback</h3>
+                <h3 style="margin-bottom:12px;"> Feedback</h3>
                 <a href="mailto:rogerelizar@gmail.com?subject=Feedback%20Smart%20Wallet" class="btn btn-primary">✉️ Enviar Feedback</a>
             </div>
         </div>
     </div>
 
-    <!-- TOAST NOTIFICATION -->
     <div class="toast" id="toast" role="alert" aria-live="assertive"></div>
 
-    <!-- SCRIPT PRINCIPAL -->
     <script src="js/app.js"></script>
 </body>
 </html>
