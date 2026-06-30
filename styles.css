@@ -85,7 +85,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .container { max-width: 1400px; margin: 0 auto; padding: 16px; position: relative; z-index: 1; }
 .icon { width: 20px; height: 20px; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; fill: none; }
 
-/* ===== SPLASH & DISCLAIMER & QUOTE ===== */
+/* ===== SPLASH SCREEN ===== */
 .splash-screen {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: radial-gradient(ellipse at top, #1e1b4b 0%, #0a0e1a 50%, #000 100%);
@@ -113,50 +113,175 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 .splash-loader-bar { height: 100%; width: 0%; background: var(--gradient-primary); border-radius: 3px; animation: splashLoad 3.5s ease-in-out forwards; }
 @keyframes splashLoad { 0% { width: 0%; } 100% { width: 100%; } }
 
-<div class="disclaimer-modal" id="disclaimerModal" role="dialog" aria-modal="true" aria-labelledby="disclaimerTitle">
-    <div class="disclaimer-content">
-        <div class="disclaimer-header">
-            <div class="disclaimer-icon" aria-hidden="true">⚠️</div>
-            <h2 class="disclaimer-title" id="disclaimerTitle">Termos de Uso e Aviso Legal</h2>
-            <p class="text-secondary">Por favor, leia atentamente antes de continuar</p>
-        </div>
-        <div class="disclaimer-body">
-            <h3>📋 Sobre o Smart Wallet</h3>
-            <p>O Smart Wallet é uma ferramenta de <strong>controle financeiro pessoal</strong> desenvolvida para ajudar você a organizar suas finanças de forma simples, segura e inteligente.</p>
-            <h3>🔒 Privacidade e Segurança</h3>
-            <ul>
-                <li><strong>100% Offline:</strong> Todos os seus dados são armazenados localmente no seu dispositivo. Nenhum dado é enviado para servidores externos.</li>
-                <li><strong>Sem Cadastro:</strong> Não é necessário criar conta, fornecer e-mail ou qualquer informação pessoal.</li>
-                <li><strong>Sem Rastreamento:</strong> Não utilizamos cookies de analytics, pixels de rastreamento ou qualquer forma de coleta de dados.</li>
-                <li><strong>Controle Total:</strong> Você pode exportar e apagar todos os seus dados a qualquer momento, sem restrições.</li>
-            </ul>
-            <h3>⚠️ Limitações e Isenção de Responsabilidade</h3>
-            <ul>
-                <li><strong>Ferramenta de Apoio:</strong> O Smart Wallet é uma ferramenta de organização pessoal e não substitui consultoria financeira profissional.</li>
-                <li><strong>Responsabilidade:</strong> Todas as decisões financeiras são de inteira responsabilidade do usuário.</li>
-                <li><strong>Precisão:</strong> Os dados exibidos dependem exclusivamente das informações inseridas pelo usuário. O sistema não verifica a veracidade dos lançamentos.</li>
-                <li><strong>Backup:</strong> É responsabilidade do usuário manter backups regulares de seus dados. A perda de dados por falha do dispositivo não é de responsabilidade do desenvolvedor.</li>
-                <li><strong>Disponibilidade:</strong> O aplicativo funciona offline e depende do navegador do usuário. Atualizações do navegador podem eventualmente causar incompatibilidades.</li>
-            </ul>
-            <h3>📜 Propriedade Intelectual</h3>
-            <p>O Smart Wallet foi idealizado e desenvolvido por <strong>RogerElizar™</strong>. Todos os direitos sobre o design, código-fonte e conceito são reservados. O uso é gratuito para fins pessoais.</p>
-            <h3>🔄 Atualizações e Manutenção</h3>
-            <p>O desenvolvedor reserva-se o direito de atualizar, modificar ou descontinuar o aplicativo a qualquer momento, sem aviso prévio. Recomenda-se fazer backup antes de qualquer atualização.</p>
-            <h3>✅ Seu Compromisso</h3>
-            <p>Ao clicar em "Li e Concordo com os Termos", você declara que:</p>
-            <ul>
-                <li>Leu e compreendeu todos os termos acima;</li>
-                <li>Concorda em utilizar o aplicativo de forma responsável;</li>
-                <li>Entende que se trata de uma ferramenta de apoio e não de consultoria financeira;</li>
-                <li>Aceita os termos de isenção de responsabilidade.</li>
-            </ul>
-        </div>
-        <div class="disclaimer-footer">
-            <div class="disclaimer-timer" id="disclaimerTimer" aria-live="polite">⏱️ Aguarde <span id="countdown">12</span> segundos para continuar</div>
-            <button class="disclaimer-accept-btn" id="acceptDisclaimerBtn" onclick="acceptDisclaimer()" disabled aria-label="Aceitar termos de uso">✓ Li e Concordo com os Termos</button>
-        </div>
-    </div>
-</div>
+/* ===== DISCLAIMER MODAL - CORRIGIDO ===== */
+.disclaimer-modal {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px);
+    display: none; align-items: center; justify-content: center;
+    z-index: 10001 !important; padding: 20px;
+}
+.disclaimer-modal.active { display: flex; animation: fadeIn 0.5s ease; }
+
+.disclaimer-content {
+    background: var(--glass-bg);
+    backdrop-filter: blur(30px);
+    border: 2px solid var(--warning-color);
+    border-radius: 24px;
+    max-width: 600px;
+    width: 100%;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+}
+
+.disclaimer-header {
+    flex-shrink: 0;
+    padding: 30px 30px 20px 30px;
+    text-align: center;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.disclaimer-icon {
+    font-size: 3rem;
+    margin-bottom: 16px;
+}
+
+.disclaimer-title {
+    color: var(--warning-color);
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.disclaimer-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 30px;
+    color: var(--text-primary);
+    line-height: 1.8;
+    font-size: 0.95rem;
+    -webkit-overflow-scrolling: touch;
+}
+
+.disclaimer-body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.disclaimer-body::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.disclaimer-body::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 3px;
+}
+
+.disclaimer-body h3 {
+    color: var(--primary-color);
+    margin: 20px 0 10px 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.disclaimer-body h3:first-child {
+    margin-top: 0;
+}
+
+.disclaimer-body ul {
+    margin-left: 20px;
+    margin-bottom: 16px;
+}
+
+.disclaimer-body li {
+    margin-bottom: 8px;
+}
+
+.disclaimer-body p {
+    margin-bottom: 12px;
+}
+
+.disclaimer-footer {
+    flex-shrink: 0;
+    padding: 20px 30px 30px 30px;
+    border-top: 1px solid var(--border-color);
+    text-align: center;
+    background: var(--glass-bg);
+}
+
+.disclaimer-timer {
+    background: var(--input-bg);
+    border: 2px solid var(--warning-color);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 20px;
+    font-weight: 600;
+    color: var(--warning-color);
+}
+
+.disclaimer-accept-btn {
+    background: var(--gradient-primary);
+    color: white;
+    border: none;
+    padding: 14px 32px;
+    border-radius: 14px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    opacity: 0.5;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.disclaimer-accept-btn.enabled {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.disclaimer-accept-btn.enabled:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(99, 102, 241, 0.6);
+}
+
+.disclaimer-modal.disintegrating {
+    animation: disclaimerDisintegrate 0.6s ease-in forwards;
+}
+
+@keyframes disclaimerDisintegrate {
+    0% { opacity: 1; transform: scale(1); }
+    100% { opacity: 0; transform: scale(1.1); filter: blur(10px); }
+}
+
+/* ===== QUOTE MODAL ===== */
+.quote-modal {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px);
+    display: none; align-items: center; justify-content: center;
+    z-index: 10001 !important; padding: 20px;
+}
+.quote-modal.active { display: flex; animation: fadeIn 0.5s ease; }
+
+.quote-content {
+    background: var(--glass-bg);
+    backdrop-filter: blur(30px);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    padding: 40px;
+    max-width: 600px;
+    width: 100%;
+    text-align: center;
+    box-shadow: var(--shadow-lg);
+}
+
+.quote-icon { width: 48px; height: 48px; stroke: var(--warning-color); stroke-width: 1.5; fill: none; margin: 0 auto 20px; }
+.quote-text { font-size: 1.3rem; font-weight: 500; line-height: 1.6; margin-bottom: 24px; font-style: italic; }
+.quote-author { font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 32px; font-weight: 600; }
+.quote-btn { background: var(--gradient-primary); color: white; border: none; padding: 16px 32px; border-radius: 16px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4); font-family: inherit; }
+.quote-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(99, 102, 241, 0.6); }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
 /* ===== HEADER & TOOLBAR ===== */
 header { background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); padding: 20px; border-radius: 20px; margin-bottom: 20px; box-shadow: var(--shadow); position: relative; overflow: visible; z-index: 1; }
@@ -191,7 +316,7 @@ header p { color: var(--text-secondary); font-size: 0.9rem; margin-top: 4px; }
 .alert-badge { position: absolute; top: -4px; right: -4px; background: var(--danger-color); color: white; min-width: 20px; height: 20px; border-radius: 10px; font-size: 0.7rem; font-weight: 700; display: none; align-items: center; justify-content: center; padding: 0 5px; border: 2px solid var(--bg-color); }
 .alert-badge.visible { display: flex; }
 
-/* ===== DASHBOARD (CLICÁVEL) ===== */
+/* ===== DASHBOARD ===== */
 .dashboard { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
 .card { background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 20px; padding: 20px; box-shadow: var(--shadow); transition: all 0.3s ease; min-width: 0; position: relative; overflow: hidden; }
 .card.clickable { cursor: pointer; }
@@ -245,10 +370,9 @@ body.privacy-on canvas { filter: blur(6px); }
 .fab:hover { transform: scale(1.1) rotate(90deg); }
 .fab .icon { width: 28px; height: 28px; stroke-width: 2.5; }
 
-/* ===== MODALS & FORMS ===== */
+/* ===== MODALS ===== */
 .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(8px); z-index: 1000; align-items: center; justify-content: center; padding: 16px; }
 .modal.active { display: flex; animation: fadeIn 0.3s ease; }
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 .modal-content { background: var(--glass-bg); backdrop-filter: blur(30px); border: 1px solid var(--glass-border); border-radius: 24px; padding: 32px; max-width: 520px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow-lg); }
 .modal-content.wide { max-width: 900px; }
 .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
@@ -291,7 +415,7 @@ body.privacy-on canvas { filter: blur(6px); }
 .card-month-today { background: var(--input-bg); border: 1px solid var(--glass-border); color: var(--text-primary); padding: 8px 14px; border-radius: 10px; cursor: pointer; font-size: 0.85rem; font-weight: 600; transition: all 0.2s ease; white-space: nowrap; }
 .card-month-today:hover { background: var(--glass-border); border-color: var(--primary-color); }
 
-/* ===== CARDS VISUALS (Credit, Accounts, Bills, Investments) ===== */
+/* ===== CARDS VISUALS ===== */
 .credit-cards-grid, .accounts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
 .credit-card-visual, .account-card { position: relative; border-radius: 16px; padding: 20px; min-height: 140px; color: white; overflow: hidden; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
 .credit-card-visual:hover, .account-card:hover { transform: translateY(-4px); }
