@@ -1,4 +1,4 @@
-#  My Wallet v{{VERSION}} - {{CODENAME}}
+#  Smart Wallet v{{VERSION}} - {{CODENAME}}
 
 > **Data de lançamento:** {{DATE}}  
 > **Tipo de release:** {{TYPE}} (Major/Minor/Patch)
@@ -61,15 +61,15 @@
 ## 📦 Instalação / Atualização
 
 ### Para usuários existentes
-1. Abra o My Wallet instalado
+1. Abra o Smart Wallet instalado
 2. O app será atualizado automaticamente (PWA)
 3. **OU** limpe o cache: `Ctrl + Shift + Delete` → `Ctrl + F5`
 
 ### Para novos usuários
-Acesse: **https://rogerelizar-2026.github.io/MyWallet/**
+Acesse: **https://rogerelizar-2026.github.io/SmartWallet/**
 
 ### Instalação como PWA
-- **Computador**: Menu do navegador → "Instalar My Wallet"
+- **Computador**: Menu do navegador → "Instalar Smart Wallet"
 - **Android**: Chrome → ⋮ → "Instalar aplicativo"
 - **iPhone**: Safari → Compartilhar → "Adicionar à Tela de Início"
 
@@ -119,7 +119,7 @@ Acesse: **https://rogerelizar-2026.github.io/MyWallet/**
 
 ## 📋 Changelog Completo
 
-Para ver todas as mudanças detalhadas, consulte o [CHANGELOG.md](https://github.com/rogerelizar-2026/MyWallet/blob/main/CHANGELOG.md).
+Para ver todas as mudanças detalhadas, consulte o [CHANGELOG.md](https://github.com/rogerelizar-2026/SmartWallet/blob/main/CHANGELOG.md).
 
 ---
 
@@ -135,7 +135,7 @@ Para ver todas as mudanças detalhadas, consulte o [CHANGELOG.md](https://github
 
 Encontrou um bug ou tem uma sugestão?
 -  E-mail: rogerelizar@gmail.com
-- 🐛 [Abrir Issue no GitHub](https://github.com/rogerelizar-2026/MyWallet/issues/new)
+- 🐛 [Abrir Issue no GitHub](https://github.com/rogerelizar-2026/SmartWallet/issues/new)
 - 💬 Feedback dentro do app (Menu → ☕ Apoie o Projeto)
 
 ---
@@ -146,5 +146,5 @@ MIT License - Copyright (c) 2026 RogerElizar™
 
 ---
 
-**My Wallet** - Controle Financeiro Pessoal Inteligente 💰  
+**Smart Wallet** - Controle Financeiro Pessoal Inteligente 💰  
 Idealizado por RogerElizar™ · 2026
