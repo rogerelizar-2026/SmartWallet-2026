@@ -1142,7 +1142,24 @@
     window.closeBillsModal = function() { document.getElementById('billsModal').classList.remove('active'); };
     window.openInvestmentsModal = function() { smartwallet.renderInvestmentsModal(); document.getElementById('investmentsModal').classList.add('active'); document.getElementById('infoMenu').classList.remove('active'); };
     window.closeInvestmentsModal = function() { document.getElementById('investmentsModal').classList.remove('active'); };
-    window.openNewInvestmentModal = function() { document.getElementById('investmentEditId').value = ''; document.getElementById('investmentForm').reset(); document.getElementById('investmentDate').value = new Date().toISOString().split('T')[0]; document.getElementById('newInvestmentTitle').textContent = 'Nova Aplicação'; const accountSelect = document.getElementById('investmentAccount'); accountSelect.innerHTML = '<option value="">-- Sem vínculo (criar nova automaticamente) --</option>'; smartwallet.accounts.filter(a => a.type === 'investment').forEach(acc => { const opt = document.createElement('option'); opt.value = acc.id; opt.textContent = acc.name + ' - ' + smartwallet.formatCurrency(acc.balance); accountSelect.appendChild(opt); }); document.getElementById('newInvestmentModal').classList.add('active'); };
+    window.openNewInvestmentModal = function() { 
+        document.getElementById('investmentEditId').value = ''; 
+        document.getElementById('investmentForm').reset(); 
+        document.getElementById('investmentDate').value = new Date().toISOString().split('T')[0]; 
+        document.getElementById('newInvestmentTitle').textContent = 'Nova Aplicação';
+    
+        // 🆕 Popular select de contas investment
+        const accountSelect = document.getElementById('investmentAccount');
+        accountSelect.innerHTML = '<option value="">-- Sem vínculo (criar nova automaticamente) --</option>';
+        smartwallet.accounts.filter(a => a.type === 'investment').forEach(acc => {
+        const opt = document.createElement('option');
+        opt.value = acc.id;
+        opt.textContent = acc.name + ' - ' + smartwallet.formatCurrency(acc.balance);
+        accountSelect.appendChild(opt);
+    });
+    
+        document.getElementById('newInvestmentModal').classList.add('active'); 
+};    
     window.closeNewInvestmentModal = function() { document.getElementById('newInvestmentModal').classList.remove('active'); };
     window.closeUpdateInvestmentModal = function() { document.getElementById('updateInvestmentModal').classList.remove('active'); };
     window.openManualModal = function() { document.getElementById('manualContent').innerHTML = manualHTML; document.getElementById('manualModal').classList.add('active'); document.getElementById('mainMenu').classList.remove('active'); };
