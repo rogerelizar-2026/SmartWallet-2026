@@ -1,8 +1,8 @@
 # .github/workflows/ci.yml
-# Smart Wallet - CI/CD Pipeline
+# My Wallet - CI/CD Pipeline
 # Executa em cada push para a branch main
 
-name: Smart Wallet CI/CD
+name: My Wallet CI/CD
 
 on:
   push:
