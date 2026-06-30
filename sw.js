@@ -1,122 +1,132 @@
-// sw.js
-// Smart Wallet Service Worker - Fase 4 (Otimizado)
+// Smart Wallet Service Worker v4.0.1
+const CACHE_NAME = 'smartwallet-v4.0.1';
+const OFFLINE_URL = '/index.html';
 
-const CACHE_NAME = 'smart-wallet-v4.0.1';
-const SHELL_ASSETS = [
+const STATIC_ASSETS = [
     './',
     './index.html',
     './styles.css',
     './js/app.js',
-    './js/handlers.js',
-    './js/delegation.js',
-    './js/lazy-loader.js',
-    './js/validators.js',
-    './js/storage-manager.js',
-    './js/a11y.js',
-    './js/workers/parser-worker.js',
     './manifest.json',
     './favicon.svg'
 ];
 
-// ===== INSTALAÇÃO =====
-self.addEventListener('install', function(event) {
-    console.log('[SW] Instalando v4.0.1...');
+const DYNAMIC_ASSETS = [
+    'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js',
+    'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap',
+    'https://fonts.gstatic.com'
+];
+
+// Instalação: Cache dos recursos estáticos
+self.addEventListener('install', (event) => {
+    console.log('[SW] Instalando Smart Wallet v4.0.1...');
     event.waitUntil(
-        caches.open(CACHE_NAME)
-            .then(function(cache) {
-                console.log('[SW] Cacheando shell do app');
-                return cache.addAll(SHELL_ASSETS);
-            })
-            .then(() => self.skipWaiting())
+        caches.open(CACHE_NAME).then((cache) => {
+            return cache.addAll(STATIC_ASSETS).catch((err) => {
+                console.warn('[SW] Falha ao cachear estáticos:', err);
+            });
+        }).then(() => {
+            return self.skipWaiting();
+        })
     );
 });
 
-// ===== ATIVAÇÃO =====
-self.addEventListener('activate', function(event) {
-    console.log('[SW] Ativando...');
+// Ativação: Limpar caches antigos
+self.addEventListener('activate', (event) => {
+    console.log('[SW] Ativando Smart Wallet v4.0.1...');
     event.waitUntil(
-        caches.keys().then(function(cacheNames) {
+        caches.keys().then((cacheNames) => {
             return Promise.all(
-                cacheNames
-                    .filter(function(name) { return name !== CACHE_NAME; })
-                    .map(function(name) { 
-                        console.log('[SW] Removendo cache antigo:', name);
-                        return caches.delete(name); 
-                    })
+                cacheNames.map((cacheName) => {
+                    if (cacheName !== CACHE_NAME) {
+                        console.log('[SW] Removendo cache antigo:', cacheName);
+                        return caches.delete(cacheName);
+                    }
+                })
             );
-        }).then(() => self.clients.claim())
+        }).then(() => {
+            return self.clients.claim();
+        })
     );
 });
 
-// ===== INTERCEPTAÇÃO DE REQUISIÇÕES =====
-self.addEventListener('fetch', function(event) {
+// Fetch: Estratégia Cache First para estáticos, Network First para dinâmicos
+self.addEventListener('fetch', (event) => {
     const url = new URL(event.request.url);
-
-    // Ignora extensões e requisições externas não essenciais
-    if (url.origin !== location.origin && !url.hostname.includes('cdn.jsdelivr.net') && !url.hostname.includes('fonts.googleapis.com')) {
-        return;
-    }
-
-    // Estratégia: Cache-First para assets estáticos e CDN
-    if (event.request.destination === 'style' || 
-        event.request.destination === 'script' || 
-        event.request.destination === 'font' ||
-        event.request.destination === 'image' ||
-        url.hostname.includes('cdn.jsdelivr.net') ||
-        url.hostname.includes('fonts.googleapis.com') ||
-        url.hostname.includes('fonts.gstatic.com')) {
-        
-        event.respondWith(
-            caches.match(event.request).then(function(cachedResponse) {
-                if (cachedResponse) return cachedResponse;
-                
-                return fetch(event.request).then(function(response) {
-                    if (!response || response.status !== 200 || response.type !== 'basic') {
-                        return response;
-                    }
-                    var responseToCache = response.clone();
-                    caches.open(CACHE_NAME).then(function(cache) {
-                        cache.put(event.request, responseToCache);
-                    });
-                    return response;
-                }).catch(function() {
-                    // Fallback para offline
-                    if (event.request.destination === 'document') {
-                        return caches.match('./index.html');
-                    }
-                });
-            })
-        );
-        return;
-    }
-
-    // Estratégia: Network-First para HTML principal (sempre tenta rede primeiro)
-    if (event.request.destination === 'document') {
+    
+    // Ignorar requisições não-GET
+    if (event.request.method !== 'GET') return;
+    
+    // Ignorar requisições externas não listadas
+    const isExternal = !url.origin.includes(self.location.origin);
+    
+    if (isExternal) {
+        // Recursos externos (CDN, fonts): Network First com fallback para cache
         event.respondWith(
             fetch(event.request)
-                .then(function(response) {
-                    var responseToCache = response.clone();
-                    caches.open(CACHE_NAME).then(function(cache) {
-                        cache.put(event.request, responseToCache);
-                    });
+                .then((response) => {
+                    if (response && response.status === 200) {
+                        const responseClone = response.clone();
+                        caches.open(CACHE_NAME).then((cache) => {
+                            cache.put(event.request, responseClone);
+                        });
+                    }
                     return response;
                 })
-                .catch(function() {
-                    return caches.match('./index.html');
+                .catch(() => {
+                    return caches.match(event.request);
                 })
         );
         return;
     }
+    
+    // Recursos locais: Cache First com fallback para network
+    event.respondWith(
+        caches.match(event.request).then((cachedResponse) => {
+            if (cachedResponse) {
+                // Atualiza cache em background (stale-while-revalidate)
+                const fetchPromise = fetch(event.request).then((networkResponse) => {
+                    if (networkResponse && networkResponse.status === 200) {
+                        const responseClone = networkResponse.clone();
+                        caches.open(CACHE_NAME).then((cache) => {
+                            cache.put(event.request, responseClone);
+                        });
+                    }
+                    return networkResponse;
+                }).catch(() => {});
+                
+                event.waitUntil(fetchPromise);
+                return cachedResponse;
+            }
+            
+            // Se não está em cache, busca da rede
+            return fetch(event.request).then((response) => {
+                if (!response || response.status !== 200 || response.type !== 'basic') {
+                    return response;
+                }
+                const responseClone = response.clone();
+                caches.open(CACHE_NAME).then((cache) => {
+                    cache.put(event.request, responseClone);
+                });
+                return response;
+            });
+        }).catch(() => {
+            // Fallback para offline
+            if (event.request.destination === 'document') {
+                return caches.match(OFFLINE_URL);
+            }
+        })
+    );
 });
 
-// ===== MENSAGENS DO CLIENTE =====
-self.addEventListener('message', function(event) {
-    if (event.data === 'skipWaiting') {
+// Mensagens do cliente
+self.addEventListener('message', (event) => {
+    if (event.data === 'SKIP_WAITING') {
         self.skipWaiting();
     }
-    if (event.data === 'clearCache') {
-        caches.keys().then(names => Promise.all(names.map(n => caches.delete(n))));
+    if (event.data === 'CLEAR_CACHE') {
+        caches.delete(CACHE_NAME).then(() => {
+            console.log('[SW] Cache limpo com sucesso');
+        });
     }
 });
-
-console.log('[SW] Smart Wallet Service Worker v4.0.1 carregado');
