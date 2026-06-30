@@ -6,7 +6,7 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 ---
 
-## [4.0.0] - 2026-06-28
+## [4.0.1] - 2026-06-28
 
 ### 🎉 Adicionado
 - ♿ **Acessibilidade completa**: navegação por teclado, trap de foco em modais, anúncios ARIA para leitores de tela
