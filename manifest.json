@@ -1,6 +1,6 @@
 {
-  "name": "My Wallet",
-  "short_name": "MyWallet",
+  "name": "Smart Wallet",
+  "short_name": "SmartWallet",
   "description": "Controle financeiro pessoal inteligente - Idealizado por RogerElizar®",
   "start_url": "./",
   "scope": "./",
@@ -10,7 +10,7 @@
   "theme_color": "#6366f1",
   "lang": "pt-BR",
   "dir": "ltr",
-  "id": "my-wallet-v2.0",
+  "id": "smart-wallet-v2.0",
   "categories": ["finance", "productivity", "utilities"],
   "prefer_related_applications": false,
   "icons": [
