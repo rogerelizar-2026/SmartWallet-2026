@@ -1,228 +1,256 @@
-# 💰 MyWallet - Controle Financeiro Pessoal Inteligente
-
-> **Controle Financeiro Pessoal Inteligente**  
-> 100% offline · Privacidade total · PWA instalável
-
-[![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions-brightgreen)](https://github.com/rogerelizar-2026/SmartWallet/actions)
-[![Versão](https://img.shields.io/badge/versão-4.0.3-blue)](https://github.com/rogerelizar-2026/SmartWallet/releases)
-[![Licença](https://img.shields.io/badge/licença-MIT-green)](LICENSE)
-[![Lighthouse](https://img.shields.io/badge/lighthouse-95%2B-brightgreen)](https://pagespeed.web.dev/)
-
+💰 Smart Wallet Brasil
+<div align="center">
+![Version](https://img.shields.io/badge/version-4.1.0-6366f1?style=for-the-badge)
+![PWA](https://img.shields.io/badge/PWA-ready-10b981?style=for-the-badge)
+![Offline](https://img.shields.io/badge/100%25-Offline-06b6d4?style=for-the-badge)
+![License](https://img.shields.io/badge/license-MIT-f59e0b?style=for-the-badge)
+Controle Financeiro Pessoal Inteligente
+Seu parceiro na jornada para a liberdade financeira
+🚀 Recursos • 📦 Instalação • 📖 Manual • 🆕 Novidades
+</div>
 ---
-
-## ✨ Funcionalidades
-
-### 💸 Controle Financeiro
-- ✅ Receitas e despesas com categorização
-- ✅ Saldo unificado entre contas
-- ✅ Filtros avançados (tipo, categoria, status, conta, busca)
-- ✅ Recorrência automática (mensal, anual, parcelado)
-- ✅ Histórico com saldo acumulado
-
-### 💳 Cartões de Crédito
-- ✅ Múltiplos cartões com limite e vencimento
-- ✅ Faturas automáticas por período
-- ✅ Cálculo de disponível em tempo real
-- ✅ Exportação de fatura (CSV/PDF)
-
-### 📊 Visualizações
-- ✅ Entradas e saídas (6 meses)
-- ✅ Despesas por categoria
-- ✅ Evolução de cartões
-- ✅ Acompanhamento de investimentos com projeção
-
-### 🔒 Privacidade & Segurança
-- ✅ 100% offline (dados no seu dispositivo)
-- ✅ Sem cadastro, sem rastreamento
-- ✅ Modo privacidade (blur em valores)
-- ✅ Backup e restore via JSON
-
-### 🎨 Experiência
-- ✅ Tema claro/escuro
-- ✅ Acessibilidade (teclado, leitores de tela)
-- ✅ Responsivo (mobile, tablet, desktop)
-- ✅ PWA instalável
-
+🎯 Sobre o Projeto
+Smart Wallet Brasil é um aplicativo web progressivo (PWA) de controle financeiro pessoal, desenvolvido para ser simples, seguro e inteligente.
+Diferente de apps tradicionais, o Smart Wallet:
+✅ Funciona 100% offline após a instalação
+✅ Não requer cadastro ou envio de dados para servidores
+✅ Armazena tudo localmente no seu dispositivo
+✅ Não usa cookies de rastreamento ou analytics
+✅ É gratuito para uso pessoal
+> *"Toda boa dádiva e todo dom perfeito vêm do alto, descendo do Pai das luzes."* — Tiago 1:17
 ---
-
-## 🚀 Instalação
-
-### Como WebApp (Recomendado)
-
-1. Acesse: **https://rogerelizar-2026.github.io/SmartWallet/**
-2. **No computador**: Menu do navegador → "Instalar MyWallet"
-3. **No Android**: Chrome → ⋮ → "Instalar aplicativo"
-4. **No iPhone**: Safari → Compartilhar → "Adicionar à Tela de Início"
-
-### Desenvolvimento Local
-
+✨ Recursos Principais
+📊 Dashboard Financeiro Inteligente
+Cards clicáveis para filtrar receitas, despesas e ver saldo unificado
+Navegação mensal com setas ← →
+Gráficos automáticos de evolução e categorias
+Modo privacidade para ocultar valores em público
+💸 Transações & Recorrências
+Registro rápido de receitas e despesas
+Suporte a recorrências: Mensal, Anual ou Parcelado
+Filtros por categoria, conta, status ou período
+🆕 Gestos no celular: deslize para marcar como pago ou excluir
+⚡ Ações Rápidas (FAB Speed Dial)
+Botão "+" expansível com 3 opções:
+💸 Nova Despesa
+💰 Nova Receita
+🔄 Transferência entre contas
+💳 Gestão de Cartões de Crédito
+Cadastro com limite, fechamento e vencimento
+🆕 Navegação entre faturas com setas
+🆕 Período automático: fechamento anterior → fechamento atual
+🆕 Vencimento inteligente: só avança quando a fatura fecha
+Exportação em CSV ou PDF
+📈 Acompanhamento de Aplicações
+CDBs, Tesouro Direto, LCI/LCA, FIIs, Ações e mais
+🆕 Vinculação automática com contas de investimento
+Sincronização de saldo em tempo real
+Gráficos de evolução patrimonial
+📊 Orçamento por Categoria
+🆕 Barras de progresso comparando com média dos últimos 3 meses
+Cores indicativas: verde, amarelo e vermelho
+Indicadores ⬆️ ⬇️ de variação
+🔔 Alertas Inteligentes
+Contas vencendo nos próximos 3 dias
+🆕 Fechamento de fatura 1 dia antes
+💾 Backup & Segurança
+Exportação JSON completa
+Importação de CSV e JSON
+Modo privacidade (oculta valores)
+📖 Manual do Usuário Expandido
+Dicas exclusivas do Coach SW
+Casos reais de sucesso financeiro
+Regra 50-30-20 explicada
+Plano de ação de 4 semanas
+🆕 Lembrete de impressão ao atualizar versão
+---
+🆕 Changelog v4.1.0
+✨ Novidades
+📱 Gestos no Celular (Swipe): deslize para marcar como pago ou excluir
+⚡ Menu de Ações Rápidas (FAB): acesso direto a Despesa, Receita e Transferência
+📊 Orçamento por Categoria: barras de progresso com média dos últimos 3 meses
+🔄 Transferência entre Contas: mova saldo automaticamente
+🔔 Alerta de Fechamento: aviso 1 dia antes do fechamento do cartão
+🎉 Sistema de Atualização: modal "What's New" com novidades e lembrete do manual
+🔧 Melhorias
+🎨 Visual Aprimorado: modais com opacidade aumentada
+💳 Navegação de Faturas: setas para consultar períodos anteriores
+📈 Investimentos Sincronizados: vinculação automática com contas
+🖨️ Impressão Simplificada: extrato sem ícones e cores
+🐛 Correções
+Botão Salvar do modal de edição
+Timestamps nos arquivos exportados (`SmartWallet-AAAAMMDDHHMMSS`)
+Impressão do Manual do Usuário
+Período da fatura (fechamento anterior → fechamento atual)
+---
+📦 Instalação
+💻 No Computador (Chrome, Edge, Brave)
+Acesse o site pelo navegador
+Procure o ícone de instalação na barra de endereços (monitor com seta para baixo)
+Ou clique no menu do navegador (⋮) → "Instalar Smart Wallet..."
+Confirme a instalação
+Pronto! O app aparecerá na sua área de trabalho
+📱 No Celular Android (Chrome)
+Abra o site no Chrome
+Toque nos três pontos (⋮) no canto superior direito
+Selecione "Instalar aplicativo" ou "Adicionar à tela inicial"
+Confirme tocando em "Instalar"
+O ícone aparecerá na sua tela inicial
+🍎 No iPhone (Safari)
+Abra o site no Safari
+Toque no botão Compartilhar (quadrado com seta)
+Role para baixo e toque em "Adicionar à Tela de Início"
+Toque em "Adicionar"
+O app aparecerá na sua tela inicial
+🔧 Desenvolvimento Local
 ```bash
 # Clone o repositório
-git clone https://github.com/rogerelizar-2026/SmartWallet.git
-cd SmartWallet
+git clone https://github.com/seu-usuario/smart-wallet.git
 
-# Sirva com qualquer servidor estático
+# Entre na pasta
+cd smart-wallet
+
+# Inicie um servidor local (escolha uma opção):
+
 # Opção 1: Python
-python3 -m http.server 8000
+python -m http.server 8000
 
-# Opção 2: Node.js (http-server)
-npx http-server -p 8000
+# Opção 2: Node.js
+npx serve
 
-# Opção 3: VS Code Live Server
-# Abra a pasta no VS Code e use a extensão Live Server
+# Opção 3: VS Code
+# Instale a extensão "Live Server" e abra o index.html
 ```
-
+Acesse em: `http://localhost:8000`
 ---
-
-## 📁 Estrutura do Projeto
-
+📁 Estrutura do Projeto
 ```
-MyWallet/
-├── index.html              # Interface principal
-├── styles.css              # Estilos (glass morphism)
-├── manifest.json           # Configuração PWA
-├── sw.js                   # Service Worker
-├── favicon.svg             # Ícone do app
-├── README.md               # Esta documentação
-├── CHANGELOG.md            # Histórico de versões
-└── js/
-    ├── app.js              # Aplicação principal
-    ├── backup-fix.js       # Correções de backup
-    └── (outros módulos)
+smart-wallet/
+├── index.html          # Estrutura HTML principal
+├── styles.css          # Estilos CSS (tema escuro/claro)
+├── manifest.json       # Configuração PWA
+├── sw.js               # Service Worker (cache offline)
+├── favicon.svg         # Ícone do app
+├── js/
+│   └── app.js          # Lógica principal da aplicação
+├── backup_teste_2025.json  # Dados de teste
+└── README.md           # Este arquivo
 ```
-
 ---
-
-## 🛠️ Tecnologias
-
-- **HTML5 + CSS3** (Glass Morphism, Grid, Flexbox)
-- **JavaScript ES6+** (Modules, Classes, Async/Await)
-- **Chart.js 4.4.0** (Gráficos)
-- **Service Workers** (Offline-first)
-- **LocalStorage** (Persistência)
-- **Zero dependências de backend** - Tudo roda no navegador
-
+🛠️ Tecnologias Utilizadas
+HTML5 - Estrutura semântica
+CSS3 - Glassmorphism, responsividade, temas
+JavaScript (ES6+) - Lógica da aplicação
+Chart.js - Gráficos interativos
+PWA - Service Worker, manifest
+LocalStorage - Persistência de dados
+IndexedDB (futuro) - Para grandes volumes
 ---
-
-## 📖 Como Usar
-
-### 1. Adicionar Transação
-- Clique no botão **+ Adicionar**
-- Escolha: Receita ou Despesa
-- Selecione categoria, valor, data
-- Opção de recorrência (mensal/anual/parcelado)
-
-### 2. Gerenciar Cartões de Crédito
-- Menu → **💳 Meus Cartões**
-- Cadastre seus cartões
-- Acompanhe faturas
-- Exporte em CSV ou PDF
-
-### 3. Fazer Backup
-- Menu → **💾 Backup (JSON)**
-- Clique para exportar
-- Arquivo será baixado
-
-### 4. Restaurar Dados
-- Menu → **Restaurar Backup**
-- Selecione o arquivo .json
-- Clique **Restaurar** ✅
-
-### 5. Análises
-- Veja gráficos automáticos
-- Entradas vs Saídas por mês
-- Despesas por categoria
-- Projeção do próximo mês
-
+📖 Manual do Usuário
+O manual está integrado ao app! Acesse pelo botão "i" (informações) no cabeçalho.
+Conteúdo do Manual:
+🎯 Bem-vindo e dicas iniciais
+📱 Guia de instalação por plataforma
+💰 Funcionalidades detalhadas
+🚀 Guia do Sucesso Financeiro
+🎯 Regra 50-30-20
+💎 Investimentos para iniciantes
+🎓 Educação financeira contínua
+🎯 Plano de ação de 4 semanas
+🎯 Dicas exclusivas do Coach SW
+> 💡 **Dica**: Imprima o manual para consultar sempre que precisar!
 ---
-
-## 🎨 Recursos Adicionais
-
-### 🌙 Tema Escuro/Claro
-Alterne temas com um clique
-
-### 🔒 Modo Privacidade
-Oculta valores sensíveis
-
-### 📥 Importar CSV
-Importe transações de outros apps
-
-### 🖨️ Imprimir/PDF
-Exporte relatórios em PDF
-
-### 🎯 Metas Financeiras
-Acompanhe suas metas
-
+🧪 Testando o App
+Importar Dados de Teste
+Baixe o arquivo `backup_teste_2025.json`
+No app, vá em Menu → Restaurar Backup
+Selecione o arquivo
+Confirme a substituição
+O backup contém:
+📅 13 meses de dados (Dez/2025 - Dez/2026)
+💳 2 cartões de crédito
+🏦 2 contas (corrente + investimento)
+📈 3 aplicações vinculadas
+🔄 Recorrências variadas (mensal, parcelado, anual)
+💰 Todas as 21 categorias cobertas
 ---
-
-## 💡 Dicas Importantes
-
-### Regra 50-30-20
-- **50%** Necessidades (aluguel, comida, transporte)
-- **30%** Desejos (lazer, restaurantes)
-- **20%** Objetivos (reserva, investimentos)
-
-### Reserva de Emergência
-Mantenha **6 meses** de despesas
-
-### Revisão Regular
-Acompanhe suas finanças **semanalmente**
-
-### Backup Regular
-Exporte backup **mensalmente**
-
+🎨 Personalização
+Cores do Tema
+Edite o arquivo `styles.css` na seção `:root`:
+```css
+:root {
+    --primary-color: #6366f1;    /* Cor principal */
+    --accent-color: #06b6d4;     /* Cor de destaque */
+    --success-color: #10b981;    /* Verde */
+    --danger-color: #ef4444;     /* Vermelho */
+    --warning-color: #f59e0b;    /* Amarelo */
+}
+```
+Categorias Personalizadas
+As categorias podem ser editadas diretamente no app ou via backup JSON.
 ---
-
-## 📊 Roadmap
-
-### ✅ Concluído
-- v1.0.0 - Funcionalidades básicas
-- v2.0.0 - UI/UX moderna + gráficos
-- v3.0.0 - Arquitetura modular
-- v4.0.0 - Acessibilidade + Performance + PWA
-- v4.0.3 - Correção de backup ✨
-
-### 🎯 Próximas versões
-- v5.0.0 - Sincronização opcional (E2E encrypted)
-- v5.1.0 - Metas financeiras
-- v5.2.0 - Relatórios personalizados
-- v6.0.0 - Migração para TypeScript
-
+🤝 Contribuindo
+Contribuições são bem-vindas! Siga estes passos:
+Fork o projeto
+Crie uma branch para sua feature (`git checkout -b feature/NovaFeature`)
+Commit suas mudanças (`git commit -m 'feat: adiciona nova feature'`)
+Push para a branch (`git push origin feature/NovaFeature`)
+Abra um Pull Request
+Padrões de Commit
+`feat:` Nova funcionalidade
+`fix:` Correção de bug
+`docs:` Documentação
+`style:` Formatação
+`refactor:` Refatoração
+`test:` Testes
 ---
-
-## 🤝 Contribuindo
-
-Este é um projeto pessoal, mas sugestões são bem-vindas!
-
-- 🐛 Abra uma [Issue](https://github.com/rogerelizar-2026/SmartWallet/issues) descrevendo o bug/sugestão
-- 📧 Envie feedback: rogerelizar@gmail.com
-- 💝 Apoie via PIX (chave no app)
-
+🗺️ Roadmap
+Próximas Versões
+[ ] Sincronização opcional com nuvem
+[ ] Exportação para Excel (.xlsx)
+[ ] Metas financeiras personalizadas
+[ ] Relatórios anuais em PDF
+[ ] Integração com Open Finance (futuro)
+[ ] Modo multi-usuário (família)
+[ ] App nativo (React Native)
 ---
-
-## 📜 Licença
-
-MIT License - Copyright (c) 2026 RogerElizar™
-
+📄 Licença
+Este projeto está sob a licença MIT. Veja o arquivo LICENSE para mais detalhes.
+> O uso é **gratuito para fins pessoais**. Para uso comercial, entre em contato.
 ---
-
-## 🙏 Agradecimentos
-
-> "Toda boa dádiva e todo dom perfeito vêm do alto, descendo do Pai das luzes."
-> — Tiago 1:17
-
-**Dedicado aos meus filhos, com amor.** 💝
-
+👨‍💻 Autor
+<div align="center">
+RogerElizar™
+Desenvolvedor & Idealizador
+📧 rogerelizar@gmail.com
+</div>
+💝 Dedicação
+> *"Dedico este trabalho aos meus amados filhos. Que este seja um legado de ensino, organização e sabedoria financeira."*
 ---
-
-## 📞 Suporte
-
-- 📧 **Email:** rogerelizar@gmail.com
-- 🐛 **Issues:** [GitHub Issues](https://github.com/rogerelizar-2026/SmartWallet/issues)
-- 📘 **Manual:** Menu → 📖 Manual do Usuário
-
+🙏 Agradecimentos
+A Deus, por toda sabedoria e saúde
+À minha família, pelo apoio incondicional
+A todos os usuários que confiam no Smart Wallet
+À comunidade open source pelas ferramentas incríveis
 ---
-
-**MyWallet v4.0.3** - Idealizado por RogerElizar™ · 2026
-
-Desenvolvido com ❤️ e muita ☕
+☕ Apoie o Projeto
+Se o Smart Wallet tem sido útil para você, considere fazer uma doação via PIX:
+<div align="center">
+💚 Chave PIX: `rogerelizar@gmail.com`
+Qualquer valor é bem-vindo e ajuda a manter o projeto!
+</div>
+---
+📞 Contato & Suporte
+📧 E-mail: rogerelizar@gmail.com
+💬 Feedback: Use o botão "Apoie o Projeto" no app
+🐛 Bugs: Abra uma issue no GitHub
+---
+⚠️ Aviso Legal
+O Smart Wallet é uma ferramenta de apoio e não substitui consultoria financeira profissional. Todas as decisões financeiras são de inteira responsabilidade do usuário.
+---
+<div align="center">
+🙏 É Isso! 💰
+Que Deus abençoe sua jornada financeira. Que você tenha sabedoria para administrar, generosidade para compartilhar e disciplina para perseverar.
+Feito com ❤️ por RogerElizar®
+⭐ Se gostou do projeto, deixe uma estrela no GitHub! ⭐
+</div>
