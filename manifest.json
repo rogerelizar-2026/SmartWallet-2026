@@ -2,7 +2,7 @@
     "name": "Smart Wallet",
     "short_name": "SmartWallet",
     "description": "Controle financeiro pessoal inteligente - Idealizado por RogerElizar™",
-    "version": "4.0.1",
+    "version": "4.1.0",
     "start_url": "./index.html",
     "display": "standalone",
     "orientation": "portrait",
